@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>德召文汽修</title>
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="css/index.css" />
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<style>
+			.el-header {
+				text-align: left;
+				line-height: 60px;
+				border-bottom: 1px solid #ddd
+			}
+			
+			* {
+				margin: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="MenuApp">
+			<el-container style='height:60vh'>
+				<el-header>
+					<span style="float: left;margin: 5px 20px;">username</span>
+					<ul class="nav nav-tabs" role="tablist" style="display: inline-block;margin-left:200px;margin-top: 18px;">
+						<li role="presentation" v-for="(temp,i) in menuData" >
+							<a v-bind:href="['#'+temp.src]" :aria-controls="temp.src" role="tab" data-toggle="tab">{{temp.title}}</a>
+						</li>
+					</ul>
+					<span style="float: right;font-size: 15px;"><span>设置</span>|
+					<el-button type="danger" size="mini" @click="exit" style="">注销</el-button>
+					</span>
+				</el-header>
+				<el-container>
+					<el-aside width="250px" style="border: 1px  solid ghostwhite;margin: 20px;border-radius: 20px;">
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane fade  active" :id="temp.id" v-for="(temp,index) in pageData">
+								<el-menu style="border-right:0">
+									<el-submenu :index="index1+''"  v-for="(temp1,index1) in temp.list">
+										<template slot="title">
+											<i class="el-icon-s-home"></i>
+											<span>{{temp1.title}}</span>
+										</template>
+										<el-menu-item-group>
+											<el-menu-item :index="index1-index2+''" @click="showView('temp2.src')" v-for="(temp2,index2) in temp1.list">{{temp2.title}}</el-menu-item>
+										</el-menu-item-group>
+									</el-submenu>
+								</el-menu>
+							</div>
+						</div>
+					</el-aside>
+					<el-main style="border-left: 1px ghostwhite solid;">
+						<div id="cnt">
+							<h1 style="text-align: center;line-height: 100px;">欢迎使用德召文汽修系统</h1>
+						</div>
+					</el-main>
+				</el-container>
+			</el-container>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/jq_ajax_config.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+			data: {
+				menuData: [{
+					"title": '维修',
+					"src": 'servicing'
+				}, {
+					"title": '商品',
+					"src": 'shop'
+				}, {
+					"title": '前台',
+					"src": 'proscenium'
+				}, {
+					"title": '代办',
+					"src": 'home'
+				}, {
+					"title": '客服',
+					"src": 'home'
+				}, {
+					"title": '数据',
+					"src": 'home'
+				}, {
+					"title": '财务',
+					"src": 'home'
+				}, {
+					"title": '人事',
+					"src": 'home'
+				}, {
+					"title": '系统',
+					"src": 'home'
+				}],
+				pageData: [{
+					"id": 'servicing',
+					"list": [{
+						"title": "维修救援",
+						"list":[{
+							"title":"维修接车",
+							"src":".html"
+						},{
+							"title":"竣工检验",
+							"src":".html"
+						},{
+							"title":"出厂放行",
+							"src":".html"
+						},{
+							"title":"施工登记",
+							"src":".html"
+						}]
+					},{
+						"title": "三包索赔",
+						"list":[{
+							"title":"维修接车",
+							"src":".html"
+						},{
+							"title":"竣工检验",
+							"src":".html"
+						},{
+							"title":"出厂放行",
+							"src":".html"
+						},{
+							"title":"施工登记",
+							"src":".html"
+						}]
+					}]
+				},{
+					"id": 'shop',
+					"list": [{
+						"title": "商品入库",
+						"list":[{
+							"title":"维修接车",
+							"src":".html"
+						},{
+							"title":"竣工检验",
+							"src":".html"
+						},{
+							"title":"出厂放行",
+							"src":".html"
+						},{
+							"title":"施工登记",
+							"src":".html"
+						}]
+					},{
+						"title": "技工备料",
+						"list":[{
+							"title":"维修接车",
+							"src":".html"
+						},{
+							"title":"竣工检验",
+							"src":".html"
+						},{
+							"title":"出厂放行",
+							"src":".html"
+						},{
+							"title":"施工登记",
+							"src":".html"
+						}]
+					}]
+				},{
+					"id": 'proscenium',
+					"list": [{
+						"title": "前台结算",
+						"list":[{
+							"title":"维修接车",
+							"src":".html"
+						},{
+							"title":"竣工检验",
+							"src":".html"
+						},{
+							"title":"出厂放行",
+							"src":".html"
+						},{
+							"title":"施工登记",
+							"src":".html"
+						}]
+					},{
+						"title": "收益统计",
+						"list":[{
+							"title":"维修接车",
+							"src":".html"
+						},{
+							"title":"竣工检验",
+							"src":".html"
+						},{
+							"title":"出厂放行",
+							"src":".html"
+						},{
+							"title":"施工登记",
+							"src":".html"
+						}]
+					}]
+				}]
+			},
+			methods: {
+				showView(url) {
+					$('#cnt').load(url);
+				},
+				exit() {
+					this.$confirm('退出登录, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						/*$.post(`http://127.0.0.1:8080/api/user/exit`, function(res) {
+							location.href = "glylogin.html";
+						})*/
+					});
+				}
+			},
+			mounted() {
+				$(".nav-tabs>li").eq(0).addClass("active");
+				$(".tab-content>div").eq(0).addClass("active");
+				$(".tab-content>div").eq(0).addClass("in");
+			}
+		}).$mount("#MenuApp");
+	</script>
+
+</html>
