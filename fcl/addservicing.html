@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="fclApp">
+			<el-page-header @back="goBack" content="接车页面">
+			</el-page-header>
+			<el-switch style="float: right;margin-right: 50px;" @change="changeState" v-model="value1" active-text="站内接车" inactive-color="green" inactive-text="站外接车">
+			</el-switch>
+			<el-form :model="servicing" style="clear: both;text-align: center;" class="demo-ruleForm">
+				<el-form-item>
+					<el-select v-if="value1"  multiple placeholder="请选择救援车牌号">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
+					</el-select>
+					<el-select v-model="value2" multiple collapse-tags style="margin-left: 10px;" placeholder="请选择维修组">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
+					</el-select>
+					<el-select v-model="value2" multiple collapse-tags style="margin-left: 10px;" placeholder="请选择客户车牌号">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
+					</el-select>
+				</el-form-item>
+
+				<el-form-item>
+					<el-input style="width:500px;" placeholder="请输入驾驶员名称"></el-input>
+				</el-form-item>
+
+				<el-form-item>
+					<el-input style="width:500px;" placeholder="请输入维修备注"></el-input>
+				</el-form-item>
+			</el-form>
+			<el-table :data="tableData" style="width: 100%">
+				<el-table-column prop="infoid" label="编号">
+				</el-table-column>
+				<el-table-column prop="infoname" label="维修项目名">
+				</el-table-column>
+				<el-table-column prop="price" label="维修价格">
+				</el-table-column>
+				<el-table-column align="center">
+					<template slot="header" slot-scope="scope">
+						<el-button type="success" @click="this.showWindowDialog('fcl/addservicinginfo.html','添加')">添加维修项</el-button>
+					</template>
+					<template slot-scope="temp">
+						<el-button v-if="!temp.row.bool" size="mini" type="danger" @click="update(temp.row.wareid)">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<el-button size="mini" type="danger" @click="">开单</el-button>
+		</div>
+		<script>
+			var app = new Vue({
+				data: {
+					value1: true,
+					servicing: {
+
+					},
+					tableData: [{
+						"infoid": 1,
+						"infoname": 'sfsd',
+						"price": 12,
+						"infomark": '454',
+						"bool": true
+					}, {
+						"infoid": 1,
+						"infoname": 'Jiuyuan',
+						"price": 12,
+						"infomark": '454',
+						"bool": true
+					}],
+					options: [{
+						value: '选项1',
+						label: '黄金糕'
+					}, {
+						value: '选项2',
+						label: '双皮奶'
+					}, {
+						value: '选项3',
+						label: '蚵仔煎'
+					}, {
+						value: '选项4',
+						label: '龙须面'
+					}, {
+						value: '选项5',
+						label: '北京烤鸭'
+					}],
+					value2: []
+				},
+				methods: {
+					goBack() {
+						$("#cnt").load("fcl/servicing_meetcar.html");
+					},
+					changeState() {
+						if(!this.value1) {
+							this.tableData = [{
+								"infoid": 1,
+								"infoname": 'sfsd',
+								"price": 12,
+								"infomark": '454',
+								"bool": true
+							}]
+						} else {
+							this.tableData = [{
+								"infoid": 1,
+								"infoname": 'sfsd',
+								"price": 12,
+								"infomark": '454',
+								"bool": true
+							}, {
+								"infoid": 1,
+								"infoname": 'Jiuyuan',
+								"price": 12,
+								"infomark": '454',
+								"bool": true
+							}]
+						}
+					}
+				}
+			}).$mount("#fclApp");
+
+			function send() {
+				alert("");
+			}
+		</script>
+	</body>
+
+</html>
