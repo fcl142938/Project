@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>会员查看</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<style>
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div id="memberQueryApp" class="row" v-cloak>
+				<h3>会员操作</h3>
+				<hr />
+				<div>
+					<el-form :inline="true" :model="member" class="demo-form-inline" label-width="80px">
+						<el-form-item label="会员名称">
+							<el-input v-model="member.name"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="success" @click="onQuery()">查询</el-button>
+							<el-button type="primary" @click="onAdd()">新会员</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+				<div>
+					<template>
+						<el-table :data="pageInfo.list" stripe style="width: 100%">
+							<el-table-column prop="jid" label="会员编号">
+							</el-table-column>
+							<el-table-column prop="jname" label="会员姓名">
+							</el-table-column>
+							<el-table-column prop="jname" label="会员积分">
+							</el-table-column>
+						</el-table>
+					</template>
+				</div>
+				<div style="margin-left: 40%;">
+					<el-button @click="fristPage" type="primary">首页</el-button>
+					<el-button v-if="pageInfo.hasPreviousPage" @click="prePage" type="primary">上一页</el-button>
+					第<span>{{pageInfo.pageNum}}</span>页 共<span>{{pageInfo.pages}}</span>页 （总数<span>{{pageInfo.total}}</span>）
+					<el-button v-if="pageInfo.hasNextPage" @click="nextPage" type="primary">下一页</el-button>
+					<el-button @click="lastPage" type="primary">尾页</el-button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/dialogs.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script>
+		var memberQueryApp = new Vue({
+			data: {
+				member:{
+					name:''
+				},
+				auction: {
+					auctionName: '',
+					auctionStartPrice: '',
+					auctionStartTime: '',
+					auctionEndTime: '',
+					auctionDesc: ''
+				},
+				pageInfo: {}
+			},
+			methods: {
+				onAdd(){
+					location.href="memberAdd.html";
+				}
+			},
+			mounted() {
+
+			}
+		}).$mount('#memberQueryApp');
+	</script>
+
+</html>
