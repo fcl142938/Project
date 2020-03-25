@@ -26,7 +26,7 @@
 				<el-header>
 					<span style="float: left;margin: 5px 20px;">username</span>
 					<ul class="nav nav-tabs" role="tablist" style="display: inline-block;margin-left:200px;margin-top: 18px;">
-						<li role="presentation" v-for="(temp,i) in menuData" >
+						<li role="presentation" v-for="(temp,i) in menuData">
 							<a v-bind:href="['#'+temp.src]" :aria-controls="temp.src" role="tab" data-toggle="tab">{{temp.title}}</a>
 						</li>
 					</ul>
@@ -39,13 +39,13 @@
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane fade  active" :id="temp.id" v-for="(temp,index) in pageData">
 								<el-menu style="border-right:0">
-									<el-submenu :index="index1+''"  v-for="(temp1,index1) in temp.list">
+									<el-submenu :index="index1+''" v-for="(temp1,index1) in temp.list">
 										<template slot="title">
 											<i class="el-icon-s-home"></i>
 											<span>{{temp1.title}}</span>
 										</template>
 										<el-menu-item-group>
-											<el-menu-item :index="index1-index2+''" @click="showView('temp2.src')" v-for="(temp2,index2) in temp1.list">{{temp2.title}}</el-menu-item>
+											<el-menu-item :index="index1-index2+''" @click="showView(temp2.src,temp2.title)" v-for="(temp2,index2) in temp1.list">{{temp2.title}}</el-menu-item>
 										</el-menu-item-group>
 									</el-submenu>
 								</el-menu>
@@ -53,8 +53,10 @@
 						</div>
 					</el-aside>
 					<el-main style="border-left: 1px ghostwhite solid;">
+						<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab" @tab-click="loadPage">
+							<el-tab-pane v-for="(item, index) in editableTabs" :key="item.name" :label="item.title" :name="item.name" :data-page="item.content">{{item.content}}</el-tab-pane>
+						</el-tabs>
 						<div id="cnt">
-							<h1 style="text-align: center;line-height: 100px;">欢迎使用德召文汽修系统</h1>
 						</div>
 					</el-main>
 				</el-container>
@@ -66,9 +68,14 @@
 	<script type="text/javascript" src="js/index.js"></script>
 	<script type="text/javascript" src="js/jq_ajax_config.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/dialogs.js"></script>
+	<script type="text/javascript" src="js/dialog.js"></script>
 	<script type="text/javascript">
 		var app = new Vue({
 			data: {
+				editableTabsValue: '1',
+				editableTabs: [],
+				tabIndex: 1,
 				menuData: [{
 					"title": '维修',
 					"src": 'servicing'
@@ -80,127 +87,164 @@
 					"src": 'proscenium'
 				}, {
 					"title": '代办',
-					"src": 'home'
+					"src": 'commission'
 				}, {
 					"title": '客服',
-					"src": 'home'
+					"src": 'custom'
 				}, {
 					"title": '数据',
-					"src": 'home'
+					"src": 'information'
 				}, {
 					"title": '财务',
-					"src": 'home'
+					"src": 'financing'
 				}, {
 					"title": '人事',
-					"src": 'home'
+					"src": 'human'
 				}, {
 					"title": '系统',
-					"src": 'home'
+					"src": 'systematic'
 				}],
 				pageData: [{
 					"id": 'servicing',
 					"list": [{
 						"title": "维修救援",
-						"list":[{
-							"title":"维修接车",
-							"src":".html"
-						},{
-							"title":"竣工检验",
-							"src":".html"
-						},{
-							"title":"出厂放行",
-							"src":".html"
-						},{
-							"title":"施工登记",
-							"src":".html"
+						"list": [{
+							"title": "维修接车",
+							"src": "fcl/servicing_meetcar.html"
+						}, {
+							"title": "竣工检验",
+							"src": "finish.html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
 						}]
-					},{
+					}, {
 						"title": "三包索赔",
-						"list":[{
-							"title":"维修接车",
-							"src":".html"
-						},{
-							"title":"竣工检验",
-							"src":".html"
-						},{
-							"title":"出厂放行",
-							"src":".html"
-						},{
-							"title":"施工登记",
-							"src":".html"
+						"list": [{
+							"title": "维修接车",
+							"src": ".html"
+						}, {
+							"title": "竣工检验",
+							"src": ".html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
 						}]
 					}]
-				},{
+				}, {
 					"id": 'shop',
 					"list": [{
 						"title": "商品入库",
-						"list":[{
-							"title":"维修接车",
-							"src":".html"
-						},{
-							"title":"竣工检验",
-							"src":".html"
-						},{
-							"title":"出厂放行",
-							"src":".html"
-						},{
-							"title":"施工登记",
-							"src":".html"
+						"list": [{
+							"title": "维修接车",
+							"src": ".html"
+						}, {
+							"title": "竣工检验",
+							"src": ".html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
 						}]
-					},{
+					}, {
 						"title": "技工备料",
-						"list":[{
-							"title":"维修接车",
-							"src":".html"
-						},{
-							"title":"竣工检验",
-							"src":".html"
-						},{
-							"title":"出厂放行",
-							"src":".html"
-						},{
-							"title":"施工登记",
-							"src":".html"
+						"list": [{
+							"title": "维修接车",
+							"src": ".html"
+						}, {
+							"title": "竣工检验",
+							"src": ".html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
 						}]
 					}]
-				},{
+				}, {
 					"id": 'proscenium',
 					"list": [{
 						"title": "前台结算",
-						"list":[{
-							"title":"维修接车",
-							"src":".html"
-						},{
-							"title":"竣工检验",
-							"src":".html"
-						},{
-							"title":"出厂放行",
-							"src":".html"
-						},{
-							"title":"施工登记",
-							"src":".html"
+						"list": [{
+							"title": "维修接车",
+							"src": ".html"
+						}, {
+							"title": "竣工检验",
+							"src": ".html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
 						}]
-					},{
+					}, {
 						"title": "收益统计",
-						"list":[{
-							"title":"维修接车",
-							"src":".html"
-						},{
-							"title":"竣工检验",
-							"src":".html"
-						},{
-							"title":"出厂放行",
-							"src":".html"
-						},{
-							"title":"施工登记",
-							"src":".html"
+						"list": [{
+							"title": "维修接车",
+							"src": ".html"
+						}, {
+							"title": "竣工检验",
+							"src": ".html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
+						}]
+					}]
+				}, {
+					"id": 'systematic',
+					"list": [{
+						"title": "初始数据",
+						"list": [{
+							"title": "维修接车",
+							"src": ".html"
+						}, {
+							"title": "竣工检验",
+							"src": ".html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
+						}]
+					}, {
+						"title": "权限控制",
+						"list": [{
+							"title": "权限附加",
+							"src": "fcl/powerup.html"
+						}, {
+							"title": "权限管理",
+							"src": "fcl/powermanage.html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
 						}]
 					}]
 				}]
 			},
 			methods: {
-				showView(url) {
-					$('#cnt').load(url);
+				showView(url, title) {
+					this.addTab(this.editableTabsValue, url, title);
+					$("#cnt").load(url);
+				},
+				loadPage(obj) {
+					$("#cnt").load($("#pane-" + obj.name).text());
 				},
 				exit() {
 					this.$confirm('退出登录, 是否继续?', '提示', {
@@ -212,12 +256,44 @@
 							location.href = "glylogin.html";
 						})*/
 					});
+				},
+				addTab(targetName, url, title) {
+					let newTabName = ++this.tabIndex + '';
+					this.editableTabs.push({
+						title: title,
+						name: newTabName,
+						content: url
+					});
+					this.editableTabsValue = newTabName;
+
+				},
+				removeTab(targetName) {
+					let tabs = this.editableTabs;
+					let activeName = this.editableTabsValue;
+					if(activeName === targetName) {
+						tabs.forEach((tab, index) => {
+							if(tab.name === targetName) {
+								let nextTab = tabs[index + 1] || tabs[index - 1];
+								if(nextTab) {
+									activeName = nextTab.name;
+								}
+							}
+						});
+					}
+
+					this.editableTabsValue = activeName;
+					this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+					if(this.editableTabs.length == 0) {
+						$("#cnt").load("show.html");
+					}
 				}
 			},
 			mounted() {
 				$(".nav-tabs>li").eq(0).addClass("active");
 				$(".tab-content>div").eq(0).addClass("active");
 				$(".tab-content>div").eq(0).addClass("in");
+				$(".el-tabs__content").hide();
+				$("#cnt").load("show.html");
 			}
 		}).$mount("#MenuApp");
 	</script>

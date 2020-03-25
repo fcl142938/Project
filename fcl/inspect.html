@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="inspectApp">
+			<el-form ref="ser" :model="ser" label-width="80px" >
+				<el-form-item label="编号">
+					<el-input v-model="ser.smid"></el-input>
+				</el-form-item>
+				<el-form-item label="开始时间">
+					<el-input v-model="ser.starttime"></el-input>
+				</el-form-item>
+				<el-form-item label="结束时间">
+					<el-input v-model="ser.entime"></el-input>
+				</el-form-item>
+				
+				<el-form-item label="是否合格">
+					<el-radio-group>
+						<el-radio label="合格"></el-radio>
+						<el-radio label="不合格"></el-radio>
+					</el-radio-group>
+				</el-form-item>
+				<el-form-item label="备注">
+					<el-input type="textarea" v-model="ser.countprice"></el-input>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click="this.closeWindowDialog()">完成</el-button>
+					<el-button>取消</el-button>
+				</el-form-item>
+			</el-form>
+		</div>
+		<script>
+			var inspectApp = new Vue({
+				data: {
+					/*id: window.sessionStorage.getItem("smid"),*/
+					ser: {
+						"smid": '123',
+						"carnumber": '123',
+						"starttime": '2018-9-9',
+						"entime": '2019-9-9',
+						"countprice": '30',
+						"state":1,
+						"list": [{
+							"infoname": 'sfhj',
+							"price": '200',
+						}, {
+							"infoname": 'sfhj',
+							"price": '200',
+						}],
+						"list1": [{
+								"courseid": 1,
+								"gname": "战三组",
+								"coursestarttime": '2019-9-9',
+								"courseendtime": '2019-9-9',
+								"coursestate": '返回',
+								"coursemark": "失误"
+							},
+							{
+								"courseid": 1,
+								"gname": "战三组",
+								"coursestarttime": '2019-9-9',
+								"courseendtime": '2019-9-9',
+								"coursestate": '返回',
+								"coursemark": "失误"
+							}
+						]
+					}
+				}
+			}).$mount("#inspectApp");
+		</script>
+	</body>
+
+</html>

@@ -1,82 +1,180 @@
-@charset "utf-8";
-/* CSS Document */
-img{border:none}
-.lf{ float:left}
-.rg{ float:right}
-.tg{ text-align:right}
-.blues,.blues a{ color:#0096ff}
-.red,.red a{ color:#FF0000}
-ul li,ul,p{ list-style:none;padding:0; margin:0}
-.cl{ clear:both}
-.f14{ font-size:14px}
- .bar ul{ float:left}
-.wrap{ width:960px; margin:0 auto}
-select,input,label,button,button{ vertical-align:middle}
-.main{ padding:27px 0 0 70px; clear:both}
-.spbg{ background:url(../images/buttom.jpg) no-repeat}
-.sidebar{ width:443px; float:left}
-.sidebarg{width:400px; float:right; padding:40px 0 0}
- .sidebarg label,.sidebarg input{float:left}
- .sidebarg label{width:50px; text-align:right}
-.login{ padding:22px 0 0}
- .login dt{ font-weight:bold; font-size:14px; padding:0 0 5px}
- .login dd{ margin:0 0 8px; clear:both; line-height:18px; height:31px}
-   .login dd span a{ text-decoration:underline; line-height:34px}
-   .login dl .buttom{height:40px;}
-.inputh{ width:215px; height:27px; border:1px solid #7F7F7F; color:#C1C1C1; margin:0 5px 0 0; line-height:24px}
-.inputs{ width:114px}
-.wordp{ height:27px; border:1px solid #7F7F7F; width:96px; margin:0 6px; cursor:pointer}
-.buttombg{width:99px;height:37px;border:none; cursor:pointer; text-align:center; font-weight:bold; color:#fff; line-height:37px;margin:0 5px 0 0}
-.buttomb{ background-position:-100px 0}
-.fnone{margin:0 auto; float:none}
-/*zhuce*/
-.logns{ padding:22px 0 0 13px; width:490px; margin:0 auto}
-.logns dd{ height:38px; padding:0 0 0 40px; margin:0;}
- .logns .adl{padding:48px 0 0 40px}
- .logns dl dd small{ color:#0096ff; font-size:12px;}
- .logns label{width:60px; text-align:right; margin:0 5px 0 0;float:left}
- .logns .labels{width:180px; text-align:left; float:none}
- .logns .labe{width:80px}
- .logns .laba{width:180px}
-.logns .hegas{height:40px; margin:0}
-/*list*/
-.forms{margin:0 0 10px;}
-.nwselect{ height:18px;border:1px solid #7eabab}
-.nwinput{ width:120px; height:18px; border:1px solid #7eabab}
-.sale{ clear:both; border-bottom:1px solid #ccc; height:47px; overflow:hidden; margin:0 0 10px;line-height:30px; _line-height:47px;}
-.sale h1{ font-size:24px;}
-.logout{ background:#EBF6FA; border:1px solid #C8E5F5; text-align:center; line-height:20px; width:60px; margin:20px 0 0}
-.items{border:1px solid #7EABAB;line-height:28px}
-.items .even{ background:#EBF6FA;}
-.strong{font-weight:bold}
-.rows{ height:28px; overflow:hidden;border-bottom:1px solid #7EABAB;}
-.rows li{float:left; width:150px; text-align:center;border-right:1px solid #7EABAB;}
-.rows .list-wd{ width:200px}
-.rows .borderno{border:none}
-/*list-single*/
-.salebd{border:1px solid #7EABAB; padding:5px}
-.borer-bt{border-bottom:1px solid #D0E3EF;}
-.inputwd{border:1px solid #D0E3EF; height:19px;}
-.sg-font{ width:500px;}
-.sg-font .borderno{ width:300px; text-align:left;padding:0 0 0 8px}     
-.sale-buttom{ width:70px; height:25px; line-height:25px;}
-.sale-bg{ background:#D0E3EF}
-.offer{padding:15px 0 0}
-.offer .sg-font .borderno{ width:150px}
-.textarea{width:440px; height:80px; margin:5px 0 0}
-.produce{width:600px;padding:0}
-.produce input{border:1px solid #7EABAB;}
-.produce .hegas{padding:30px 0 0 100px}
-.produce .dds{height:auto}
-.marg10{margin:20px 0 0 20px}
-.rulse{padding:15px 0 0}
-.produce  label{ width:75px}
-.produce h1{ font-size:26px; line-height:30px;}
-.records .record{ width:300px;}
-.records .rows{height:auto;_height:95px;overflow:hidden;}
-.records .rowh{height:28px}
-.records .rows p{height:25px;}
-.records .rows li{border:none}
-.page{padding:20px; text-align:center}
-.page a{margin:0 5px}
-.border-no{border-bottom:none}
+/* =======================================================
+*
+* 	Template Style 
+*	Edit this section
+*
+* ======================================================= */
+body {
+  font-family: "Open Sans", Arial, sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
+  color: #848484;
+  background-color: #f0f0f0;
+}
+body.style-2 {
+  background-color: #ffffff;
+  background-size: cover;
+  background-position: -30% center;
+  background-repeat: no-repeat;
+  background-image: url(../images/bg_2.jpg);
+  height: 100%;
+}
+body.style-3 {
+  background: #ffffff url(../img/geometry2.png) no-repeat;
+   background-size: cover;
+}
+
+a {
+  color: #33cccc;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+a:hover {
+  color: #29a3a3;
+}
+
+.menu {
+  padding: 0;
+  margin: 30px 0 0 0;
+}
+.menu li {
+  list-style: none;
+  margin-bottom: 10px;
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+}
+.menu li a {
+  padding: 5px;
+}
+.menu li.active a {
+  color: #b3b3b3;
+}
+
+.fh5co-form {
+  padding: 30px;
+  margin-top: 4em;
+  -webkit-box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+.style-2 .fh5co-form {
+  -webkit-box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: -4px 7px 46px 2px rgba(0, 0, 0, 0.1);
+}
+@media screen and (max-width: 768px) {
+  .fh5co-form {
+    padding: 15px;
+  }
+}
+.fh5co-form h2 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 20px;
+  margin: 0 0 30px 0;
+  color: #000000;
+}
+.fh5co-form .form-group {
+  margin-bottom: 30px;
+}
+.fh5co-form .form-group p {
+  font-size: 14px;
+  color: #9f9f9f;
+  font-weight: 300;
+}
+.fh5co-form .form-group p a {
+  color: #000000;
+}
+.fh5co-form label {
+  font-weight: 300;
+  font-size: 14px;
+  font-weight: 300;
+}
+.fh5co-form .form-control {
+  font-size: 16px;
+  font-weight: 300;
+  height: 50px;
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  border-radius: 0px;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.fh5co-form .form-control::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .form-control::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .form-control:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.copyrights{
+	text-indent:-9999px;
+	height:0;
+	line-height:0;
+	font-size:0;
+	overflow:hidden;
+}
+.fh5co-form .form-control:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .form-control:focus, .fh5co-form .form-control:active {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.btn-primary {
+  height: 50px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border: none;
+  background: #33cccc;
+  color: #ffffff;
+  -webkit-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+  -moz-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+  -o-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+  box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  color: #ffffff;
+  background: #47d1d1 !important;
+  outline: none;
+}
+
+input, textarea {
+  color: #000;
+}
+
+.placeholder {
+  color: #aaa;
+}
+
+.js .animate-box {
+  opacity: 0;
+}
+
+/*# sourceMappingURL=style.css.map */
