@@ -4,9 +4,17 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>德召文汽修</title>
-		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<!--<link href="css/style.css" rel="stylesheet" type="text/css">-->
+		<link href="css/style1.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="css/index.css" />
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+		<link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
+		<!-- endinject -->
+		<!-- plugin css for this page -->
+		<link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
 		<style>
 			.el-header {
 				text-align: left;
@@ -26,6 +34,9 @@
 				<el-header>
 					<span style="float: left;margin: 5px 20px;">username</span>
 					<ul class="nav nav-tabs" role="tablist" style="display: inline-block;margin-left:200px;margin-top: 18px;">
+						<li role="presentation">
+							<a role="tab" data-toggle="tab">首页</a>
+						</li>
 						<li role="presentation" v-for="(temp,i) in menuData">
 							<a v-bind:href="['#'+temp.src]" :aria-controls="temp.src" role="tab" data-toggle="tab">{{temp.title}}</a>
 						</li>
@@ -70,6 +81,22 @@
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/dialogs.js"></script>
 	<script type="text/javascript" src="js/dialog.js"></script>
+	<!--外部导入-->
+	<script src="vendors/base/vendor.bundle.base.js"></script>
+
+	<script src="vendors/chart.js/Chart.min.js"></script>
+	<script src="vendors/datatables.net/jquery.dataTables.js"></script>
+	<script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+
+	<script src="js/off-canvas.js"></script>
+	<script src="js/hoverable-collapse.js"></script>
+	<script src="js/template.js"></script>
+
+	<script src="js/dashboard.js"></script>
+	<script src="js/data-table.js"></script>
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/dataTables.bootstrap4.js"></script>
+	<script type="text/javascript" src="js/echarts.js" charset="UTF-8"></script>
 	<script type="text/javascript">
 		var app = new Vue({
 			data: {
@@ -175,14 +202,14 @@
 					"list": [{
 						"title": "前台结算",
 						"list": [{
-							"title": "维修接车",
-							"src": ".html"
+							"title": "结算中心",
+							"src": "tyh/settlementCenter.html"
 						}, {
-							"title": "竣工检验",
-							"src": ".html"
+							"title": "会员充值",
+							"src": "tyh/memberAdd.html"
 						}, {
-							"title": "出厂放行",
-							"src": ".html"
+							"title": "会员查询",
+							"src": "tyh/memberQuery.html"
 						}, {
 							"title": "施工登记",
 							"src": ".html"
@@ -245,10 +272,10 @@
 							"src": "px/post.html"
 						}, {
 							"title": "岗位定义",
-							"src": "px/leave.html"
+							"src": "tyh/jobDefinition.html"
 						}, {
 							"title": "离职登记",
-							"src": "px/leaveinfo.html"
+							"src": "px/leave.html"
 						}, {
 							"title": "通讯名录",
 							"src": "px/tel.html"
