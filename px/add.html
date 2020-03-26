@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="addapp">
+	       <el-row :span="24">
+	       	 <el-col :span="12">
+	       	 	<h3>员工卡片</h3>
+	       	 </el-col>
+	       	     <el-col :span="12">
+	       		<el-form :span="12" id="btn">
+						<el-form-item  >
+								<el-button icon="el-icon-success" size="mini" type="success" @click="">保存</el-button>
+						</el-form-item>
+					</el-form>
+					 </el-col>
+	       </el-row>
+	          <el-form :model="user"  label-width="100px">
+				<el-form-item label="员工编号" prop="userid">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input v-model="user.userid" placeholder="" style="width: 220px;"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="员工姓名" prop="username">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input v-model="user.username" placeholder="" style="width: 220px;"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="所在门店" prop="usermd">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input v-model="user.usermd" placeholder="" style="width: 220px;"></el-input>
+					</el-col>
+				</el-form-item>
+			
+				
+                  <el-form-item label="性别">
+                  	<el-col :span="6">
+                      <el-select v-model="user.usersex" placeholder="请选择" style="width: 220px;">
+                      <el-option label="男" value="男"></el-option>
+                      <el-option label="女" value="女"></el-option>
+                     </el-select>
+                     </el-col>
+                  </el-form-item>
+                  
+                    <el-form-item label="所在部门">
+                  	<el-col :span="6">
+                      <el-select v-model="user.userdep" placeholder="请选择" style="width: 220px;">
+                      <el-option label="财政部" value="财政部"></el-option>
+                      <el-option label="行政部" value="行政部"></el-option>
+                     </el-select>
+                     </el-col>
+                  </el-form-item>
+                    <el-form-item label="属性">
+                  	<el-col :span="6">
+                      <el-select v-model="user.usersx" placeholder="请选择" style="width: 220px;">
+                      <el-option label="记考勤记薪" value="记考勤记薪"></el-option>
+                      <el-option label="记考勤记薪" value="记考勤记薪"></el-option>
+                     </el-select>
+                     </el-col>
+                  </el-form-item>
+		</div>
+	</body>
+	<script>
+		var addapp=new Vue({
+			el:"#addapp",
+			data:{
+				user:{
+					userid:"",
+					username:"",
+					usersex:"",
+					usermd:"",
+					userdep:"",
+					usersx:""
+					
+				}
+				
+				
+			},
+		})
+		
+	</script>
+</html>

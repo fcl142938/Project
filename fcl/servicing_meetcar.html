@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="fclApp">
+			<el-form :inline="true" id="myForm" name="queryForm" :model="ware" style="text-align: center;">
+				<el-form-item>
+					<el-col style="width:100px;">
+						<el-button size="mini" type="primary" @click="gotoPage('fcl/addservicing.html')">新增维修订单</el-button>
+					</el-col>
+				</el-form-item>
+				<el-form-item>
+					<el-select placeholder="全部" style="width: 100px;" size="mini">
+						<el-option>正在维修</el-option>
+						<el-option>接车</el-option>
+					</el-select>
+				</el-form-item>
+			</el-form>
+			<div v-loading="loading">
+				<el-table :data="pageinfo.list" border style="width: 100%">
+					<el-table-column type="expand">
+						<template slot-scope="props">
+							<el-table  :data="props.row.list" border style="width:362px;margin: 0 auto;">
+								<el-table-column label="详细记录">
+									<el-table-column prop="infoname" label="项目名称" width="180">
+									</el-table-column>
+									<el-table-column prop="price" label="项目价格" width="180">
+									</el-table-column>
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-table-column>
+					<el-table-column prop="carnumber" label="车牌号" width="180" align="center">
+					</el-table-column>
+					<el-table-column prop="countprice" label="维修金额" align="center">
+					</el-table-column>
+					<el-table-column prop="starttime" label="进厂日期" width="180" align="center">
+					</el-table-column>
+					<el-table-column prop="entime" label="完工日期" align="center">
+					</el-table-column>
+					<el-table-column label="操作" align="center">
+						<template slot-scope="temp">
+							<el-button size="mini" type="danger" @click="">修改</el-button>
+							<el-button size="mini" type="danger" @click="">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div style="text-align: center;" v-if="pageinfo.list.length!=0">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[5,10,15,20]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageinfo.total">
+					</el-pagination>
+				</div>
+
+			</div>
+		</div>
+		<script>
+			var app = new Vue({
+				data: {
+					loading: true,
+					pageinfo: {
+						"pageSize": 1,
+						"total": 6,
+						list: [{
+							"carnumber": '123',
+							"starttime": '2018-9-9',
+							"entime": '2019-9-9',
+							"countprice": '30',
+							"list":[{
+								"infoname":'sfhj',
+								"price":'200',
+							},{
+								"infoname":'sfhj',
+								"price":'200',
+							}]
+						}, {
+							"carnumber": '13',
+							"starttime": '2018-9-9',
+							"entime": '2019-9-9',
+							"countprice": '200',
+							"list":[{
+								"infoname":'sfhj',
+								"price":'200',
+							},{
+								"infoname":'sfhj',
+								"price":'200',
+							}]
+						}, {
+							"carnumber": '13',
+							"starttime": '2018-9-9',
+							"entime": '2019-9-9',
+							"countprice": '200',
+							"list":[{
+								"infoname":'sfhj',
+								"price":'200',
+							},{
+								"infoname":'sfhj',
+								"price":'200',
+							}]
+						}]
+					}
+				},
+				methods: {
+					gotoPage(url){
+						$("#cnt").load(url);
+					}
+				},
+				mounted() {
+					setTimeout(() => {
+						this.loading = false;
+					}, 1000);
+				}
+			}).$mount("#fclApp")
+		</script>
+	</body>
+
+</html>
