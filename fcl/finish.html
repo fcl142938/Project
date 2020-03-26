@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="finishApp">
+			<div v-loading="loading">
+				<el-table :data="pageinfo.list" border style="width: 100%">
+					<el-table-column type="expand">
+						<template slot-scope="props">
+							<el-table :data="props.row.list" border style="margin: 0 auto;">
+								<el-table-column label="详细记录" align="center">
+									<el-table-column prop="infoname" label="项目名称">
+									</el-table-column>
+									<el-table-column prop="price" label="项目价格">
+									</el-table-column>
+								</el-table-column>
+							</el-table>
+							<el-table :data="props.row.list1" border style="margin: 0 auto;">
+								<el-table-column label="施工过程" align="center">
+									<el-table-column prop="courseid" label="编号">
+									</el-table-column>
+									<el-table-column prop="gname" label="维修组">
+									</el-table-column>
+									<el-table-column prop="coursestarttime" label="开始时间">
+									</el-table-column>
+									<el-table-column prop="courseendtime" label="结束时间">
+									</el-table-column>
+									<el-table-column prop="coursestate" label="完成状态">
+									</el-table-column>
+									<el-table-column prop="coursemark" label="备注">
+									</el-table-column>
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-table-column>
+					<el-table-column prop="carnumber" label="车牌号" width="180" align="center">
+					</el-table-column>
+					<el-table-column prop="countprice" label="维修金额" align="center">
+					</el-table-column>
+					<el-table-column prop="starttime" label="进厂日期" width="180" align="center">
+					</el-table-column>
+					<el-table-column prop="entime" label="完工日期" align="center">
+					</el-table-column>
+					<el-table-column label="操作" align="center">
+						<template slot-scope="temp">
+							<el-button size="mini" type="danger" @click="gotoinspect(temp.row.smid)">检查</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div style="text-align: center;" v-if="pageinfo.list.length!=0">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[5,10,15,20]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageinfo.total">
+					</el-pagination>
+				</div>
+
+			</div>
+		</div>
+	</body>
+	<script>
+		var finishApp = new Vue({
+			data: {
+				loading: true,
+				pageinfo: {
+					"pageSize": 1,
+					"total": 6,
+					list: [{
+						"smid":'123',
+						"carnumber": '123',
+						"starttime": '2018-9-9',
+						"entime": '2019-9-9',
+						"countprice": '30',
+						"list": [{
+							"infoname": 'sfhj',
+							"price": '200',
+						}, {
+							"infoname": 'sfhj',
+							"price": '200',
+						}],
+						"list1": [{
+								"courseid": 1,
+								"gname": "战三组",
+								"coursestarttime": '2019-9-9',
+								"courseendtime": '2019-9-9',
+								"coursestate": '返回',
+								"coursemark": "失误"
+							},
+							{
+								"courseid": 1,
+								"gname": "战三组",
+								"coursestarttime": '2019-9-9',
+								"courseendtime": '2019-9-9',
+								"coursestate": '返回',
+								"coursemark": "失误"
+							}
+						]
+					}, {
+						"smid":'1',
+						"carnumber": '13',
+						"starttime": '2018-9-9',
+						"entime": '2019-9-9',
+						"countprice": '200',
+						"list": [{
+							"infoname": 'sfhj',
+							"price": '200',
+						}, {
+							"infoname": 'sfhj',
+							"price": '200',
+						}]
+					}, {
+						"smid":'3',
+						"carnumber": '13',
+						"starttime": '2018-9-9',
+						"entime": '2019-9-9',
+						"countprice": '200',
+						"list": [{
+							"infoname": 'sfhj',
+							"price": '200',
+						}, {
+							"infoname": 'sfhj',
+							"price": '200',
+						}],
+						"list1": [{
+								"courseid": 1,
+								"gname": "战三组",
+								"coursestarttime": '2019-9-9',
+								"courseendtime": '2019-9-9',
+								"coursestate": '返回',
+								"coursemark": "失误"
+							},
+							{
+								"courseid": 1,
+								"gname": "战三组",
+								"coursestarttime": '2019-9-9',
+								"courseendtime": '2019-9-9',
+								"coursestate": '返回',
+								"coursemark": "失误"
+							}
+						]
+					}]
+				}
+			},
+			mounted() {
+				setTimeout(() => {
+					this.loading = false;
+				}, 1000);
+			},methods:{
+				gotoinspect(id){
+					window.sessionStorage.setItem("smid",id);
+					showWindowDialog('fcl/inspect.html','检查');
+				}
+			}
+		}).$mount("#finishApp");
+	</script>
+
+</html>

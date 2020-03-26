@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="powerupApp">
+			<el-container>
+				<el-aside width="200px" style="border: 1px gainsboro solid;border-radius: 5px;padding:10px 10px;">
+					<h5>公司职位</h5>
+					<el-tree :data="positions" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+				</el-aside>
+				<el-main style="border: 1px gainsboro solid;border-radius: 5px;padding:10px 10px">
+					<el-checkbox-group v-model="checkList">
+						<div style="width: 310px;margin: 10px 3px;border-radius: 5px;float: left;border: 1px gainsboro solid;" v-for="(temp,i) in pageData">
+							<h3 class="text-center">{{temp.title}}</h3>
+							<div v-for="temp1 in temp.list" style="border: 1px gainsboro solid;padding: 5px;margin: 5px;">
+								<el-checkbox :label="temp1.title" :key="temp1.title" @change="handleCheckAllChange(temp1.title)">{{temp1.title}}</el-checkbox>
+								<div style="margin: 15px 0;"></div>
+
+								<el-checkbox v-for="temp2 in temp1.list" :label="temp2.title" :key="temp2.title" :name="temp1.title"></el-checkbox>
+
+							</div>
+						</div>
+					</el-checkbox-group>
+				</el-main>
+			</el-container>
+		</div>
+	</body>
+	<script>
+		var powerupApp = new Vue({
+			data: {
+				checkList: ['选中且禁用', '复选框 A'],
+				positions: [{
+					positionname: '销售部',
+					children: [{
+						"positionname": '销售经理'
+					}, {
+						"positionname": '副经理'
+					}]
+				}, {
+					positionname: '开发部',
+					children: [{
+						"positionname": '开发经理'
+					}, {
+						"positionname": '副经理'
+					}]
+				}],
+				defaultProps: {
+					children: 'children',
+					label: 'positionname'
+				},
+				pageData: [{
+					"id": 'servicing',
+					"title": "维修",
+					"list": [{
+						"title": "维修救援",
+						"list": [{
+							"title": "维修接车",
+							"src": "fcl/servicing_meetcar.html"
+						}, {
+							"title": "竣工检验",
+							"src": "fcl/finish.html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
+						}]
+					}, {
+						"title": "三包索赔",
+						"list": [{
+							"title": "维修车",
+							"src": ".html"
+						}, {
+							"title": "工检验",
+							"src": ".html"
+						}, {
+							"title": "出放行",
+							"src": ".html"
+						}, {
+							"title": "工登记",
+							"src": ".html"
+						}]
+					}]
+				}, {
+					"id": 'shop',
+					"title": "商品",
+					"list": [{
+						"title": "商品入库",
+						"list": [{
+							"title": "维接车",
+							"src": ".html"
+						}, {
+							"title": "竣工验",
+							"src": ".html"
+						}, {
+							"title": "厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工记",
+							"src": ".html"
+						}]
+					}, {
+						"title": "技工备料",
+						"list": [{
+							"title": "维车",
+							"src": ".html"
+						}, {
+							"title": "竣验",
+							"src": ".html"
+						}, {
+							"title": "出行",
+							"src": ".html"
+						}, {
+							"title": "施记",
+							"src": ".html"
+						}]
+					}]
+				}, {
+					"id": 'systematic',
+					"title": "系统",
+					"list": [{
+						"title": "初始数据",
+						"list": [{
+							"title": "修车",
+							"src": ".html"
+						}, {
+							"title": "竣检",
+							"src": ".html"
+						}, {
+							"title": "厂放行",
+							"src": ".html"
+						}, {
+							"title": "施记",
+							"src": ".html"
+						}]
+					}, {
+						"title": "权限控制",
+						"list": [{
+							"title": "权限附加",
+							"src": "powerup.html"
+						}, {
+							"title": "权限管理",
+							"src": "powermanage.html"
+						}, {
+							"title": "出放行",
+							"src": ".html"
+						}, {
+							"title": "施工记",
+							"src": ".html"
+						}]
+					}]
+				}]
+			},
+			methods: {
+				handleCheckAllChange(name) {
+					let _this=this;
+					$.each($("[name=" + name + "]"), function(i,obj) {
+						_this.checkList.push(obj.value)
+					});
+
+				}
+			}
+		}).$mount("#powerupApp")
+	</script>
+
+</html>
