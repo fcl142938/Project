@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="leaveinfoapp">
+			 <el-row :span="24">
+	       	 <el-col :span="12">
+	       	 	<h3>离职登记</h3>
+	       	 </el-col>
+	       	     <el-col :span="12">
+	       		<el-form :span="12" id="btn">
+						<el-form-item  >
+								<el-button icon="el-icon-success" size="mini" type="success" @click="">保存</el-button>
+						</el-form-item>
+					</el-form>
+					 </el-col>
+	       </el-row>
+	       <el-form :model="user"  label-width="100px">
+				<el-form-item label="员工姓名" prop="username">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input v-model="user.username" placeholder="" style="width: 220px;"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="离职日期" prop="userdate">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input  type="date" v-model="user.userdate" placeholder="" style="width: 220px;"></el-input>
+					</el-col>
+				</el-form-item>
+				
+					<el-form-item label="离职原因" prop="useryy">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input type="textarea" v-model="user.useryy" placeholder="" style="width: 220px;"></el-input>
+					</el-col>
+				</el-form-item>
+			
+			
+		</div>
+	</body>
+	<script>
+		var leaveinfoapp=new Vue({
+			 el:"#leaveinfoapp",
+			 data:{
+			 	user:{
+			 		username:"",
+			 		userdate:"",
+			 		useryy:""
+			 	}
+			 	
+			 }
+			
+		})
+		
+	</script>
+</html>
