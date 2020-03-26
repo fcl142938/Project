@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+</html><!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="../css/index.css" />
+		<script type="text/javascript" src="../js/vue.js" ></script>
+		<script type="text/javascript" src="../js/jquery-1.12.4.js" ></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js" ></script>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			
+			i {
+				color: #5ca8ff;
+				font-size: 18px;
+			}
+			
+			.el-row {
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+			
+			.el-col {
+				border-radius: 4px;
+				padding: 5px;
+			}
+			
+			.bg-purple-dark {
+				background: #99a9bf;
+			}
+			
+			.bg-purple {
+				background: #d3dce6;
+			}
+			
+			.bg-purple-light {
+				background: #e5e9f2;
+			}
+			
+			.grid-content {
+				border-radius: 4px;
+				min-height: 36px;
+			}
+			
+			.row-bg {
+				padding: 10px 0;
+				background-color: #f9fafc;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="clzl">
+			<el-row :gutter="20" style="background-color: #f3fffd;">
+				<el-col :span="12">
+					<span style="font-family: '楷体';font-size: xx-large;padding-left: 10px;">客户档案</span>
+				</el-col>
+				<el-col :span="8">
+					<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+				</el-col>
+				<el-col :span="2">
+					<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+				</el-col>
+				<el-col :span="2">
+					<el-button type="warning" plain style="font-size: 18px;">关闭</el-button>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #fefff3;">
+				<el-col :span="10">
+					<el-col :span="8">
+						<span>车牌号码：</span>
+						<el-input style="width: 60%;">
+					</el-col>
+					<el-col :span="8">
+						<span>车架号：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+				</el-col>
+				<el-col :span="8">
+					<el-col :span="5">
+						<i class="el-icon-edit-outline" @click="isShow3=true">新增</i>
+					</el-col>
+					<el-col :span="5">
+						<i class="el-icon-edit" @click="isShow3=true">修改</i>
+					</el-col>
+					<el-col :span="5">
+						<i class="el-icon-delete">删除</i>
+					</el-col>
+					<el-col :span="5">
+						<i class="el-icon-search">查询</i>
+					</el-col>
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-brush">保养</i>
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-upload2">导出</i>
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-setting">字段设置</i>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
+				<template>
+					<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+						<el-table-column type="index" width="50">
+						</el-table-column>
+						<el-table-column property="date" label="日期" width="120">
+						</el-table-column>
+						<el-table-column property="name" label="姓名" width="120">
+						</el-table-column>
+						<el-table-column property="address" label="地址">
+						</el-table-column>
+					</el-table>
+				</template>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
+				<el-tabs type="border-card">
+					<el-tab-pane label="客户信息">
+						<template>
+							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column type="index" width="50">
+								</el-table-column>
+								<el-table-column property="date" label="日期" width="120">
+								</el-table-column>
+								<el-table-column property="name" label="姓名" width="120">
+								</el-table-column>
+								<el-table-column property="address" label="地址">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-tab-pane>
+					<el-tab-pane label="历史维修">
+						<template>
+							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column type="index" width="50">
+								</el-table-column>
+								<el-table-column property="date" label="日期" width="120">
+								</el-table-column>
+								<el-table-column property="name" label="姓名" width="120">
+								</el-table-column>
+								<el-table-column property="address" label="地址">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-tab-pane>
+				</el-tabs>
+			</el-row>
+			<el-dialog title="车辆资料编辑" :visible.sync="isShow3" width="70%" :before-close="handleClose1">
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>车牌号码：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆车牌：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆型号：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>驾驶员：</span>
+						<el-input style="width: 75%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>驾驶员电话：</span>
+						<el-input style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>出生日期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆归属：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>驾证到期：</span>
+						<el-input type="date" style="width: 71%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>车架号：</span>
+						<el-input style="width: 74%;">
+					</el-col>
+					<el-col :span="6">
+						<span>发动机号：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆年款：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>里程：</span>
+						<el-input style="width: 79%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="12">
+						<span>发动机品牌：</span>
+						<el-input style="width: 83%;">
+					</el-col>
+					<el-col :span="6">
+						<span>载重：</span>
+						<el-input style="width: 75%;">
+					</el-col>
+					<el-col :span="6">
+						<span>购买日期：</span>
+						<el-input type="date" style="width: 71%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>上牌日期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车检到期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>燃油类别：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						 <el-checkbox v-model="checked" style="line-height: 40px;">在我投保车</el-checkbox>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>交强险保险公司：</span>
+						<el-input style="width: 56%;">
+					</el-col>
+					<el-col :span="6">
+						<span>交强险到期：</span>
+						<el-input type="date" style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>商业险保险公司：</span>
+						<el-input style="width: 53%;">
+					</el-col>
+					<el-col :span="6">
+						<span>商业险到期：</span>
+						<el-input type="date" style="width: 65%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>下次保养里程：</span>
+						<el-input style="width: 61%;">
+					</el-col>
+					<el-col :span="6">
+						<span>下次保养日期：</span>
+						<el-input type="date" style="width: 61%;">
+					</el-col>
+					<el-col :span="6">
+						<span>客户编码：</span>
+						<el-input :disabled="true" style="width: 66%;">
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+	    			<el-button @click="isShow3 = false">取 消</el-button>
+	    			<el-button type="primary" @click="isShow3 = false">确 定</el-button>
+  				</span>
+			</el-dialog>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/index.js" ></script>
+	<script>
+		var indexApp = new Vue({
+			data: {
+				tableData: [{
+					date: '2016-05-02',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1518 弄'
+				}, {
+					date: '2016-05-04',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1517 弄'
+				}, {
+					date: '2016-05-01',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1519 弄'
+				}, {
+					date: '2016-05-03',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1516 弄'
+				}],
+				currentRow: null,
+				isShow3: false,
+				checked: false
+			},
+			methods: {
+				handleCurrentChange(val) {
+					alert(JSON.stringify(val))
+					this.currentRow = val;
+				},
+				handleClose1(done) {
+					//确认框
+					this.$confirm('是否关闭').then(() => {
+						//正确
+						done(); //关闭
+					}).catch(() => {
+						//错误
+						console.debug('取消操作');
+					});
+				},
+			},
+			mounted() {
+				
+			}
+		}).$mount('#clzl');
+	</script>
+</html>
+
