@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>组织结构定义</title>
+		<link rel="stylesheet" href="../css/index.css" />
+		<script type="text/javascript" src="../js/vue.js" ></script>
+		<script type="text/javascript" src="../js/jquery-1.12.4.js" ></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js" ></script>
+		
+		<style>
+			/*.el-table .warning-row {
+				background: #EBF6FA;
+			}
+			
+			.el-table .success-row {
+				background: #EBF6FA;
+			}*/
+			#el{
+				margin: 0px;
+				margin-left: 850px;
+			}
+			#btn{
+				margin-top: 3px;
+			}
+			#el2{
+				background-color: #C0C4CC;
+				height: 50px;
+			}
+			#ef2{
+				margin-top: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="personApp" v-loading="loading">
+			<el-row>
+				<div>
+					<h1 class="lf" style="font-size: 30px; font-family: '微软雅黑';color: black;">组织结构定义</h1>
+				</div>
+				<el-row :span="24" id="el">
+						<el-col :span="12">	
+						<el-input v-model="format.fname" placeholder="请搜索"></el-input>
+						</el-col>
+					<el-form :span="12" id="btn">
+						<el-form-item  >
+								<el-button icon="el-icon-search" size="mini" type="warning" @click="">搜索</el-button>
+						</el-form-item>
+					</el-form>
+				</el-row>
+				<el-row id="el2">
+					<el-form  id="ef2">
+						<el-row>
+						<el-col>
+							<el-button  icon="el-icon-edit" type="primary" round @click="showDialog">增加员工</el-button>
+							<el-button icon="el-icon-success" type="primary" round @click="">修改</el-button>
+							<el-button icon="el-icon-delete-solid" type="danger" round @click="">删除</el-button>
+							<el-button icon="el-icon-user-solid" type="success" round @click="">查询</el-button>
+							<el-button icon="el-icon-delete" type="danger" round @click="">置空密码</el-button>
+							<el-button icon="el-icon-upload2" type="warning" round @click="">导出</el-button>
+							<el-button icon="el-icon-download" type="warning" round @click="">导入</el-button>
+							<el-button icon="el-icon-user" type="success" round @click="">员工角色</el-button>
+							<el-button icon="el-icon-setting" type="success" round @click="">字段设置</el-button>
+						</el-col>
+					  </el-row>
+                      </el-form >
+				</el-row>
+				<el-row :span="24">
+					<el-col :span="4">
+						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+						
+					</el-col>
+					<el-col :span="20">
+						<el-table  :data="pageInfo" border :row-class-name="tableRowClassName" style="width:100%">
+						<el-table-column prop="org" label="机构"  width="100">
+						</el-table-column>
+						<el-table-column prop="pid" label="部门代号"  width="100">
+						</el-table-column>
+						<el-table-column prop="department" label="部门名称"  width="100">
+						</el-table-column>
+						<el-table-column prop="num" label="工号"  width="100">
+						</el-table-column>
+						<el-table-column prop="pname" label="姓名"  width="100">
+						</el-table-column>
+						<el-table-column prop="psex" label="性别"  width="100">
+						</el-table-column>
+						<el-table-column prop="pgw" label="岗位名称"  width="100">
+						</el-table-column>
+						<el-table-column prop="pzk" label="身体状况"  width="100">
+						</el-table-column>
+						<el-table-column prop="psg" label="身高"  width="100">
+						</el-table-column>
+						<el-table-column prop="pjg" label="籍贯"  width="100">
+						</el-table-column>
+					</el-table>
+					</el-col>
+				</el-row>
+				<!--模态框-->
+			<el-dialog :destroy-on-close="true" @opened="handlOpen" title="员工开片" :visible.sync="isShow" :before-close="handleClose" center>
+				<div id="modalcnt"></div>
+			</el-dialog>
+					
+				
+					
+					
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/index.js" ></script>
+	<script>
+		var personApp = new Vue({
+			el: '#personApp',
+			data: {
+				pageInfo: [
+				{
+					org:"成高",
+					pid:"001",
+                    department:"财务部",
+                    num:"as123",
+					pname:"asd",
+					psex:"男",
+					pgw:"123",
+					pzk:"好",
+					psg:"175",
+					pjg:"湖南"
+				},
+					{
+					org:"成高",
+					pid:"001",
+                    department:"财务部",
+                    num:"as123",
+					pname:"asd",
+					psex:"男",
+					pgw:"123",
+					pzk:"好",
+					psg:"175",
+					pjg:"湖南"
+				},
+				
+				],
+				format: {
+				   fcoding:"",
+				   fname:""
+				},
+				
+		 datas: [{
+          label: '北京德召文卡车系统',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }],
+         defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+				loading: true,
+				isShow:false
+			},
+			methods: {
+				 handleNodeClick(data) {
+              console.log(data);
+     },
+     handlOpen(){
+					$("#modalcnt").load('add.html');
+				},
+				handleClose(done){
+					this.$confirm('是否关闭').then(() => {
+						done(); 
+					}).catch(() => {});
+				},
+				showDialog() {
+					this.isShow=true;
+				},
+			
+			tableRowClassName({
+					row,
+					rowIndex
+				}) {
+					if(rowIndex === 1) {
+						return 'warning-row';
+					} else if(rowIndex === 3) {
+						return 'success-row';
+					}
+					return '';
+				}
+			
+		
+				
+			},
+					
+			mounted() {
+				setTimeout(() => {
+					this.loading = false;
+				}, 1000);
+			}
+		});
+	</script>
+
+</html>
