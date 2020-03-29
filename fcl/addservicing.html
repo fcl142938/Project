@@ -45,7 +45,7 @@
 				</el-table-column>
 				<el-table-column align="center">
 					<template slot="header" slot-scope="scope">
-						<el-button type="success" @click="this.showWindowDialog('fcl/addservicinginfo.html','添加')">添加维修项</el-button>
+						<el-button type="success" @click="gotoPages">添加维修项</el-button>
 					</template>
 					<template slot-scope="temp">
 						<el-button v-if="!temp.row.bool" size="mini" type="danger" @click="update(temp.row.wareid)">删除</el-button>
@@ -93,6 +93,10 @@
 					value2: []
 				},
 				methods: {
+					gotoPages(){
+						alert("");
+						showWindowDialog('fcl/addservicinginfo.html','添加');
+					},
 					goBack() {
 						$("#cnt").load("fcl/servicing_meetcar.html");
 					},

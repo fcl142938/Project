@@ -168,7 +168,9 @@
 					} else {
 						//添加
 						$.each($("[name=" + name + "]"), function(i, obj) {
-							_this.checkList.push(obj.value)
+							if(_this.checkList.indexOf(obj.value)==-1){
+								_this.checkList.push(obj.value)
+							}
 						});
 					}
 				}

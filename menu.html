@@ -35,7 +35,7 @@
 					<span style="float: left;margin: 5px 20px;">username</span>
 					<ul class="nav nav-tabs" role="tablist" style="display: inline-block;margin-left:200px;margin-top: 18px;">
 						<li role="presentation">
-							<a role="tab" data-toggle="tab">首页</a>
+							<a role="tab" data-toggle="tab" @click="">首页</a>
 						</li>
 						<li role="presentation" v-for="(temp,i) in menuData">
 							<a v-bind:href="['#'+temp.src]" :aria-controls="temp.src" role="tab" data-toggle="tab">{{temp.title}}</a>
@@ -82,7 +82,7 @@
 	<script type="text/javascript" src="js/dialogs.js"></script>
 	<script type="text/javascript" src="js/dialog.js"></script>
 	<!--外部导入-->
-	<script src="vendors/base/vendor.bundle.base.js"></script>
+	<!--<script src="vendors/base/vendor.bundle.base.js"></script>-->
 
 	<script src="vendors/chart.js/Chart.min.js"></script>
 	<script src="vendors/datatables.net/jquery.dataTables.js"></script>
@@ -279,6 +279,76 @@
 						}, {
 							"title": "通讯名录",
 							"src": "px/tel.html"
+						}]
+					}, {
+						"title": "权限控制",
+						"list": [{
+							"title": "权限附加",
+							"src": "fcl/powerup.html"
+						}, {
+							"title": "权限管理",
+							"src": "fcl/powermanage.html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
+						}]
+					}]
+				}, {
+					"id": 'information',
+					"list": [{
+						"title": "主数据",
+						"list": [{
+							"title": "发动机品牌",
+							"src": "mjw/engine.html"
+						}, {
+							"title": "维修项目",
+							"src": "mjw/maintain.html"
+						}, {
+							"title": "商品资料",
+							"src": "mjw/supplier.html"
+						}, {
+							"title": "供货单位",
+							"src": "mjw/goods.html"
+						},{
+							"title": "车型档案",
+							"src": "lyf/cxda.html"
+						}]
+					}, {
+						"title": "权限控制",
+						"list": [{
+							"title": "权限附加",
+							"src": "fcl/powerup.html"
+						}, {
+							"title": "权限管理",
+							"src": "fcl/powermanage.html"
+						}, {
+							"title": "出厂放行",
+							"src": ".html"
+						}, {
+							"title": "施工登记",
+							"src": ".html"
+						}]
+					}]
+				},
+				 {
+					"id": 'custom',
+					"list": [{
+						"title": "客户档案",
+						"list": [{
+							"title": "客户资料",
+							"src": "lyf/khzl.html"
+						}, {
+							"title": "车辆资料",
+							"src": "lyf/clzl.html"
+						}, {
+							"title": "商品资料",
+							"src": "mjw/supplier.html"
+						}, {
+							"title": "供货单位",
+							"src": "mjw/goods.html"
 						}]
 					}, {
 						"title": "权限控制",
