@@ -49,8 +49,6 @@
 					<el-form  id="btn">
 						<el-form-item  >
 								<el-button id="q" icon="el-icon-search" size="mini" type="warning" @click="query">搜索</el-button>
-		
-		
 						</el-form-item>
 					</el-form>
 					</el-col>
@@ -92,8 +90,8 @@
 						</el-table-column>
 							<el-table-column label="操作">
 							<template slot-scope="temp">
-								 <el-button type="primary" icon="el-icon-edit" circle></el-button>
-								  <el-button type="danger" icon="el-icon-delete" circle></el-button>
+								 <el-button type="primary" icon="el-icon-edit" circle @click="showDialogs(temp.row.staffid)"></el-button>
+								  <el-button type="danger" icon="el-icon-delete" circle @click="deletebyid(temp.row.staffid)"></el-button>
 							   
 							</template>
 						</el-table-column>
@@ -105,6 +103,9 @@
 				<!--模态框-->
 			<el-dialog :destroy-on-close="true" @opened="handlOpen" title="新增员工" :visible.sync="isShow" :before-close="handleClose" center>
 				<div id="modalcnt"></div>
+			</el-dialog>
+			<el-dialog :destroy-on-close="true" @opened="handlOpen1" title="员工信息修改" :visible.sync="isShows" :before-close="handleClose" center>
+				<div id="modalcnts"></div>
 			</el-dialog>
 					
 				
@@ -136,7 +137,8 @@
           label: 'label'
         },
 				loading: true,
-				isShow:false
+				isShow:false,
+				isShows:false
 			},
 			methods: {
 				goToPage(staffname) {
@@ -151,12 +153,45 @@
 						{this.format.staffname=null};
 					   this.goToPage(this.format.staffname);
 				},
+				deletebyid(staffid){
+						let _this = this;
+					this.$confirm('是否移除员工信息?', '系统提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						$.ajax(`http://127.0.0.1:8080/px/api/user/sta/${staffid}`, 
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "100") {
+									_this.$message(data.msg);
+								} else {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								}
+							}
+						});
+					}).catch(() => {
+						this.$message({	
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+					
+				},
 				
 				 handleNodeClick(data) {
                   console.log(data);
                 },
                 handlOpen(){
 					$("#modalcnt").load('px/add.html');
+				},
+				 handlOpen1(){
+					$("#modalcnts").load('px/updatestaff.html');
 				},
 				handleClose(done){
 					this.$confirm('是否关闭').then(() => {
@@ -165,6 +200,10 @@
 				},
 				showDialog() {
 					this.isShow=true;
+				},
+				showDialogs(id) {
+					this.isShows=true;
+					sessionStorage.setItem('id',id);
 				},
 			
 			tableRowClassName({

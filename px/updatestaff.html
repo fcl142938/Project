@@ -5,10 +5,10 @@
 		<title></title>
 	</head>
 	<body>
-		<div id="addapp" v-loading="loading">
+		<div id="updateapp" v-loading="loading">
 	       <el-row :span="24">
 	       	 <el-col :span="12">
-	       	 	<h3>新增员工</h3>
+	       	 	<h3>员工信息修改</h3>
 	       	 </el-col>
 	       	     <el-col :span="12">
 	       		<el-form :span="12" id="btn">
@@ -19,7 +19,7 @@
 					 </el-col>
 	       </el-row>
 	       
-	       <el-form :model="user"  ref="shoppForm":rules="shoppRules" label-width="100px">
+	       <el-form :model="user"  ref="shoppForm" label-width="100px">
 	          	<el-row :span="24" >
 				  <el-col :span="12">
 				<el-form-item label="员工姓名" prop="staffname">
@@ -124,8 +124,8 @@
 		</div>
 	</body>
 	<script>
-		var addapp=new Vue({
-			el:"#addapp",
+		var updateapp=new Vue({
+			el:"#updateapp",
 			data:{
 				/*number:window.sessionStorage.getItem("number"),*/
 				user:{
@@ -143,55 +143,6 @@
 				    },
 				department:{},
 				loading: true,
-				shoppRules:{
-				staffname:[{
-					required:true,
-					message:"员工姓名必填",
-					trigger:"blur"
-				}],
-				positionid:[{
-					required:true,
-					message:"员工部门必填",
-					trigger:"change"
-				}],
-				staffsex:[{
-					required:true,
-					message:"员工性别",
-					trigger:"change"
-				}],
-				staffaccount:[{
-					required:true,
-					message:"员工账号",
-					trigger:"blur"
-				}],
-				staffpwd:[{
-					required:true,
-					message:"员工密码必填",
-					trigger:"blur"
-				}],
-					saddress:[{
-					required:true,
-					message:"员工地址",
-					trigger:"blur"
-				}],
-					sstarttime:[{
-					required:true,
-					message:"入职时间必填",
-					trigger:"change"
-				}],
-					price:[{
-					required:true,
-					message:"月薪必填",
-					trigger:"blur"
-				}],
-					idcd:[{
-					required:true,
-					message:"身份证必填",
-					trigger:"blur"
-				}],
-			},
-				
-				
 			},
 			methods:{
 				
@@ -209,8 +160,8 @@
 							});
 							//延迟2秒，模拟网络延迟
 							setTimeout(() => {
-								$.ajax('http://127.0.0.1:8080/px/api/user/addsta', {
-									type: 'post',
+								$.ajax('http://127.0.0.1:8080/px/api/user/sta', {
+									type: 'put',
 									data: JSON.stringify(this.user),
 									dataType: 'json',
 									contentType: 'application/json',
@@ -219,7 +170,7 @@
 											loading.close(); //关闭加载块【非常重要】
 											_this.$message({
 												type: 'success',
-												message: '新增成功'
+												message: '修改成功'
 											});
 											
 											personApp.isShow=false;//非常重要
@@ -235,21 +186,23 @@
 					});
 				},
 				
-				showView(url) {
-					window.location.href = url;
-				},
-				
+				querybyid(staffid){
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/px/api/user/sta/${staffid}`, function(date) {
+						_this.user = date;
+					});
+					
+				}
 				
 			},
-			
 			mounted(){
 					setTimeout(() => {
 					this.loading = false;
 				}, 1000);
 				let _this = this;
-				$.getJSON(`http://127.0.0.1:8080/px/api/user/dep`, function(date) {
-						_this.department = date;	
-					});
+				_this.staffid = sessionStorage.getItem('id');
+				_this.querybyid(_this.staffid);
+				
 				
 			},
 			
