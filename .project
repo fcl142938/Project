@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Project</name>
+	<name>asdasd</name>
 	<comment>Create By HBuilder</comment>
 	<projects>
 	</projects>
@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1584676036096</id>
+			<id>1585198718821</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -34,11 +34,7 @@
 			</matcher>
 		</filter>
 		<filter>
-<<<<<<< HEAD
-			<id>1584951422052</id>
-=======
-			<id>1585020193141</id>
->>>>>>> 6c25251dc16523708ab43f19515bf33fc934ee25
+			<id>1585198769352</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
@@ -47,11 +43,7 @@
 			</matcher>
 		</filter>
 		<filter>
-<<<<<<< HEAD
-			<id>1584951422052</id>
-=======
-			<id>1585020193146</id>
->>>>>>> 6c25251dc16523708ab43f19515bf33fc934ee25
+			<id>1585198769362</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
