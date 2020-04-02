@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="adddep">
+		<el-form :model="dep"  ref="shoppForm" label-width="100px">
+			<el-form-item  >
+					请输入部门名称:<el-input v-model="dep.departmentname" placeholder="" style="width: 130px;"></el-input>
+					<el-button icon="el-icon-success" size="mini" type="success" @click="adddeps">保存</el-button>
+			</el-form-item  >
+		</el-form>
+		</div>
+	</body>
+	<script>
+		var adddep=new Vue({
+			el:"#adddep",
+			data:{
+				dep:{
+					departmentname:""
+				}
+				
+			},
+			methods:{
+				adddeps(){
+					let _this = this;
+					this.$refs['shoppForm'].validate(valid => {
+						if(valid) {
+							//验证通过
+							//自定义加载块
+							const loading = this.$loading({
+								lock: true,
+								text: '努力更新中....',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.5)'
+							});
+							//延迟2秒，模拟网络延迟
+							setTimeout(() => {
+								$.ajax('http://127.0.0.1:8080/px/api/user/adddepment', {
+									type: 'post',
+									data: JSON.stringify(this.dep),
+									dataType: 'json',
+									contentType: 'application/json',
+									success(msg) {
+										if(msg.code == "200") {
+											loading.close(); //关闭加载块【非常重要】
+											_this.$message({
+												type: 'success',
+												message: '新增成功'
+											});
+											
+											personApp.isShows1=false;//非常重要
+										/*	$("#tab-"+_this.number).click();*/
+										}
+									}
+								});
+							}, 2000);
+						} 
+					});
+					
+				}
+				
+			}
+			
+		})
+		
+	</script>
+</html>
