@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="css/index.css"/>
+		<!--		<link rel="stylesheet" href="css/index.css"/>-->
 		<style>
 			.mobileBackColor:after {
 				clear: both;
@@ -14,26 +14,27 @@
 				display: block;
 				visibility: hidden;
 			}
-			
 			/*.el-header {
 				background-color: #B3C0D1;
 				color: #333;
 				line-height: 60px;
 			}
 			*/
-		/*	.el-aside {
+			/*	.el-aside {
 				color: #333;
 			}*/
 		</style>
 
-		<script src="js/jquery-1.12.4.js"></script>
+		<!--<script src="js/jquery-1.12.4.js"></script>
 		<script src="js/jq_ajax_config.js"></script>
 		<script src="js/vue.js"></script>
-		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>-->
 	</head>
 
 	<body>
-		<div id="maintain"> <!--style="background-color: whitesmoke;"-->
+
+		<div id="maintain">
+			<!--style="background-color: whitesmoke;"-->
 			<div class="mobileBackColor" style="">
 				<h1 style="float: left;,color: #82848A;">维修项目</h1>
 				<div style="width: 400px; float: right; margin-top: 25px;">
@@ -44,73 +45,76 @@
 
 			</div>
 			<el-container style="height: 500px; border: 1px solid #eee">
-				<el-aside width="200px" ><!--style="background-color: rgb(238, 241, 246)"-->
-					<el-menu>
-						<el-submenu index="1">
-							<template slot="title"><i class="el-icon-message"></i>导航一</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="1-1">选项1</el-menu-item>
-								<el-menu-item index="1-2">选项2</el-menu-item>
-							</el-menu-item-group>
-							<el-menu-item-group title="分组2">
-								<el-menu-item index="1-3">选项3</el-menu-item>
-							</el-menu-item-group>
-							<el-submenu index="1-4">
-								<template slot="title">选项4</template>
-								<el-menu-item index="1-4-1">选项4-1</el-menu-item>
+				<el-aside width="200px">
+					<!--style="background-color: rgb(238, 241, 246)"-->
+
+					<template v-for="(val,i) in this.menulist">
+
+						<el-menu>
+
+							<el-submenu index="i">
+								<template slot="title"><i class="el-icon-message"></i>{{val.typename}}</template>
+								<el-menu-item-group index="i">
+									<template v-for="(val2,i) in val.typeList">
+										<el-menu-item @click="show(val2.typeid)">{{val2.typename}}</el-menu-item>
+
+									</template>
+
+								</el-menu-item-group>
+
 							</el-submenu>
-						</el-submenu>
-						<el-submenu index="2">
-							<template slot="title"><i class="el-icon-menu"></i>导航二</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="2-1">选项1</el-menu-item>
-								<el-menu-item index="2-2">选项2</el-menu-item>
-							</el-menu-item-group>
-							<el-menu-item-group title="分组2">
-								<el-menu-item index="2-3">选项3</el-menu-item>
-							</el-menu-item-group>
-							<el-submenu index="2-4">
-								<template slot="title">选项4</template>
-								<el-menu-item index="2-4-1">选项4-1</el-menu-item>
-							</el-submenu>
-						</el-submenu>
-						<el-submenu index="3">
-							<template slot="title"><i class="el-icon-setting"></i>导航三</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="3-1">选项1</el-menu-item>
-								<el-menu-item index="3-2">选项2</el-menu-item>
-							</el-menu-item-group>
-							<el-menu-item-group title="分组2">
-								<el-menu-item index="3-3">选项3</el-menu-item>
-							</el-menu-item-group>
-							<el-submenu index="3-4">
-								<template slot="title">选项4</template>
-								<el-menu-item index="3-4-1">选项4-1</el-menu-item>
-							</el-submenu>
-						</el-submenu>
-					</el-menu>
+
+						</el-menu>
+
+					</template>
 				</el-aside>
 
 				<el-container>
 					<el-header style="text-align: right; font-size: 12px">
-						<span @click="dialogFormVisible = true" style="font-size: 20px; margin-right: 10px;"><i class="el-icon-edit-outline"></i>增加</span>
-						<span style="font-size: 20px;  margin-right: 10px;"><i class="el-icon-delete"></i>删除</span>
-						<span style="font-size: 20px; margin-right: 10px;"><i class="el-icon-document-copy"></i>保存</span>
+						<span @click="dialogFormVisible = true;
+						shouButt:true;
+						shouButt2:false;" style="font-size: 20px; margin-right: 10px;"><i class="el-icon-edit-outline"></i>增加</span>
+						<span @click="deleteById()" style="font-size: 20px;  margin-right: 10px;"><i class="el-icon-delete"></i>删除</span>
+						<span @click="queryOne()" style="font-size: 20px; margin-right: 10px;"><i class="el-icon-document-copy"></i>修改</span>
 						<span style="font-size: 20px; margin-right: 10px;"><i class="el-icon-folder-opened"></i>导出</span>
 					</el-header>
 
 					<el-main>
 						<template>
-							<el-table ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+							<el-table ref="singleTable" :data="pageinfo.list" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 
-								<el-table-column property="date" label="日期" width="120">
+								<el-table-column property="infoid" label="编号" width="120">
 								</el-table-column>
-								<el-table-column property="name" label="姓名" width="120">
+								<el-table-column property="infoname" label="项目名称" width="120">
 								</el-table-column>
-								<el-table-column property="address" label="地址">
+								<el-table-column property="price" label="标准价">
+								</el-table-column>
+								<el-table-column label="会员价">
+									<template slot-scope="temp">
+										{{temp.row.price * 0.9}}
+									</template>
+								</el-table-column>
+								<el-table-column label="vip价">
+									<template slot-scope="temp">
+										{{temp.row.price * 0.8}}
+									</template>
+								</el-table-column>
+								<el-table-column label="协商价">
+									<template slot-scope="temp">
+										{{temp.row.price * 0.5}}
+									</template>
+								</el-table-column>
+								<el-table-column label="索赔价">
+									<template slot-scope="temp">
+										{{temp.row.price * 0.1}}
+									</template>
+								</el-table-column>
+								<el-table-column label="保险价">
+									<template slot-scope="temp">
+										{{temp.row.price * 0.4}}
+									</template>
+								</el-table-column>
+								<el-table-column property="infomark" label="备注">
 								</el-table-column>
 							</el-table>
 							<div style="margin-top: 20px">
@@ -122,19 +126,19 @@
 			</el-container>
 
 			<el-dialog title="服务项目自定义" :visible.sync="dialogFormVisible" center>
-				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+				<el-form :model="Typeinfo" :rules="rules" ref="Typeinfo" label-width="100px" class="demo-ruleForm">
 					<el-row>
 						<el-col :span="12">
 							<el-form-item label="项目编码" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="Typeinfo.infoid"></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="项目名称" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="Typeinfo.infoname"></el-input>
 
 							</el-form-item>
 						</el-col>
@@ -152,16 +156,17 @@
 
 						<el-col :span="12">
 							<el-form-item label="项目类别" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
+								<el-select v-model="Typeinfo.typeid"  placeholder="请选择活动区域">
+									<el-option label="大众" value="1"></el-option>
+									<el-option label="奔驰" value="2"></el-option>
+									<el-option label="宝马" value="3"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-form-item label="备注" prop="name">
 
-						<el-input v-model="ruleForm.name"></el-input>
+						<el-input v-model="Typeinfo.infomark"></el-input>
 
 					</el-form-item>
 
@@ -169,14 +174,14 @@
 						<el-col :span="12">
 							<el-form-item label="标准价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="Typeinfo.price"></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="会员价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input></el-input>
 
 							</el-form-item>
 						</el-col>
@@ -185,14 +190,14 @@
 						<el-col :span="12">
 							<el-form-item label="vip价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="协议价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input></el-input>
 
 							</el-form-item>
 						</el-col>
@@ -201,14 +206,14 @@
 						<el-col :span="12">
 							<el-form-item label="索赔价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="保险价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input></el-input>
 
 							</el-form-item>
 						</el-col>
@@ -216,8 +221,10 @@
 
 				</el-form>
 				<div slot="footer" class="dialog-footer">
+					
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
-					<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+					<el-button v-show='shouButt2' type="primary" @click="add()">确 定</el-button>
+					<el-button v-show='shouButt' type="primary" @click="updet()">保 存</el-button>
 				</div>
 			</el-dialog>
 
@@ -226,23 +233,22 @@
 		<script>
 			var maintain = new Vue({
 				data: {
-					tableData: [{
-						date: '2016-05-02',
-						name: '王小虎',
-						address: '上海市普陀区金沙江路 1518 弄'
-					}, {
-						date: '2016-05-04',
-						name: '王小虎',
-						address: '上海市普陀区金沙江路 1517 弄'
-					}, {
-						date: '2016-05-01',
-						name: '王小虎',
-						address: '上海市普陀区金沙江路 1519 弄'
-					}, {
-						date: '2016-05-03',
-						name: '王小虎',
-						address: '上海市普陀区金沙江路 1516 弄'
-					}],
+					shouButt:false,
+					shouButt2:true,
+					Typeinfo: {
+						infoid: '',
+						infomark: '',
+						infoname: '',
+						price: '',
+						typeid: ''
+
+					},
+					typeid: '',
+					menulist: {},
+
+					pageinfo: {},
+
+					currentRow: {},
 					dialogFormVisible: false,
 					ruleForm: {
 						name: '',
@@ -255,61 +261,119 @@
 						desc: ''
 					},
 					rules: {
-						name: [{
-								required: true,
-								message: '请输入活动名称',
-								trigger: 'blur'
-							},
-							{
-								min: 3,
-								max: 5,
-								message: '长度在 3 到 5 个字符',
-								trigger: 'blur'
-							}
-						],
-						region: [{
-							required: true,
-							message: '请选择活动区域',
-							trigger: 'change'
-						}],
-						date1: [{
-							type: 'date',
-							required: true,
-							message: '请选择日期',
-							trigger: 'change'
-						}],
-						date2: [{
-							type: 'date',
-							required: true,
-							message: '请选择时间',
-							trigger: 'change'
-						}],
-						type: [{
-							type: 'array',
-							required: true,
-							message: '请至少选择一个活动性质',
-							trigger: 'change'
-						}],
-						resource: [{
-							required: true,
-							message: '请选择活动资源',
-							trigger: 'change'
-						}],
-						desc: [{
-							required: true,
-							message: '请填写活动形式',
-							trigger: 'blur'
-						}]
+
 					}
 				},
 				methods: {
+					newinfo(){
+						
+					},
+					updet(){
+						console.log(this.Typeinfo);
+						
+						let _this = this;
+						alert(JSON.stringify(_this.Typeinfo));
+						$.ajax(`http://127.0.0.1:8080/api/weixius/pingpai`, {
+							type: 'put',
+							dataType: 'json',
+							data: JSON.stringify(_this.Typeinfo),
+							contentType: 'application/json',
+							success(msg) {
+								if(msg > 0) {
+									alert('修改成功！');
+									_this.show(_this.typeid);
+									_this.dialogFormVisible = false;
+								} else {
+									alert('修改失败！');
+								}
+							}
+						});
+						
+					}
+					,
+					queryOne() {
+						let _this = this;
+						this.shouButt=true;
+						this.shouButt2=false;
+						$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpai/${_this.currentRow.infoid}`, function(val) {
+
+							_this.Typeinfo = val;
+
+							console.log(_this.Typeinfo);
+							_this.dialogFormVisible = true
+						});
+
+					},
+					add() {
+						this.shouButt=false;
+						this.shouButt2=true;
+						console.log(this.Typeinfo);
+
+						let _this = this;
+						alert(JSON.stringify(_this.Typeinfo));
+						$.ajax(`http://127.0.0.1:8080/api/weixius/pingpai`, {
+							type: 'post',
+							dataType: 'json',
+							data: JSON.stringify(_this.Typeinfo),
+							contentType: 'application/json',
+							success(msg) {
+								if(msg > 0) {
+									alert('新增成功！');
+									_this.show(_this.typeid);
+									_this.dialogFormVisible = false;
+									
+								} else {
+									alert('新增失败！');
+								}
+							}
+						});
+					},
+
+					deleteById() {
+						let _this = this;
+						$.ajax(`http://127.0.0.1:8080/api/weixius/deleteById/${_this.currentRow.infoid}`, {
+							type: 'delete',
+							dataType: 'json',
+							data: _this.infoid,
+							contentType: 'application/json',
+							success(msg) {
+								if(msg > 0) {
+									alert('删除成功！');
+									_this.show(_this.typeid);
+
+								} else {
+									alert('删除失败！');
+								}
+							}
+						});
+					},
 					handleCurrentChange(val) {
 						this.currentRow = val;
+						console.log(this.currentRow);
+					},
+					shoumenu(typeid) {
+						let _this = this;
+						
+						$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpais/${typeid}`, function(val) {
+
+							_this.menulist = val;
+
+						});
+
+					},
+					show(typeid) {
+						let _this = this;
+_this.typeid = typeid;
+						$.getJSON(`http://127.0.0.1:8080/api/weixius/TypeInfo/1/2/${typeid}`, function(val) {
+
+							_this.pageinfo = val;
+
+						});
 
 					}
 				},
 				mounted() {
-
+					this.shoumenu(1);
 				}
 
 			}).$mount('#maintain');
