@@ -31,6 +31,33 @@
 				margin-left: 20px;
 				
 			}
+	       .menu_item {
+                  line-height: 10px;
+                  text-align: center;
+                  margin-top: 10px;
+             }
+
+    .menu {
+        height: 100px;
+        width: 80px;
+        border-radius: 10px;
+        border: 1px solid #999999;
+        background-color: #f4f4f4;
+        z-index:50;
+       position: absolute;
+       margin-left: -250px;
+       margin-top: -30px;
+       
+    }
+
+   .menu> li:hover {
+        background-color: #1790ff;
+        color: white;
+    }
+    .menu>li{font-size:10px}
+
+      
+
 		</style>
 	</head>
 
@@ -49,8 +76,6 @@
 					<el-form  id="btn">
 						<el-form-item  >
 								<el-button id="q" icon="el-icon-search" size="mini" type="warning" @click="query">搜索</el-button>
-		
-		
 						</el-form-item>
 					</el-form>
 					</el-col>
@@ -67,9 +92,18 @@
 				</el-row>
 				<el-row :span="24">
 					<el-col :span="4">
-						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-						
+						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"  @node-contextmenu="rightClick"></el-tree>
+							 <div v-show="menuVisible">
+                              <ul id="menu" class="menu">
+                                 <li class="menu_item" @click="showDialogs1">增加部门</li>
+                                 <li class="menu_item" @click="deletedep">删除部门</li>
+                                 <li class="menu_item" @click="showDialogs2">修改部门</li>
+                              </ul>
+                             
+                             </div>	
 					</el-col>
+				
+					
 					<el-col :span="20">
 						<el-table  :data="pageInfo" border :row-class-name="tableRowClassName" style="width:100%">
 						<el-table-column prop="staffid" label="编号"  width="70">
@@ -92,8 +126,8 @@
 						</el-table-column>
 							<el-table-column label="操作">
 							<template slot-scope="temp">
-								 <el-button type="primary" icon="el-icon-edit" circle></el-button>
-								  <el-button type="danger" icon="el-icon-delete" circle></el-button>
+								 <el-button type="primary" icon="el-icon-edit" circle @click="showDialogs(temp.row.staffid)"></el-button>
+								  <el-button type="danger" icon="el-icon-delete" circle @click="deletebyid(temp.row.staffid)"></el-button>
 							   
 							</template>
 						</el-table-column>
@@ -106,10 +140,15 @@
 			<el-dialog :destroy-on-close="true" @opened="handlOpen" title="新增员工" :visible.sync="isShow" :before-close="handleClose" center>
 				<div id="modalcnt"></div>
 			</el-dialog>
-					
-				
-					
-					
+			<el-dialog :destroy-on-close="true" @opened="handlOpen1" title="员工信息修改" :visible.sync="isShows" :before-close="handleClose" center>
+				<div id="modalcnts"></div>
+			</el-dialog>
+			<el-dialog :destroy-on-close="true" @opened="handlOpen2" title="部门新增" :visible.sync="isShows1" :before-close="handleClose" center>
+				<div id="modalcnts1"></div>
+			</el-dialog>
+			<el-dialog :destroy-on-close="true" @opened="handlOpen3" title="部门名称修改" :visible.sync="isShows2" :before-close="handleClose" center>
+				<div id="modalcnts2"></div>
+			</el-dialog>
 		</div>
 	</body>
 	<script>
@@ -121,24 +160,84 @@
 				   fcoding:"",
 				   staffname:""
 				},
-				
-		 datas: [{
-          label: '北京德召文卡车系统',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }],
-         defaultProps: {
-          children: 'children',
-          label: 'label'
+				 menuVisible: false,
+				 did:"",
+				 len:"",
+		       datas:[],
+              defaultProps: {
+              children: 'list',
+               label: 'positionname'
         },
 				loading: true,
-				isShow:false
+				isShow:false,
+				isShows:false,
+				isShows1:false,
+				isShows2:false,
 			},
 			methods: {
+			
+				
+				deletedep(){
+					
+						let _this = this;
+						
+						alert(_this.did);
+						alert(_this.len);
+					
+					this.$confirm('是否移除部门信息?', '系统提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						$.ajax(`http://127.0.0.1:8080/px/api/user/deletedepss/${_this.did}`, 
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "100") {
+									_this.$message(data.msg);
+								} else {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								}
+							}
+						});
+					}).catch(() => {
+						this.$message({	
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+					
+					
+				},
+				
+				//右键点击
+            rightClick(MouseEvent, object, Node, element) {
+            	let _this = this;
+            	this.datas.forEach(row=>{
+            		if(row.departmentid==object.departmentid){
+            		    _this.len= row.list.length
+            			return
+            		}
+            	})
+            		
+            	  _this.did =JSON.stringify(object.departmentid);
+                this.menuVisible = false // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
+                this.menuVisible = true  // 显示模态窗口，跳出自定义菜单栏
+                var menu = document.querySelector('#menu')
+                document.addEventListener('click', this.foo) // 给整个document添加监听鼠标事件，点击任何位置执行foo方法
+                menu.style.display = "block";
+                menu.style.left = MouseEvent.clientX - 0 + 'px'
+                menu.style.top = MouseEvent.clientY - 80 + 'px'
+            },
+            foo() { // 取消鼠标监听事件 菜单栏
+                this.menuVisible = false
+                document.removeEventListener('click', this.foo) // 要及时关掉监听，不关掉的是一个坑，不信你试试，虽然前台显示的时候没有啥毛病，加一个alert你就知道了
+            },
+
 				goToPage(staffname) {
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/px/api/user/${staffname}`, function(date) {
@@ -151,12 +250,51 @@
 						{this.format.staffname=null};
 					   this.goToPage(this.format.staffname);
 				},
+				deletebyid(staffid){
+						let _this = this;
+					this.$confirm('是否移除员工信息?', '系统提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						$.ajax(`http://127.0.0.1:8080/px/api/user/sta/${staffid}`, 
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "100") {
+									_this.$message(data.msg);
+								} else {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								}
+							}
+						});
+					}).catch(() => {
+						this.$message({	
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+					
+				},
 				
 				 handleNodeClick(data) {
                   console.log(data);
                 },
                 handlOpen(){
 					$("#modalcnt").load('px/add.html');
+				},
+				 handlOpen1(){
+					$("#modalcnts").load('px/updatestaff.html');
+				},
+				 handlOpen2(){
+					$("#modalcnts1").load('px/adddep.html');
+				},
+				 handlOpen3(){
+					$("#modalcnts2").load('px/updatedeps.html');
 				},
 				handleClose(done){
 					this.$confirm('是否关闭').then(() => {
@@ -165,6 +303,18 @@
 				},
 				showDialog() {
 					this.isShow=true;
+				},
+				showDialogs(id) {
+					this.isShows=true;
+					sessionStorage.setItem('id',id);
+				},
+				showDialogs1() {
+					this.isShows1=true;
+				},
+				showDialogs2() {
+					let _this = this;
+					sessionStorage.setItem('id',_this.did);
+					this.isShows2=true;
 				},
 			
 			tableRowClassName({
@@ -188,6 +338,11 @@
 					this.loading = false;
 				}, 1000);
 				this.goToPage(null);
+				  let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/department`, function(date) {
+						_this.datas = date;
+					
+					});
 			}
 		});
 	</script>
