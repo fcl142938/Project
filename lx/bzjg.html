@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>班组技工</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<style>
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div class="container">
+
+			<div id="bzjgApp"  class="row" v-cloak>
+
+				<h1>班组技工</h1>
+				<div id="ss">					
+					<el-input v-model="job.jid" style="width: 200px;"></el-input>					
+					<el-button type="success" onclick="">搜索</el-button> &nbsp;&nbsp;
+					<el-button  onclick="">关闭</el-button>
+				</div>
+				<hr />
+				<div id="" style="background-color:navajowhite;">
+					<p>
+						<el-button type="success"  onclick="">添加员工</el-button>&nbsp;&nbsp;&nbsp;&nbsp;<el-button type="primary"  onclick="">修改</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="danger" onclick="">删除</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="primary"  onclick="">查询</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="primary"  onclick="">班组权重</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="primary"  onclick="">导出</el-button>
+					</p>
+				</div>
+				<div id="indexApp">
+					<template>
+					<el-table :data="pageInfo.list" stripe style="width: 100%">
+						<el-table-column prop="jid" label="班组序号">
+						</el-table-column>
+						<el-table-column prop="jclsname" label="班组名称">
+						</el-table-column>
+						<el-table-column prop="jbh" label="技工编号">
+						</el-table-column>
+						<el-table-column prop="jname" label="技工姓名">
+						</el-table-column>
+						<el-table-column prop="jsex" label="性别">
+						</el-table-column>
+						<el-table-column prop="jsj" label="手机">
+						</el-table-column>
+						<el-table-column prop="jaddress" label="地址">
+						</el-table-column>
+						<el-table-column prop="jdate" label="出生日期">
+						</el-table-column>
+						<el-table-column prop="jzc" label="组长">
+						</el-table-column>
+						<el-table-column prop="jdlm" label="登陆名">
+						</el-table-column>
+						
+						</el-table>
+					</template>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/dialogs.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script>
+		var bzjgApp = new Vue({
+			data: {
+				job: {
+			
+				},
+				pageInfo:{
+					list:[{
+						jid: '123',
+						jclsname: 'asd',
+						jbh: 'ddd',
+						jname: 'aaa',
+						jsex: 'dddd',
+						jsj: 'ssss',
+						jdate: 'weqwe',
+						jzc: 'dasdasd',
+						jdlm: 'aaaaaa',
+						jaddress: 'dddd'
+					}]
+				}
+			},
+			methods: {
+
+			},
+			mounted() {
+
+			}
+		}).$mount('#bzjgApp');
+	</script>
+
+</html>
