@@ -20,12 +20,11 @@
 							<div v-for="temp1 in temp.list" style="border: 1px gainsboro solid;padding: 5px;margin: 5px;">
 								<el-checkbox :label="temp1.title" :key="temp1.title" @change="handleCheckAllChange(temp1.title)">{{temp1.title}}</el-checkbox>
 								<div style="margin: 15px 0;"></div>
-
 								<el-checkbox v-for="temp2 in temp1.list" :label="temp2.title" :key="temp2.title" :name="temp1.title"></el-checkbox>
-
 							</div>
 						</div>
 					</el-checkbox-group>
+					 <el-button type="success">保存</el-button>
 				</el-main>
 			</el-container>
 		</div>
@@ -33,7 +32,7 @@
 	<script>
 		var powerupApp = new Vue({
 			data: {
-				checkList: ['选中且禁用', '复选框 A'],
+				checkList: [],
 				positions: [{
 					positionname: '销售部',
 					children: [{
@@ -159,11 +158,21 @@
 			},
 			methods: {
 				handleCheckAllChange(name) {
-					let _this=this;
-					$.each($("[name=" + name + "]"), function(i,obj) {
-						_this.checkList.push(obj.value)
-					});
-
+					let _this = this;
+					//判断有无元素
+					if(_this.checkList.indexOf(name) == -1) {
+						//移除
+						$.each($("[name=" + name + "]"), function(i, obj) {
+							_this.checkList.splice(_this.checkList.indexOf(obj.value),1);
+						});
+					} else {
+						//添加
+						$.each($("[name=" + name + "]"), function(i, obj) {
+							if(_this.checkList.indexOf(obj.value)==-1){
+								_this.checkList.push(obj.value)
+							}
+						});
+					}
 				}
 			}
 		}).$mount("#powerupApp")

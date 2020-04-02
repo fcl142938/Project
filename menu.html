@@ -4,9 +4,17 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>德召文汽修</title>
-		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<!--<link href="css/style.css" rel="stylesheet" type="text/css">-->
+		<link href="css/style1.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="css/index.css" />
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+		<link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
+		<!-- endinject -->
+		<!-- plugin css for this page -->
+		<link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
 		<style>
 			.el-header {
 				text-align: left;
@@ -17,6 +25,10 @@
 			* {
 				margin: 0;
 			}
+			
+			.el-tabs__content {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -24,10 +36,13 @@
 		<div id="MenuApp">
 			<el-container style='height:60vh'>
 				<el-header>
-					<span style="float: left;margin: 5px 20px;">username</span>
+					<span style="float: left;margin: 5px 20px;">{{staffvo.stf.staffname}}</span>
 					<ul class="nav nav-tabs" role="tablist" style="display: inline-block;margin-left:200px;margin-top: 18px;">
-						<li role="presentation" v-for="(temp,i) in menuData">
-							<a v-bind:href="['#'+temp.src]" :aria-controls="temp.src" role="tab" data-toggle="tab">{{temp.title}}</a>
+						<li role="presentation">
+							<a role="tab" data-toggle="tab" @click="showView('show.html','首页')">首页</a>
+						</li>
+						<li role="presentation" v-for="(temp,i) in staffvo.list">
+							<a v-bind:href="['#'+temp.powersrc]" :aria-controls="temp.powersrc" role="tab" data-toggle="tab">{{temp.powername}}</a>
 						</li>
 					</ul>
 					<span style="float: right;font-size: 15px;"><span>设置</span>|
@@ -37,15 +52,15 @@
 				<el-container>
 					<el-aside width="250px" style="border: 1px  solid ghostwhite;margin: 20px;border-radius: 20px;">
 						<div class="tab-content">
-							<div role="tabpanel" class="tab-pane fade  active" :id="temp.id" v-for="(temp,index) in pageData">
+							<div role="tabpanel" class="tab-pane fade  active" :id="temp.powersrc" v-for="(temp,index) in staffvo.list">
 								<el-menu style="border-right:0">
 									<el-submenu :index="index1+''" v-for="(temp1,index1) in temp.list">
 										<template slot="title">
 											<i class="el-icon-s-home"></i>
-											<span>{{temp1.title}}</span>
+											<span>{{temp1.powername}}</span>
 										</template>
 										<el-menu-item-group>
-											<el-menu-item :index="index1-index2+''" @click="showView(temp2.src,temp2.title)" v-for="(temp2,index2) in temp1.list">{{temp2.title}}</el-menu-item>
+											<el-menu-item :index="index1-index2+''" @click="showView(temp2.powersrc,temp2.powername)" v-for="(temp2,index2) in temp1.list">{{temp2.powername}}</el-menu-item>
 										</el-menu-item-group>
 									</el-submenu>
 								</el-menu>
@@ -56,7 +71,7 @@
 						<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab" @tab-click="loadPage">
 							<el-tab-pane v-for="(item, index) in editableTabs" :key="item.name" :label="item.title" :name="item.name" :data-page="item.content">{{item.content}}</el-tab-pane>
 						</el-tabs>
-						<div id="cnt">
+						<div id="cnt" v-loading="loadingmenu">
 						</div>
 					</el-main>
 				</el-container>
@@ -70,178 +85,312 @@
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/dialogs.js"></script>
 	<script type="text/javascript" src="js/dialog.js"></script>
+	<!--外部导入-->
+	<!--<script src="vendors/base/vendor.bundle.base.js"></script>-->
+
+	<script src="vendors/chart.js/Chart.min.js"></script>
+	<script src="vendors/datatables.net/jquery.dataTables.js"></script>
+	<script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+
+	<script src="js/off-canvas.js"></script>
+	<script src="js/hoverable-collapse.js"></script>
+	<script src="js/template.js"></script>
+
+	<script src="js/dashboard.js"></script>
+	<script src="js/data-table.js"></script>
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/dataTables.bootstrap4.js"></script>
+	<script type="text/javascript" src="js/echarts.js" charset="UTF-8"></script>
 	<script type="text/javascript">
 		var app = new Vue({
 			data: {
 				editableTabsValue: '1',
 				editableTabs: [],
 				tabIndex: 1,
-				menuData: [{
-					"title": '维修',
-					"src": 'servicing'
-				}, {
-					"title": '商品',
-					"src": 'shop'
-				}, {
-					"title": '前台',
-					"src": 'proscenium'
-				}, {
-					"title": '代办',
-					"src": 'commission'
-				}, {
-					"title": '客服',
-					"src": 'custom'
-				}, {
-					"title": '数据',
-					"src": 'information'
-				}, {
-					"title": '财务',
-					"src": 'financing'
-				}, {
-					"title": '人事',
-					"src": 'human'
-				}, {
-					"title": '系统',
-					"src": 'systematic'
-				}],
-				pageData: [{
-					"id": 'servicing',
-					"list": [{
-						"title": "维修救援",
-						"list": [{
-							"title": "维修接车",
-							"src": "fcl/servicing_meetcar.html"
-						}, {
-							"title": "竣工检验",
-							"src": "finish.html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}, {
-						"title": "三包索赔",
-						"list": [{
-							"title": "维修接车",
-							"src": ".html"
-						}, {
-							"title": "竣工检验",
-							"src": ".html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}]
-				}, {
-					"id": 'shop',
-					"list": [{
-						"title": "商品入库",
-						"list": [{
-							"title": "维修接车",
-							"src": ".html"
-						}, {
-							"title": "竣工检验",
-							"src": ".html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}, {
-						"title": "技工备料",
-						"list": [{
-							"title": "维修接车",
-							"src": ".html"
-						}, {
-							"title": "竣工检验",
-							"src": ".html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}]
-				}, {
-					"id": 'proscenium',
-					"list": [{
-						"title": "前台结算",
-						"list": [{
-							"title": "维修接车",
-							"src": ".html"
-						}, {
-							"title": "竣工检验",
-							"src": ".html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}, {
-						"title": "收益统计",
-						"list": [{
-							"title": "维修接车",
-							"src": ".html"
-						}, {
-							"title": "竣工检验",
-							"src": ".html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}]
-				}, {
-					"id": 'systematic',
-					"list": [{
-						"title": "初始数据",
-						"list": [{
-							"title": "维修接车",
-							"src": ".html"
-						}, {
-							"title": "竣工检验",
-							"src": ".html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}, {
-						"title": "权限控制",
-						"list": [{
-							"title": "权限附加",
-							"src": "fcl/powerup.html"
-						}, {
-							"title": "权限管理",
-							"src": "fcl/powermanage.html"
-						}, {
-							"title": "出厂放行",
-							"src": ".html"
-						}, {
-							"title": "施工登记",
-							"src": ".html"
-						}]
-					}]
-				}]
+				staffvo: {},
+				loadingmenu: true
+				//				menuData: [{
+				//					"title": '维修',
+				//					"src": 'servicing'
+				//				}, {
+				//					"title": '商品',
+				//					"src": 'shop'
+				//				}, {
+				//					"title": '前台',
+				//					"src": 'proscenium'
+				//				}, {
+				//					"title": '代办',
+				//					"src": 'commission'
+				//				}, {
+				//					"title": '客服',
+				//					"src": 'custom'
+				//				}, {
+				//					"title": '数据',
+				//					"src": 'information'
+				//				}, {
+				//					"title": '财务',
+				//					"src": 'financing'
+				//				}, {
+				//					"title": '人事',
+				//					"src": 'human'
+				//				}, {
+				//					"title": '系统',
+				//					"src": 'systematic'
+				//				}],
+				//				pageData: [{
+				//						"id": 'servicing',
+				//						"list": [{
+				//							"title": "维修救援",
+				//							"list": [{
+				//								"title": "维修接车",
+				//								"src": "fcl/servicing_meetcar.html"
+				//							}, {
+				//								"title": "竣工检验",
+				//								"src": "fcl/finish.html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}, {
+				//							"title": "三包索赔",
+				//							"list": [{
+				//								"title": "维修接车",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "竣工检验",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					}, {
+				//						"id": 'shop',
+				//						"list": [{
+				//							"title": "商品入库",
+				//							"list": [{
+				//								"title": "维修接车",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "竣工检验",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}, {
+				//							"title": "技工备料",
+				//							"list": [{
+				//								"title": "维修接车",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "竣工检验",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					}, {
+				//						"id": 'proscenium',
+				//						"list": [{
+				//							"title": "前台结算",
+				//							"list": [{
+				//								"title": "结算中心",
+				//								"src": "tyh/settlementCenter.html"
+				//							}, {
+				//								"title": "会员充值",
+				//								"src": "tyh/memberAdd.html"
+				//							}, {
+				//								"title": "会员查询",
+				//								"src": "tyh/memberQuery.html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}, {
+				//							"title": "收益统计",
+				//							"list": [{
+				//								"title": "维修接车",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "竣工检验",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					}, {
+				//						"id": 'systematic',
+				//						"list": [{
+				//							"title": "初始数据",
+				//							"list": [{
+				//								"title": "维修接车",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "竣工检验",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}, {
+				//							"title": "权限控制",
+				//							"list": [{
+				//								"title": "权限附加",
+				//								"src": "fcl/powerup.html"
+				//							}, {
+				//								"title": "权限管理",
+				//								"src": "fcl/powermanage.html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					}, {
+				//						"id": 'human',
+				//						"list": [{
+				//							"title": "员工资料",
+				//							"list": [{
+				//								"title": "组织结构",
+				//								"src": "px/post.html"
+				//							}, {
+				//								"title": "岗位定义",
+				//								"src": "tyh/jobDefinition.html"
+				//							}, {
+				//								"title": "离职登记",
+				//								"src": "px/leave.html"
+				//							}, {
+				//								"title": "通讯名录",
+				//								"src": "px/tel.html"
+				//							}]
+				//						}, {
+				//							"title": "权限控制",
+				//							"list": [{
+				//								"title": "权限附加",
+				//								"src": "fcl/powerup.html"
+				//							}, {
+				//								"title": "权限管理",
+				//								"src": "fcl/powermanage.html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					}, {
+				//						"id": 'information',
+				//						"list": [{
+				//							"title": "主数据",
+				//							"list": [{
+				//								"title": "发动机品牌",
+				//								"src": "mjw/engine.html"
+				//							}, {
+				//								"title": "维修项目",
+				//								"src": "mjw/maintain.html"
+				//							}, {
+				//								"title": "商品资料",
+				//								"src": "mjw/supplier.html"
+				//							}, {
+				//								"title": "供货单位",
+				//								"src": "mjw/goods.html"
+				//							}, {
+				//								"title": "车型档案",
+				//								"src": "lyf/cxda.html"
+				//							}]
+				//						}, {
+				//							"title": "权限控制",
+				//							"list": [{
+				//								"title": "权限附加",
+				//								"src": "fcl/powerup.html"
+				//							}, {
+				//								"title": "权限管理",
+				//								"src": "fcl/powermanage.html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					},
+				//					{
+				//						"id": 'custom',
+				//						"list": [{
+				//							"title": "客户档案",
+				//							"list": [{
+				//								"title": "客户资料",
+				//								"src": "lyf/khzl.html"
+				//							}, {
+				//								"title": "车辆资料",
+				//								"src": "lyf/clzl.html"
+				//							}, {
+				//								"title": "商品资料",
+				//								"src": "mjw/supplier.html"
+				//							}, {
+				//								"title": "供货单位",
+				//								"src": "mjw/goods.html"
+				//							}]
+				//						}, {
+				//							"title": "权限控制",
+				//							"list": [{
+				//								"title": "权限附加",
+				//								"src": "fcl/powerup.html"
+				//							}, {
+				//								"title": "权限管理",
+				//								"src": "fcl/powermanage.html"
+				//							}, {
+				//								"title": "出厂放行",
+				//								"src": ".html"
+				//							}, {
+				//								"title": "施工登记",
+				//								"src": ".html"
+				//							}]
+				//						}]
+				//					}
+				//				]
 			},
 			methods: {
 				showView(url, title) {
-					this.addTab(this.editableTabsValue, url, title);
+					var bool = true;
+					var number;
+					this.editableTabs.forEach(temp => {
+						if(temp.title == title) {
+							bool = false;
+							number=temp.name;
+						}
+					})
 					$("#cnt").load(url);
+					if(bool) {
+						this.addTab(this.editableTabsValue, url, title);
+					} else {
+						$("#tab-"+number).click();
+					}
 				},
 				loadPage(obj) {
 					$("#cnt").load($("#pane-" + obj.name).text());
@@ -249,12 +398,11 @@
 				exit() {
 					this.$confirm('退出登录, 是否继续?', '提示', {
 						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
+						cancelButtonText: '取消'
 					}).then(() => {
-						/*$.post(`http://127.0.0.1:8080/api/user/exit`, function(res) {
-							location.href = "glylogin.html";
-						})*/
+						$.getJSON(`http://127.0.0.1:8080/fcl/api/staff/extis`, function(res) {
+							location.href ="login.html";
+						})
 					});
 				},
 				addTab(targetName, url, title) {
@@ -289,11 +437,17 @@
 				}
 			},
 			mounted() {
-				$(".nav-tabs>li").eq(0).addClass("active");
-				$(".tab-content>div").eq(0).addClass("active");
-				$(".tab-content>div").eq(0).addClass("in");
-				$(".el-tabs__content").hide();
-				$("#cnt").load("show.html");
+				let _this = this;
+				$.getJSON(`http://127.0.0.1:8080/fcl/api/staff/power`, function(res) {
+					_this.staffvo = res;
+					setTimeout(() => {
+						$(".nav-tabs>li").eq(0).addClass("active");
+						$(".tab-content>div").eq(0).addClass("active");
+						$(".tab-content>div").eq(0).addClass("in");
+						_this.showView('show.html', '首页')
+						_this.loadingmenu = false;
+					}, 500);
+				})
 			}
 		}).$mount("#MenuApp");
 	</script>

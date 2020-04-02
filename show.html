@@ -1,10 +1,307 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Home</title>
+		<!--<link href="css/style.css" rel="stylesheet" type="text/css">-->
+		<style>
+			div {
+				/*	border: 1px  red  solid;*/
+			}
+			
+			.showdiv>div {
+				float: left;
+				border: 1px gainsboro solid;
+				border-radius: 5px;
+				width: 270px;
+				height: 100px;
+				margin: 0 10px;
+			}
+			
+			.icon-lg {
+				font-size: 7rem;
+				display: inline-block;
+				float: left;
+				margin-left: 60px;
+				margin-right: 10px;
+			}
+			
+			.showdiv>div>div {
+				float: left;
+				margin-top: 20px;
+				font-size: 15px;
+			}
+		</style>
 	</head>
+
 	<body>
-			<h1 style="text-align: center;line-height: 100px;">欢迎使用德召文汽修系统</h1>
+		<div class="container-scroller" id="menuCountApp">
+			<!-- partial -->
+			<div class="main-panel" style="padding:5px;">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="card">
+							<div style="margin-bottom: 20px;">
+								<div class="showdiv">
+									<div>
+										<i class="mdi mdi-currency-usd mr-3 icon-lg text-danger"></i>
+										<div>
+											<small>收入</small>
+											<h5>$577545</h5>
+										</div>
+									</div>
+									<div>
+										<i class="mdi mdi-eye mr-3 icon-lg text-success"></i>
+										<div>
+											<small>浏览次数</small>
+											<h5>9833550</h5>
+										</div>
+									</div>
+									<div>
+										<i class="mdi mdi-download mr-3 icon-lg text-warning"></i>
+										<div>
+											<small>维修次数</small>
+											<h5>2233783</h5>
+										</div>
+									</div>
+									<div>
+										<i class="mdi mdi-flag mr-3 icon-lg text-danger"></i>
+										<div>
+											<small>返工次数</small>
+											<h5>3497843</h5>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--<div class="row" style="margin-top: 20px">
+						<div class="card">
+							<div class="card-body">
+								<h4>维修统计图</h4>
+								<div id="echartsDom" style='heigth:400px;background:#fff;clear: both;padding-top: 20px'>
+								</div>
+								<div class="text-center">
+									<el-button type="primary" @click="changeView('bar')">查看柱状图</el-button>
+									<el-button type="primary" @click="changeView('pie')">查看饼图</el-button>
+									<el-button type="primary" @click="changeView('line')">查看曲线图</el-button>
+								</div>
+							</div>
+						</div>
+					</div>-->
+					<div class="row" style="margin-top: 30px;">
+						<div class="col-md-12 stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h3>数据表</h3>
+									<div class="table-responsive">
+										<table id="recent-purchases-listing" class="table">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Status report</th>
+													<th>Office</th>
+													<th>Price</th>
+													<th>Date</th>
+													<th>Gross amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Jeremy Ortega</td>
+													<td>Levelled up</td>
+													<td>Catalinaborough</td>
+													<td>$790</td>
+													<td>06 Jan 2018</td>
+													<td>$2274253</td>
+												</tr>
+												<tr>
+													<td>Alvin Fisher</td>
+													<td>Ui design completed</td>
+													<td>East Mayra</td>
+													<td>$23230</td>
+													<td>18 Jul 2018</td>
+													<td>$83127</td>
+												</tr>
+												<tr>
+													<td>Emily Cunningham</td>
+													<td>support</td>
+													<td>Makennaton</td>
+													<td>$939</td>
+													<td>16 Jul 2018</td>
+													<td>$29177</td>
+												</tr>
+												<tr>
+													<td>Minnie Farmer</td>
+													<td>support</td>
+													<td>Agustinaborough</td>
+													<td>$30</td>
+													<td>30 Apr 2018</td>
+													<td>$44617</td>
+												</tr>
+												<tr>
+													<td>Betty Hunt</td>
+													<td>Ui design not completed</td>
+													<td>Lake Sandrafort</td>
+													<td>$571</td>
+													<td>25 Jun 2018</td>
+													<td>$78952</td>
+												</tr>
+												<tr>
+													<td>Myrtie Lambert</td>
+													<td>Ui design completed</td>
+													<td>Cassinbury</td>
+													<td>$36</td>
+													<td>05 Nov 2018</td>
+													<td>$36422</td>
+												</tr>
+												<tr>
+													<td>Jacob Kennedy</td>
+													<td>New project</td>
+													<td>Cletaborough</td>
+													<td>$314</td>
+													<td>12 Jul 2018</td>
+													<td>$34167</td>
+												</tr>
+												<tr>
+													<td>Ernest Wade</td>
+													<td>Levelled up</td>
+													<td>West Fidelmouth</td>
+													<td>$484</td>
+													<td>08 Sep 2018</td>
+													<td>$50862</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- main-panel ends -->
+		</div>
+		<!-- page-body-wrapper ends -->
+		</div>
+		<script>
+			var menuCountApp = new Vue({
+				data: {
+					term: {
+						year:4,
+						month:5,
+						departmentId:5
+					},
+					dataArr: [{
+						"name": "雷军",
+						"money": 37633
+					}, {
+						"name": "郭忠意",
+						"money": 5722
+					}, {
+						"name": "尹红文",
+						"money": 6514
+					}, {
+						"name": "丁磊",
+						"money": 1000
+					}, {
+						"name": "鲁昌盛",
+						"money": 4222
+					}]
+				},
+				methods: {
+					changeView(type) {
+						var xAxis = new Array();
+						var legend = new Array();
+						for(var i = 0; i < this.dataArr.length; i++) {
+							xAxis[i] = this.dataArr[i].name;
+							legend[i] = this.dataArr[i].money;
+
+						}
+						var option = null;
+						if(type == 'bar') {
+							option = {
+								title: {
+									text: this.term.year + '年' + this.term.month + '月' + this.departmentName + '月度报销统计图'
+								},
+								tooltip: {},
+								legend: {
+									data: ['报销金额']
+								},
+								xAxis: {
+									data: xAxis
+								},
+								yAxis: {},
+								series: [{
+									name: '报销金额',
+									type: 'bar',
+									barWidth: 30,
+									data: legend
+								}]
+							};
+						} else if(type == "pie") {
+							option = {
+								title: {
+									text: this.term.year + '年' + this.term.month + '月' + this.departmentName + '月度报销统计图'
+								},
+								tooltip: {},
+								series: [{
+									name: '报销金额',
+									type: 'pie',
+									radius: '60%',
+									label: {
+										normal: {
+											formatter: '{b}:({d}%)',
+											textStyle: {
+												fontWeight: 'normal',
+												fontSize: 15
+											}
+										}
+									}
+								}],
+								dataset: {
+									source: this.dataArr
+								}
+							};
+						} else {
+							option = {
+								title: {
+									text: this.term.year + '年' + this.term.month + '月' + this.departmentName + '月度报销统计图'
+								},
+								tooltip: {},
+								legend: {
+									data: ['报销金额']
+								},
+								xAxis: {
+									data: xAxis
+								},
+								yAxis: {},
+								series: [{
+									name: '报销金额',
+									type: 'line',
+									barWidth: 30,
+									data: legend
+								}]
+							};
+						}
+						var dom = document.getElementById('echartsDom');
+						$("#echartsDom").height('400px');
+						var myChart = echarts.init(dom);
+						if(myChart != null && myChart != "" && myChart != undefined) { //关键
+							myChart.dispose();
+						}
+						var myChart = echarts.init(dom);
+						myChart.setOption(option);
+					}
+				},
+				mounted() {
+					this.changeView('pie');
+				}
+			}).$mount("#menuCountApp")
+		</script>
 	</body>
+
 </html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<!--<link rel="stylesheet" href="../css/index.css" />
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>-->
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			
+			i {
+				color: #5ca8ff;
+				font-size: 18px;
+			}
+			
+			.el-row {
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+			
+			.el-col {
+				border-radius: 4px;
+				padding: 5px;
+			}
+			
+			.bg-purple-dark {
+				background: #99a9bf;
+			}
+			
+			.bg-purple {
+				background: #d3dce6;
+			}
+			
+			.bg-purple-light {
+				background: #e5e9f2;
+			}
+			
+			.grid-content {
+				border-radius: 4px;
+				min-height: 36px;
+			}
+			
+			.row-bg {
+				padding: 10px 0;
+				background-color: #f9fafc;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="khzl">
+			<el-row :gutter="20" style="background-color: #f3fffd;">
+				<el-col :span="12">
+					<span style="font-family: '楷体';font-size: xx-large;padding-left: 10px;">客户档案</span>
+				</el-col>
+				<el-col :span="8">
+					<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+				</el-col>
+				<el-col :span="2">
+					<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+				</el-col>
+				<el-col :span="2">
+					<el-button type="warning" plain style="font-size: 18px;">关闭</el-button>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #fefff3;">
+				<el-col :span="8">
+				</el-col>
+				<el-col :span="8">
+					<el-col :span="6">
+						<i class="el-icon-edit" @click="kehubianji">客户编辑</i>
+					</el-col>
+					<el-col :span="6">
+						<i class="el-icon-document-copy" @click="cheziliao">车资料</i>
+					</el-col>
+					<el-col :span="6">
+						<i class="el-icon-user">客户分类</i>
+					</el-col>
+					<el-col :span="6">
+						<i class="el-icon-search">查询</i>
+					</el-col>
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-upload2">导出</i>
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-setting">字段设置</i>
+				</el-col>
+			</el-row>
+			<el-row id="che" :gutter="20" style="background-color: #d7eaff; display: none;">
+				<el-col :span="12">
+					<el-col :span="6">
+						车资料
+					</el-col>
+					<el-col :span="6">
+						<span @click="isShow3=true">增加车资料</span>
+					</el-col>
+					<el-col :span="6">
+						修改车资料
+					</el-col>
+					<el-col :span="6">
+						删除车资料
+					</el-col>
+				</el-col>
+				<el-col :span="10">
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-caret-top" @click="shouche">收起</i>
+				</el-col>
+			</el-row>
+			<el-row id="kehu" :gutter="20" style="background-color: #d7eaff;display: none;">
+				<el-col :span="14">
+					<el-col :span="3">
+						客户编辑
+					</el-col>
+					<el-col :span="3">
+						<span @click="isShow1=true">增加客户和车</span>
+					</el-col>
+					<el-col :span="3">
+						<span @click="isShow2=true">增加客户</span>
+					</el-col>
+					<el-col :span="3">
+						修改客户
+					</el-col>
+					<el-col :span="3">
+						删除客户
+					</el-col>
+					<el-col :span="3">
+						相关证照
+					</el-col>
+					<el-col :span="3">
+						设置密码
+					</el-col>
+				</el-col>
+				<el-col :span="8">
+				</el-col>
+				<el-col :span="2">
+					<i class="el-icon-caret-top" @click="shoukehu">收起</i>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
+				<template>
+					<el-table stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+						<el-table-column prop="userid" label="客户编码">
+						</el-table-column>
+						<el-table-column prop="username" label="姓名">
+						</el-table-column>
+						<el-table-column prop="userphone" label="电话">
+						</el-table-column>
+						<el-table-column prop="useraddress" label="地址">
+						</el-table-column>
+						<el-table-column prop="userbrithday" label="生日">
+						</el-table-column>
+						<el-table-column prop="userremark" label="备注">
+						</el-table-column>
+					</el-table>
+				</template>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
+				<el-tabs type="border-card">
+					<el-tab-pane label="车辆信息">
+						<template>
+							<el-table stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column prop="carnumber" label="车牌号码">
+								</el-table-column>
+								<el-table-column prop="brandname" label="车辆品牌">
+								</el-table-column>
+								<el-table-column prop="motorcyclename" label="车辆型号">
+								</el-table-column>
+								<el-table-column prop="drivername" label="驾驶员">
+								</el-table-column>
+								<el-table-column prop="driverphone" label="驾驶员电话">
+								</el-table-column>
+								<el-table-column prop="driverbrithday" label="出生日期">
+								</el-table-column>
+								<el-table-column prop="motorletter" label="发动机号">
+								</el-table-column>
+								<el-table-column prop="motorname" label="发动机品牌">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-tab-pane>
+					<el-tab-pane label="历史消费">
+						<template>
+							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column type="index" width="50">
+								</el-table-column>
+								<el-table-column property="date" label="日期" width="120">
+								</el-table-column>
+								<el-table-column property="name" label="姓名" width="120">
+								</el-table-column>
+								<el-table-column property="address" label="地址">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-tab-pane>
+					<el-tab-pane label="角色管理">
+						<template>
+							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column type="index" width="50">
+								</el-table-column>
+								<el-table-column property="date" label="日期" width="120">
+								</el-table-column>
+								<el-table-column property="name" label="姓名" width="120">
+								</el-table-column>
+								<el-table-column property="address" label="地址">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-tab-pane>
+				</el-tabs>
+			</el-row>
+			<el-dialog title="增加客户和车资料" :visible.sync="isShow1" width="70%" :before-close="handleClose1">
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>客户编码：</span>
+						<el-input :disabled="true" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>客户名称：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>联系人：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>手机号码：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="12">
+						<span>客户地址：</span>
+						<el-input style="width: 85%;">
+					</el-col>
+					<el-col :span="6">
+						<span>客户生日：</span>
+						<el-input type="date" style="width: 66%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>账期（天）：</span>
+						<el-input style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>挂账额度：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>挂账顾问：</span>
+						<el-input style="width: 67%;">
+							<!--<el-select v-model="" placeholder="请选择">
+								<<el-option v-for="" :key="" :label="" :value="">
+								</el-option>
+							</el-select>-->
+					</el-col>
+					<el-col :span="6">
+						<span>顾问电话：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>省：</span>
+						<el-input style="width: 84%;">
+					</el-col>
+					<el-col :span="6">
+						<span>市：</span>
+						<el-input style="width: 83%;">
+					</el-col>
+					<el-col :span="6">
+						<span>区：</span>
+						<el-input style="width: 80%;">
+							<!--<el-select v-model="" placeholder="请选择">
+								<<el-option v-for="" :key="" :label="" :value="">
+								</el-option>
+							</el-select>-->
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="24">
+						<span style="line-height: 50px;">备注：</span><el-input type="textarea" :rows="2" placeholder="请输入内容" style="width: 95%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>车牌号码：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆车牌：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆型号：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>驾驶员：</span>
+						<el-input style="width: 75%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>驾驶员电话：</span>
+						<el-input style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>出生日期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆归属：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>驾证到期：</span>
+						<el-input type="date" style="width: 71%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>车架号：</span>
+						<el-input style="width: 74%;">
+					</el-col>
+					<el-col :span="6">
+						<span>发动机号：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆年款：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>里程：</span>
+						<el-input style="width: 79%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="12">
+						<span>发动机品牌：</span>
+						<el-input style="width: 83%;">
+					</el-col>
+					<el-col :span="6">
+						<span>载重：</span>
+						<el-input style="width: 75%;">
+					</el-col>
+					<el-col :span="6">
+						<span>购买日期：</span>
+						<el-input type="date" style="width: 71%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>上牌日期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车检到期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>燃油类别：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						 <el-checkbox v-model="checked" style="line-height: 40px;">在我投保车</el-checkbox>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>交强险保险公司：</span>
+						<el-input style="width: 56%;">
+					</el-col>
+					<el-col :span="6">
+						<span>交强险到期：</span>
+						<el-input type="date" style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>商业险保险公司：</span>
+						<el-input style="width: 53%;">
+					</el-col>
+					<el-col :span="6">
+						<span>商业险到期：</span>
+						<el-input type="date" style="width: 65%;">
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+	    			<el-button @click="isShow1 = false">取 消</el-button>
+	    			<el-button type="primary" @click="isShow1 = false">确 定</el-button>
+  				</span>
+			</el-dialog>
+			<el-dialog title="客户资料编辑" :visible.sync="isShow2" width="70%" :before-close="handleClose1">
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>客户编码：</span>
+						<el-input :disabled="true" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>客户名称：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>联系人：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>手机号码：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="12">
+						<span>客户地址：</span>
+						<el-input style="width: 85%;">
+					</el-col>
+					<el-col :span="6">
+						<span>客户生日：</span>
+						<el-input type="date" style="width: 66%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>账期（天）：</span>
+						<el-input style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>挂账额度：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>挂账顾问：</span>
+						<el-input style="width: 67%;">
+							<!--<el-select v-model="" placeholder="请选择">
+								<<el-option v-for="" :key="" :label="" :value="">
+								</el-option>
+							</el-select>-->
+					</el-col>
+					<el-col :span="6">
+						<span>顾问电话：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>省：</span>
+						<el-input style="width: 84%;">
+					</el-col>
+					<el-col :span="6">
+						<span>市：</span>
+						<el-input style="width: 83%;">
+					</el-col>
+					<el-col :span="6">
+						<span>区：</span>
+						<el-input style="width: 80%;">
+							<!--<el-select v-model="" placeholder="请选择">
+								<<el-option v-for="" :key="" :label="" :value="">
+								</el-option>
+							</el-select>-->
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="24">
+						<span style="line-height: 50px;">备注：</span><el-input type="textarea" :rows="2" placeholder="请输入内容" style="width: 95%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="12">
+						<span>纳税人识别号：</span>
+						<el-input style="width: 81%;">
+					</el-col>
+					<el-col :span="6">
+						<span>注册电话：</span>
+						<el-input style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>开户银行：</span>
+						<el-input style="width: 69%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>银行账号：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="18">
+						<span>注册地址：</span>
+						<el-input style="width: 90%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>其他一：</span>
+						<el-input style="width: 74%;">
+					</el-col>
+					<el-col :span="6">
+						<span>其他一：</span>
+						<el-input style="width: 73%;">
+					</el-col>
+					<el-col :span="6">
+						<span>其他一：</span>
+						<el-input style="width: 72%;">
+					</el-col>
+					<el-col :span="6">
+						<span>其他一：</span>
+						<el-input style="width: 73%;">
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+	    			<el-button @click="isShow2 = false">取 消</el-button>
+	    			<el-button type="primary" @click="isShow2 = false">确 定</el-button>
+  				</span>
+			</el-dialog>
+			<el-dialog title="车辆资料编辑" :visible.sync="isShow3" width="70%" :before-close="handleClose1">
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>车牌号码：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆车牌：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆型号：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>驾驶员：</span>
+						<el-input style="width: 75%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>驾驶员电话：</span>
+						<el-input style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>出生日期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆归属：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>驾证到期：</span>
+						<el-input type="date" style="width: 71%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>车架号：</span>
+						<el-input style="width: 74%;">
+					</el-col>
+					<el-col :span="6">
+						<span>发动机号：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车辆年款：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						<span>里程：</span>
+						<el-input style="width: 79%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="12">
+						<span>发动机品牌：</span>
+						<el-input style="width: 83%;">
+					</el-col>
+					<el-col :span="6">
+						<span>载重：</span>
+						<el-input style="width: 75%;">
+					</el-col>
+					<el-col :span="6">
+						<span>购买日期：</span>
+						<el-input type="date" style="width: 71%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>上牌日期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>车检到期：</span>
+						<el-input type="date" style="width: 70%;">
+					</el-col>
+					<el-col :span="6">
+						<span>燃油类别：</span>
+						<el-input style="width: 67%;">
+					</el-col>
+					<el-col :span="6">
+						 <el-checkbox v-model="checked" style="line-height: 40px;">在我投保车</el-checkbox>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>交强险保险公司：</span>
+						<el-input style="width: 56%;">
+					</el-col>
+					<el-col :span="6">
+						<span>交强险到期：</span>
+						<el-input type="date" style="width: 66%;">
+					</el-col>
+					<el-col :span="6">
+						<span>商业险保险公司：</span>
+						<el-input style="width: 53%;">
+					</el-col>
+					<el-col :span="6">
+						<span>商业险到期：</span>
+						<el-input type="date" style="width: 65%;">
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="background-color: #f3fffd;">
+					<el-col :span="6">
+						<span>下次保养里程：</span>
+						<el-input style="width: 61%;">
+					</el-col>
+					<el-col :span="6">
+						<span>下次保养日期：</span>
+						<el-input type="date" style="width: 61%;">
+					</el-col>
+					<el-col :span="6">
+						<span>客户编码：</span>
+						<el-input :disabled="true" style="width: 66%;">
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+	    			<el-button @click="isShow3 = false">取 消</el-button>
+	    			<el-button type="primary" @click="isShow3 = false">确 定</el-button>
+  				</span>
+			</el-dialog>
+		</div>
+	</body>
+	<!--<script type="text/javascript" src="../js/index.js"></script>-->
+	<script>
+		var khzl = new Vue({
+			data: {
+				currentRow: null,
+				isShow1: false,
+				isShow2: false,
+				isShow3: false,
+				checked: false,
+				consumerinfo:[],
+				consumercar:[],
+			},
+			methods: {
+				handleCurrentChange(val) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongconsumerinfochache/${val.userid}`,function(data)
+					{
+						_this.consumercar=data;
+					});
+				},
+				shouche() {
+					$("#che").hide();
+				},
+				shoukehu() {
+					$("#kehu").hide();
+				},
+				kehubianji() {
+					$("#kehu").show();
+				},
+				cheziliao() {
+					$("#che").show();
+				},
+				handleClose1(done) {
+					this.$confirm('是否关闭').then(() => {
+						done();
+					}).catch(() => {
+						console.debug('取消操作');
+					});
+				},
+				goToPage() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction`,function(data)
+					{
+						_this.consumerinfo=data;
+					});
+				},
+			},
+			mounted() {
+				this.goToPage();
+			}
+		}).$mount('#khzl');
+	</script>
+</html>

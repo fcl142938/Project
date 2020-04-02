@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	<!--	<link rel="stylesheet" href="../css/index.css" />-->
+		<!--<script type="text/javascript" src="../js/vue.js"></script>
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>-->
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			
+			i {
+				color: #5ca8ff;
+				font-size: 18px;
+			}
+			
+			.el-row {
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+			
+			.el-col {
+				border-radius: 4px;
+				padding: 5px;
+			}
+			
+			.bg-purple-dark {
+				background: #99a9bf;
+			}
+			
+			.bg-purple {
+				background: #d3dce6;
+			}
+			
+			.bg-purple-light {
+				background: #e5e9f2;
+			}
+			
+			.grid-content {
+				border-radius: 4px;
+				min-height: 36px;
+			}
+			
+			.row-bg {
+				padding: 10px 0;
+				background-color: #f9fafc;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="cxda">
+			<el-row :gutter="20" style="background-color: #f3fffd;">
+				<el-col :span="12">
+					<span style="font-family: '楷体';font-size: xx-large;padding-left: 10px;">品牌车型</span>
+				</el-col>
+				<el-col :span="8">
+				</el-col>
+				<el-col :span="2">
+				</el-col>
+				<el-col :span="2">
+					<el-button type="warning" plain style="font-size: 18px;">关闭</el-button>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20" style="background-color: #fefff3;">
+				<el-col :span="7" style="height: 100%;">
+					<el-col :span="6">
+						<i class="el-icon-edit-outline" @click="isShow3=true">新增</i>
+					</el-col>
+					<el-col :span="6">
+						<i class="el-icon-edit" @click="isShow3=true">修改</i>
+					</el-col>
+					<el-col :span="6">
+						<i class="el-icon-delete">删除</i>
+					</el-col>
+					<el-col :span="24">
+						<el-col :span="15">
+							<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+						</el-col>
+						<el-col :span="5">
+							<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+						</el-col>
+					</el-col>
+					<el-col :span="20">
+						<template>
+							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column type="index" width="50">
+								</el-table-column>
+								<el-table-column property="date" label="日期" width="120">
+								</el-table-column>
+								<el-table-column property="name" label="姓名" width="120">
+								</el-table-column>
+								<el-table-column property="address" label="地址">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-col>
+				</el-col>
+				<el-col :span="17">
+					<el-col :span="2">
+						<i class="el-icon-edit-outline" @click="isShow2=true">新增</i>
+					</el-col>
+					<el-col :span="2">
+						<i class="el-icon-edit" @click="isShow2=true">修改</i>
+					</el-col>
+					<el-col :span="2">
+						<i class="el-icon-delete">删除</i>
+					</el-col>
+					<el-col :span="2">
+						<i class="el-icon-search">查询</i>
+					</el-col>
+					<el-col :span="24">
+						<el-col :span="6">
+							<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+						</el-col>
+						<el-col :span="2">
+							<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+						</el-col>
+					</el-col>
+					<el-col :span="20">
+						<template>
+							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column type="index" width="50">
+								</el-table-column>
+								<el-table-column property="date" label="日期" width="120">
+								</el-table-column>
+								<el-table-column property="name" label="姓名" width="120">
+								</el-table-column>
+								<el-table-column property="address" label="地址">
+								</el-table-column>
+							</el-table>
+						</template>
+					</el-col>
+				</el-col>
+			</el-row>
+			<el-dialog title="品牌定义" :visible.sync="isShow3" width="20%" :before-close="handleClose1">
+				<el-row :gutter="24" style="background-color: #f3fffd;">
+					<el-col :span="24">
+						<span>品牌编码：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="24">
+						<span>品牌名称：</span>
+						<el-input style="width: 70%;">
+					</el-col>
+					<el-col :span="24">
+						<span>首字母：</span>
+						<el-input style="width: 74%;">
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+	    			<el-button @click="isShow3 = false">取 消</el-button>
+	    			<el-button type="primary" @click="isShow3 = false">确 定</el-button>
+  				</span>
+			</el-dialog>
+			<el-dialog title="车型定义" :visible.sync="isShow2" width="50%" :before-close="handleClose1">
+				<el-row :gutter="24" style="background-color: #f3fffd;">
+					<el-col :span="16">
+						<el-col :span="24">
+							<span>车辆品牌：</span>
+							<el-input style="width: 30%;"></el-input>
+							<el-input style="width: 53%;"></el-input>
+						</el-col>
+						<el-col :span="24">
+							<el-col :span="12">
+								<span>车型ID：</span>
+								<el-input style="width: 75%;">
+							</el-col>
+							<el-col :span="12">
+								<span>车型名称：</span>
+								<el-input style="width: 70%;">
+							</el-col>
+						</el-col>
+						<el-col :span="24">
+							<el-col :span="12">
+								<span>进口国产：</span>
+								<el-input style="width: 70%;">
+							</el-col>
+							<el-col :span="12">
+								<span>参考价格：</span>
+								<el-input style="width: 70%;">
+							</el-col>
+						</el-col><el-col :span="24">
+							<el-col :span="12">
+								<span>车辆年款：</span>
+								<el-input style="width: 70%;">
+							</el-col>
+							<el-col :span="12">
+								<span>功率：</span>
+								<el-input style="width: 80%;">
+							</el-col>
+						</el-col><el-col :span="24">
+							<el-col :span="12">
+								<span>燃油标号：</span>
+								<el-input style="width: 70%;">
+							</el-col>
+							<el-col :span="12">
+								<span>载重：</span>
+								<el-input style="width: 80%;">
+							</el-col>
+						</el-col>
+						<el-col :span="24">
+							<span>发动机品牌：</span>
+							<el-input style="width: 82%;">
+						</el-col>
+					</el-col>
+					<el-col :span="8">
+						<h1>图</h1>
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+	    			<el-button @click="isShow2 = false">取 消</el-button>
+	    			<el-button type="primary" @click="isShow2 = false">确 定</el-button>
+  				</span>
+			</el-dialog>
+		</div>
+	</body>
+<!--	<script type="text/javascript" src="../js/index.js"></script>-->
+	<script>
+		var indexApp = new Vue({
+			data: {
+				tableData: [{
+					date: '2016-05-02',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1518 弄'
+				}, {
+					date: '2016-05-04',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1517 弄'
+				}, {
+					date: '2016-05-01',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1519 弄'
+				}, {
+					date: '2016-05-03',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1516 弄'
+				}],
+				currentRow: null,
+				isShow2: false,
+				isShow3: false,
+				checked: false
+			},
+			methods: {
+				handleCurrentChange(val) {
+					alert(JSON.stringify(val))
+					this.currentRow = val;
+				},
+				handleClose1(done) {
+					//确认框
+					this.$confirm('是否关闭').then(() => {
+						//正确
+						done(); //关闭
+					}).catch(() => {
+						//错误
+						console.debug('取消操作');
+					});
+				},
+			},
+			mounted() {
+
+			}
+		}).$mount('#cxda');
+	</script>
+
+</html>

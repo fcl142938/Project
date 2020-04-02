@@ -1,92 +1,96 @@
-
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+	<!--<![endif]-->
+
 	<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>login</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Free HTML5 Template by FreeHTML5.co" />
-	<meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive" />
-	
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>login</title>
+		<!-- plugins:css -->
+		<link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+		<link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
 
-  
+		<link rel="stylesheet" href="css/style.css">
+		<!-- endinject -->
+		<link rel="shortcut icon" href="../../images/favicon.png" />
 
-  	<!-- Facebook and Twitter integration -->
-	<meta property="og:title" content=""/>
-	<meta property="og:image" content=""/>
-	<meta property="og:url" content=""/>
-	<meta property="og:site_name" content=""/>
-	<meta property="og:description" content=""/>
-	<meta name="twitter:title" content="" />
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:url" content="" />
-	<meta name="twitter:card" content="" />
-
-	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-	<link rel="shortcut icon" href="favicon.ico">
-
-	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-	
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/animate.css">
-	<link rel="stylesheet" href="css/style.css">
-
-
-	<!-- Modernizr JS -->
-	<script src="js/modernizr-2.6.2.min.js"></script>
-	<!-- FOR IE9 below -->
-	<!--[if lt IE 9]>
+		<!-- Modernizr JS -->
+		<script src="js/modernizr-2.6.2.min.js"></script>
+		<!-- FOR IE9 below -->
+		<!--[if lt IE 9]>
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
 
 	</head>
-	<body class="style-3">
 
-		<div class="container">
-			<div class="row">
-				<div class="col-md-4 col-md-push-8">
-					<form action="#" class="fh5co-form animate-box" data-animate-effect="fadeInRight">
-						<h2>登录</h2>
-						<div class="form-group">
-							<label for="username" class="sr-only">Username</label>
-							<input type="text" class="form-control" id="username" placeholder="用户账号" autocomplete="off">
+	<body>
+		<div class="container-scroller">
+			<div class="container-fluid page-body-wrapper full-page-wrapper">
+				<div class="content-wrapper d-flex align-items-center auth px-0">
+					<div class="row w-100 mx-0">
+						<div class="col-lg-4 mx-auto">
+							<div class="auth-form-light text-left py-5 px-4 px-sm-5">
+								<div class="brand-logo">
+									<img src="../../images/logo.svg" alt="logo">
+								</div>
+								<h4>德召文汽修管理系统</h4>
+								<form class="pt-3">
+									<div class="form-group">
+										<input type="text" class="form-control form-control-lg" id="Username" placeholder="Username">
+									</div>
+									<div class="form-group">
+										<input type="password" class="form-control form-control-lg" id="Password" placeholder="Password">
+									</div>
+									<div class="mt-3">
+										<a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" href="javascript:void(0)" onclick="loadPage()">登录</a>
+									</div>
+								</form>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="password" class="sr-only">Password</label>
-							<input type="password" class="form-control" id="password" placeholder="用户密码" autocomplete="off">
-						</div>
-						<div class="form-group">
-							<label for="remember"><input type="checkbox" id="remember">记住密码</label>
-						</div>
-						<div class="form-group">
-							<p>未注册? <a href="sign-up3.html">注册</a> | <a href="forgot3.html">忘记密码?</a></p>
-						</div>
-						<div class="form-group">
-							<input type="submit" value="登录" class="btn btn-primary">
-						</div>
-					</form>
-					<!-- END Sign In Form -->
-
-
+					</div>
 				</div>
+				<!-- content-wrapper ends -->
 			</div>
 		</div>
-	
-	<!-- jQuery -->
-	<script src="js/jquery.min.js"></script>
-	<!-- Bootstrap -->
-	<script src="js/bootstrap.min.js"></script>
-	<!-- Placeholder -->
-	<script src="js/jquery.placeholder.min.js"></script>
-	<!-- Waypoints -->
-	<script src="js/jquery.waypoints.min.js"></script>
-	<!-- Main JS -->
-	<script src="js/main.js"></script>
 
+		<!-- jQuery -->
+		<script src="js/jquery.min.js"></script>
+		<!-- Bootstrap -->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- Placeholder -->
+		<script src="js/jquery.placeholder.min.js"></script>
+		<!-- Waypoints -->
+		<script src="js/jquery.waypoints.min.js"></script>
+		<!-- Main JS -->
+		<script src="js/main.js"></script>
+		<script type="text/javascript" src="js/jq_ajax_config.js" ></script>
+		<script>
+			function loadPage() {
+				var staffname=$("#Username").val();
+				if(staffname==""){
+					alert("输入账号");
+					return;
+				}
+				var staffpwd=$("#Password").val();
+				
+				if(staffpwd==""){
+					alert("输入密码");
+					return;
+				}
+				$.getJSON(`http://127.0.0.1:8080/fcl/api/staff/login/${staffname}/${staffpwd}`,function(res){
+					if(res.state==200){
+						location.href = "menu.html";
+					}else{
+						alert("密码或账号错误");
+					}
+				})
+				
+			}
+		</script>
 	</body>
-</html>
 
+</html>
