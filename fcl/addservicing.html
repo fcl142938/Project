@@ -12,28 +12,28 @@
 			</el-page-header>
 			<el-switch style="float: right;margin-right: 50px;" @change="changeState" v-model="value1" active-text="站内接车" inactive-color="green" inactive-text="站外接车">
 			</el-switch>
-			<el-form :model="servicing" style="clear: both;text-align: center;" class="demo-ruleForm">
+			<el-form :model="servicing" style="clear: both;text-align: left;margin-left: 200px;" class="demo-ruleForm">
 				<el-form-item>
-					<el-select v-if="value1"  multiple placeholder="请选择救援车牌号">
-						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+					<el-select filterable v-if="value1" v-model="sermain.rescueid" placeholder="请选择救援车牌号" @change="uprlist">
+						<el-option v-for="item in FclSerAllVo.rlist" :label="item.rescuenumber" :data-price="item.price" :value="item.rescueid">
 						</el-option>
 					</el-select>
-					<el-select v-model="value2" multiple collapse-tags style="margin-left: 10px;" placeholder="请选择维修组">
-						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+					<el-select filterable v-model="sermain.gid" collapse-tags style="margin-left: 10px;" @change="upglist" placeholder="请选择维修组">
+						<el-option v-for="item in FclSerAllVo.alist" :label="item.gname" :data-price="item.price" :value="item.gid">
 						</el-option>
 					</el-select>
-					<el-select v-model="value2" multiple collapse-tags style="margin-left: 10px;" placeholder="请选择客户车牌号">
-						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+					<el-select filterable v-model="sermain.consumerid" collapse-tags style="margin-left: 10px;" placeholder="请选择客户车牌号">
+						<el-option v-for="item in FclSerAllVo.clist" :label="item.carnumber" :value="item.consumerid">
 						</el-option>
 					</el-select>
 				</el-form-item>
 
 				<el-form-item>
-					<el-input style="width:500px;" placeholder="请输入驾驶员名称"></el-input>
+					<el-input style="width:500px;" v-model="name" placeholder="请输入驾驶员名称"></el-input>
 				</el-form-item>
 
 				<el-form-item>
-					<el-input style="width:500px;" placeholder="请输入维修备注"></el-input>
+					<el-input style="width:500px;" v-model="sermain.consumermark" placeholder="请输入维修备注"></el-input>
 				</el-form-item>
 			</el-form>
 			<el-table :data="tableData" style="width: 100%">
@@ -41,18 +41,21 @@
 				</el-table-column>
 				<el-table-column prop="infoname" label="维修项目名">
 				</el-table-column>
-				<el-table-column prop="price" label="维修价格">
+				<el-table-column prop="countprice" label="维修价格">
 				</el-table-column>
 				<el-table-column align="center">
 					<template slot="header" slot-scope="scope">
-						<el-button type="success" @click="gotoPages">添加维修项</el-button>
+						<el-button type="success" size="mini" @click="gotoPages">添加维修项</el-button>
 					</template>
 					<template slot-scope="temp">
-						<el-button v-if="!temp.row.bool" size="mini" type="danger" @click="update(temp.row.wareid)">删除</el-button>
+						<el-button v-if="!temp.row.bool" size="mini" type="danger" @click="deleteRow(temp.row.infoid)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<el-button size="mini" type="danger" @click="">开单</el-button>
+			<div class="text-center" style="margin: 20px  auto  10px;">
+				<el-button size="mini" type="danger" @click="addSermain">开单</el-button>
+			</div>
+
 		</div>
 		<script>
 			var app = new Vue({
@@ -61,76 +64,128 @@
 					servicing: {
 
 					},
+					FclSerAllVo: {},
+					price: '20',
+					gprice: '20',
+					name: '',
 					tableData: [{
-						"infoid": 1,
-						"infoname": 'sfsd',
+						"infoid": 0,
+						"infoname": '救援费',
 						"price": 12,
-						"infomark": '454',
+						"infomark": '救援费',
 						"bool": true
 					}, {
-						"infoid": 1,
-						"infoname": 'Jiuyuan',
+						"infoid": -1,
+						"infoname": '技工费',
 						"price": 12,
-						"infomark": '454',
+						"infomark": '技工费',
 						"bool": true
 					}],
-					options: [{
-						value: '选项1',
-						label: '黄金糕'
-					}, {
-						value: '选项2',
-						label: '双皮奶'
-					}, {
-						value: '选项3',
-						label: '蚵仔煎'
-					}, {
-						value: '选项4',
-						label: '龙须面'
-					}, {
-						value: '选项5',
-						label: '北京烤鸭'
-					}],
-					value2: []
+					sermain: {
+						rescueid: '',
+						consumerid: '',
+						gid: '',
+						consumermark: ''
+					},
+					rescueid: 0,
+					numbers: 2
 				},
 				methods: {
-					gotoPages(){
-						alert("");
-						showWindowDialog('fcl/addservicinginfo.html','添加');
+					deleteRow(infoid) {
+						var index1;
+						this.tableData.forEach((temp, index) => {
+							if(temp.infoid == infoid) {
+								index1 = index;
+							}
+						});
+						this.tableData.splice(index1, 1)
+					},
+					uprlist() {
+						//console.log(this.FclSerAllVo)
+						let _this = this;
+						_this.FclSerAllVo.rlist.forEach(temp => {
+							if(temp["rescueid"] == _this.sermain.rescueid) {
+								_this.tableData[0].price = temp.price;
+								_this.price = temp.price;
+							}
+						})
+					},
+					upglist() {
+						let _this = this;
+						_this.FclSerAllVo.alist.forEach(temp => {
+							if(temp["gid"] == _this.sermain.gid) {
+								if(!_this.value1) {
+									_this.tableData[0].price = temp.gprice;
+								} else {
+									_this.tableData[1].price = temp.gprice;
+								}
+								_this.gprice = temp.gprice;
+							}
+						})
+					},
+					gotoPages() {
+						window.sessionStorage.setItem("multipleSelectionS", JSON.stringify(this.tableData));
+						window.sessionStorage.setItem("numbers", this.numbers);
+						showWindowDialog('fcl/addservicinginfo.html', '添加');
 					},
 					goBack() {
 						$("#cnt").load("fcl/servicing_meetcar.html");
 					},
 					changeState() {
 						if(!this.value1) {
-							this.tableData = [{
-								"infoid": 1,
-								"infoname": 'sfsd',
-								"price": 12,
-								"infomark": '454',
-								"bool": true
-							}]
+							this.tableData.splice(0, 1);
+							this.numbers = 1;
 						} else {
-							this.tableData = [{
-								"infoid": 1,
-								"infoname": 'sfsd',
-								"price": 12,
-								"infomark": '454',
+							this.numbers = 2;
+							this.tableData.unshift({
+								"infoid": 0,
+								"infoname": '救援费',
+								"price": this.price,
+								"infomark": '救援费',
 								"bool": true
-							}, {
-								"infoid": 1,
-								"infoname": 'Jiuyuan',
-								"price": 12,
-								"infomark": '454',
-								"bool": true
-							}]
+							})
 						}
+					},
+					addSermain() {
+
+						let _this = this;
+
+						if(!this.value1) {
+							_this.rescueid = 0;
+						} else {
+							_this.rescueid = _this.sermain.rescueid;
+						}
+						alert(_this.rescueid);
+						var vo = {
+							"ser": {
+								rescueid: _this.rescueid,
+								consumerid: _this.sermain.consumerid,
+								gid: _this.sermain.gid,
+								consumermark: _this.sermain.consumermark
+							},
+							"list": _this.tableData
+						};
+						//console.log(vo)
+						$.ajax({
+							url: `http://127.0.0.1:8080/fcl/api/sermain/addSerMain`,
+							dataType: "json",
+							type: "POST",
+							data: JSON.stringify(vo),
+							contentType: "application/json",
+							success: function(data) {
+								alert("添加成功");
+								_this.goBack();
+							}
+						})
 					}
+				},
+				mounted() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryRescuecar`, function(res) {
+						_this.FclSerAllVo = res;
+					})
 				}
 			}).$mount("#fclApp");
-
-			function send() {
-				alert("");
-			}
 		</script>
 	</body>
 

@@ -8,16 +8,16 @@
 
 	<body>
 		<div id="fclApp">
-			<el-form :inline="true" id="myForm" name="queryForm" :model="ware" style="text-align: center;">
+			<el-form :inline="true" id="myForm" name="queryForm" style="text-align: center;">
 				<el-form-item>
 					<el-col style="width:100px;">
-						<el-button size="mini" type="primary" @click="gotoPage('fcl/addservicing.html')">新增维修订单</el-button>
+						<el-button size="mini" type="primary" @click="gotoAdd('fcl/addservicing.html')">新增维修订单</el-button>
 					</el-col>
 				</el-form-item>
 				<el-form-item>
-					<el-select placeholder="全部" style="width: 100px;" size="mini">
-						<el-option>正在维修</el-option>
-						<el-option>接车</el-option>
+					<el-select style="width: 100px;" size="mini" v-model="val" @change="changestate" placeholder="请选择">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
 					</el-select>
 				</el-form-item>
 			</el-form>
@@ -25,33 +25,39 @@
 				<el-table :data="pageinfo.list" border style="width: 100%">
 					<el-table-column type="expand">
 						<template slot-scope="props">
-							<el-table  :data="props.row.list" border style="width:362px;margin: 0 auto;">
+							<el-table :data="props.row.list" border style="margin: 0 auto;">
 								<el-table-column label="详细记录">
-									<el-table-column prop="infoname" label="项目名称" width="180">
+									<el-table-column prop="infoname" label="项目名称">
 									</el-table-column>
-									<el-table-column prop="price" label="项目价格" width="180">
+									<el-table-column prop="price" label="项目价格">
 									</el-table-column>
 								</el-table-column>
 							</el-table>
 						</template>
 					</el-table-column>
-					<el-table-column prop="carnumber" label="车牌号" width="180" align="center">
+					<el-table-column prop="ser.smid" label="订单号" width="180" align="center">
 					</el-table-column>
-					<el-table-column prop="countprice" label="维修金额" align="center">
+					<!--<el-table-column prop="name" label="车牌号" width="180" align="center">
+					</el-table-column>-->
+					<el-table-column prop="gname" label="技工组" width="180" align="center">
 					</el-table-column>
-					<el-table-column prop="starttime" label="进厂日期" width="180" align="center">
+					<el-table-column prop="ser.countprice" label="维修金额" align="center">
 					</el-table-column>
-					<el-table-column prop="entime" label="完工日期" align="center">
+						<el-table-column prop="ser.consumermark" label="备注" width="180" align="center">
+					</el-table-column>
+					<el-table-column prop="ser.starttime" label="进厂日期" width="180" align="center">
+					</el-table-column>
+					<el-table-column prop="ser.entime" label="完工日期" align="center">
 					</el-table-column>
 					<el-table-column label="操作" align="center">
 						<template slot-scope="temp">
 							<!--<el-button size="mini" type="danger" @click="">修改</el-button>-->
-							<el-button size="mini" type="danger" @click="">删除</el-button>
+							<el-button size="mini" v-if="temp.row.ser.state==0" type="danger" @click="detel(temp.row.ser.smid)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-				<div style="text-align: center;" v-if="pageinfo.list.length!=0">
-					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[5,10,15,20]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageinfo.total">
+				<div style="text-align: center;" v-if="pageinfo.list!== undefined &&pageinfo.list.length!=0">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :total="pageinfo.total" :page-sizes="[5,10,15,20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</div>
 
@@ -61,57 +67,74 @@
 			var app = new Vue({
 				data: {
 					loading: true,
-					pageinfo: {
-						"pageSize": 1,
-						"total": 6,
-						list: [{
-							"carnumber": '123',
-							"starttime": '2018-9-9',
-							"entime": '2019-9-9',
-							"countprice": '30',
-							"list":[{
-								"infoname":'sfhj',
-								"price":'200',
-							},{
-								"infoname":'sfhj',
-								"price":'200',
-							}]
-						}, {
-							"carnumber": '13',
-							"starttime": '2018-9-9',
-							"entime": '2019-9-9',
-							"countprice": '200',
-							"list":[{
-								"infoname":'sfhj',
-								"price":'200',
-							},{
-								"infoname":'sfhj',
-								"price":'200',
-							}]
-						}, {
-							"carnumber": '13',
-							"starttime": '2018-9-9',
-							"entime": '2019-9-9',
-							"countprice": '200',
-							"list":[{
-								"infoname":'sfhj',
-								"price":'200',
-							},{
-								"infoname":'sfhj',
-								"price":'200',
-							}]
-						}]
-					}
+					pageinfo: {},
+					currentPage: 1,
+					pageSize: 5,
+					val: '全部',
+					state: -1,
+					options: [{
+						value: '-1',
+						label: '全部'
+					}, {
+						value: '0',
+						label: '接车中'
+					},
+					 {
+						value: '1',
+						label: '施工中'
+					}, {
+						value: '2',
+						label: '待验收'
+					}, {
+						value: '3',
+						label: '待付款'
+					}, {
+						value: '4',
+						label: '已完成'
+					},{
+						value: '5',
+						label: '返工'
+					}]
 				},
 				methods: {
-					gotoPage(url){
+					changestate() {
+						this.state = this.val;
+						this.currentPage = 1;
+						this.gotoPage();
+					},
+					handleSizeChange(val) {
+						this.pageSize = val;
+						this.gotoPage();
+					},
+					handleCurrentChange(val) {
+						this.currentPage = val;
+						this.gotoPage();
+					},
+					gotoAdd(url) {
 						$("#cnt").load(url);
+					},
+					gotoPage() {
+						let _this = this;
+						_this.loading = true;
+						$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryPage/${_this.currentPage}/${_this.pageSize}/${_this.state}`, function(res) {
+							_this.pageinfo = res;
+							setTimeout(() => {
+								_this.loading = false;
+							}, 1000);
+						})
+					},
+					detel(smid) {
+						let _this = this;
+						if(confirm("是否删除")) {
+							$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/removeById/${smid}`, function(res) {
+								alert("删除成功");
+								_this.gotoPage();
+							})
+						}
 					}
 				},
 				mounted() {
-					setTimeout(() => {
-						this.loading = false;
-					}, 1000);
+					this.gotoPage();
 				}
 			}).$mount("#fclApp")
 		</script>
