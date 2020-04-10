@@ -3,23 +3,19 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>组织结构定义</title>
+		<title>离职登记</title>
 		<!--<link rel="stylesheet" href="../css/index.css" />
 		<script type="text/javascript" src="../js/vue.js" ></script>
 		<script type="text/javascript" src="../js/jquery-1.12.4.js" ></script>
 		<script type="text/javascript" src="../js/jq_ajax_config.js" ></script>
 		<script type="text/javascript" src="../js/index.js" ></script>-->
 		<style>
-			/*.el-table .warning-row {
+			.el-table .warning-row {
 				background: #EBF6FA;
 			}
 			
 			.el-table .success-row {
 				background: #EBF6FA;
-			}*/
-			#el{
-				margin: 0px;
-				margin-left: 850px;
 			}
 			#btn{
 				margin-top: 3px;
@@ -31,162 +27,209 @@
 			#ef2{
 				margin-top: 5px;
 			}
+			#q{
+				margin-left: 20px;
+				
+			}
+	       .menu_item {
+                  line-height: 10px;
+                  text-align: center;
+                  margin-top: 10px;
+             }
+
+    .menu {
+        height: 100px;
+        width: 80px;
+        border-radius: 10px;
+        border: 1px solid #999999;
+        background-color: #f4f4f4;
+        z-index:50;
+       position: absolute;
+       margin-left: -250px;
+       margin-top: -30px;
+       
+    }
+
+   .menu> li:hover {
+        background-color: #1790ff;
+        color: white;
+    }
+    .menu>li{font-size:10px}
+
+      
+
 		</style>
 	</head>
 
 	<body>
-		<div id="leaveapp" v-loading="loading">
+		<div id="leaveApp" v-loading="loading">
 			<el-row>
 				<div>
 					<h1 class="lf" style="font-size: 30px; font-family: '微软雅黑';color: black;">离职登记</h1>
 				</div>
-				<el-row :span="24" id="el">
-						<el-col :span="12">	
-						<el-input v-model="format.fname" placeholder="请搜索"></el-input>
+
+				<el-row id="el">
+						<el-col :span="4">	
+						<el-input v-model="format.name" placeholder=""></el-input>
 						</el-col>
-					<el-form :span="12" id="btn">
+						
+						<el-col :span="4">	
+					<el-form  id="btn">
 						<el-form-item  >
-								<el-button icon="el-icon-search" size="mini" type="warning" @click="">搜索</el-button>
+								<el-button id="q" icon="el-icon-search" size="mini" type="warning" @click="query">搜索</el-button>
 						</el-form-item>
 					</el-form>
+					</el-col>
 				</el-row>
 				<el-row id="el2">
 					<el-form  id="ef2">
 						<el-row>
 						<el-col>
-							<el-button icon="el-icon-delete-solid" type="danger" round @click="showDialogs">离职</el-button>
-							<el-button icon="el-icon-user" type="primary" round @click="">回滚</el-button>
-							<el-button icon="el-icon-edit" type="success" round @click="showDialog">打开</el-button>
-							<el-button icon="el-icon-delete-solid" type="danger" round @click="">删除</el-button>
-							<el-button icon="el-icon-user-solid" type="success" round @click="">查询</el-button>
+							<el-button  icon="el-icon-edit" type="primary" round @click="showDialog">员工离职</el-button>
+							<el-button icon="el-icon-upload2" type="warning" round @click="xlsc">导出</el-button>
 						</el-col>
 					  </el-row>
                       </el-form >
 				</el-row>
 				<el-row :span="24">
 					<el-col :span="24">
-						<el-table  :data="pageInfo" border :row-class-name="tableRowClassName" style="width:100%">
-						<el-table-column prop="org" label="部门"  width="180">
+						<el-table  :data="pageInfo.list" border :row-class-name="tableRowClassName" style="width:100%" >
+						<el-table-column prop="staffid" label="编号"  width="100">
 						</el-table-column>
-						<el-table-column prop="pid" label="员工编号"  width="180">
+						<el-table-column prop="departmentname" label="部门"  width="100">
 						</el-table-column>
-						<el-table-column prop="department" label="员工姓名"  width="180">
+						<el-table-column prop="positionname" label="职位"  width="100">
 						</el-table-column>
-						<el-table-column prop="num" label="性别"  width="180">
+						<el-table-column prop="staffname" label="姓名"  width="100">
 						</el-table-column>
-						<el-table-column prop="pname" label="职位"  width="180">
+						<el-table-column prop="staffsex" label="性别"  width="100">
 						</el-table-column>
-						<el-table-column prop="psex" label="离职日期"  width="180">
+						<el-table-column prop="saddress" label="地址"  width="100">
 						</el-table-column>
-						<el-table-column prop="pgw" label="离职原因"  width="180">
+						<el-table-column prop="sstarttime" label="入职时间"  width="100">
+						</el-table-column>
+						<el-table-column prop="sendtime" label="离职时间"  width="100">
 						</el-table-column>
 						
+							<el-table-column label="操作">
+							<template slot-scope="temp">
+								  <el-button type="danger"  @click="info(temp.row.staffname)">回滚</el-button>
+							</template>
+						</el-table-column>
+						
+					
 					</el-table>
 					</el-col>
 				</el-row>
+			    <el-row>
+				<el-col :span="24">
+					<el-pagination v-if="pageInfo.total!=0" :background="true"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
+					</el-pagination>
+				</el-col>
+			   </el-row>
 				<!--模态框-->
-			<el-dialog :destroy-on-close="true" @opened="handlOpen" title="员工卡片" :visible.sync="isShow" :before-close="handleClose" center>
+			<el-dialog :destroy-on-close="true" @opened="handlOpen" title="员工离职" :visible.sync="isShow" :before-close="handleClose" center>
 				<div id="modalcnt"></div>
 			</el-dialog>
 			
-				<el-dialog :destroy-on-close="true" @opened="handlOpen1" title="离职登记" :visible.sync="isShows" :before-close="handleClose" center>
-				<div id="modalcnts"></div>
-			</el-dialog>
-					
-				
-					
-					
 		</div>
 	</body>
 	<script>
-		var leaveapp = new Vue({
-			el: '#leaveapp',
+		var leaveApp = new Vue({
+			el: '#leaveApp',
 			data: {
-				pageInfo: [
-				{
-					org:"成高",
-					pid:"001",
-                    department:"财务部",
-                    num:"as123",
-					pname:"asd",
-					psex:"男",
-					pgw:"123",
-					pzk:"好",
-					psg:"175",
-					pjg:"湖南"
-				},
-					{
-					org:"成高",
-					pid:"001",
-                    department:"财务部",
-                    num:"as123",
-					pname:"asd",
-					psex:"男",
-					pgw:"123",
-					pzk:"好",
-					psg:"175",
-					pjg:"湖南"
-				},
-				
-				],
+				pageInfo: [],
 				format: {
-				   fcoding:"",
-				   fname:""
+				  name:""
 				},
-				
-				 datas: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
-         defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
+				 menuVisible: false,
+				 did:"",
+				 len:"",
+		       datas:[],
 				loading: true,
 				isShow:false,
-				isShows:false
+				
+				pagenum:1,
+				pagesize:3,
 			},
 			methods: {
-				 handleNodeClick(data) {
-              console.log(data);
-     },
-               handlOpen(){
-					$("#modalcnt").load('px/add.html');
+				
+					xlsc(){
+					let _this = this;
+					if(this.format.name=='')
+						{this.format.name=null};
+						
+					$.getJSON(`http://127.0.0.1:8080/px/api/leavexcl/leave/${_this.format.name}/${_this.pagenum}/${_this.pagesize}`, function(date) {
+                              	if(date.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '导出成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+					});
+				
 				},
-				 handlOpen1(){
-					$("#modalcnts").load('leaveinfo.html');
+				info(name){
+					let _this = this;
+						const loading = this.$loading({
+								lock: true,
+								text: '努力更新中....',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.5)'
+							});
+							//延迟2秒，模拟网络延迟
+							setTimeout(() => {
+					            $.post(`http://127.0.0.1:8080/px/api/user/updateleaveinfo/${name}`,function(res){
+					            	if(res.code=="200"){
+					            		 loading.close(); //关闭加载块【非常重要】
+											_this.$message({
+												type: 'success',
+												message: '回滚成功'
+											});
+													
+					            	}
+					            	
+					            	
+					            })
+							}, 2000);
+				
 				},
+				goToPage(staffname,pageNum,pageSize) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/px/api/user/leave/${staffname}/${pageNum}/${pageSize}`, function(date) {
+						_this.pageInfo = date;
+
+					});
+				},
+				
+				handleSizeChange(val) {
+					if(this.format.name=='')
+						{this.format.name=null};
+						this.pageSize=val;
+					this.goToPage( this.format.name,this.pageInfo.pageNum, val);
+				},
+				handleCurrentChange(val) {
+					if(this.format.name=='')
+						{this.format.name=null};
+						this.pagenum=val;
+					this.goToPage(this.format.name, val, this.pageInfo.pageSize, );
+				},
+				
+			 
+				query(){
+						if(this.format.name=='')
+						{this.format.name=null};
+					   this.goToPage(this.format.name,1,3);
+				},
+	
+				
+				
+                handlOpen(){
+					$("#modalcnt").load('px/leaveinfo.html');
+				},
+			
 				handleClose(done){
 					this.$confirm('是否关闭').then(() => {
 						done(); 
@@ -195,10 +238,7 @@
 				showDialog() {
 					this.isShow=true;
 				},
-				showDialogs() {
-					this.isShows=true;
-				},
-				
+			
 			
 			tableRowClassName({
 					row,
@@ -211,7 +251,6 @@
 					}
 					return '';
 				}
-			
 		
 				
 			},
@@ -220,6 +259,8 @@
 				setTimeout(() => {
 					this.loading = false;
 				}, 1000);
+				this.goToPage(null,1,3);
+			
 			}
 		});
 	</script>
