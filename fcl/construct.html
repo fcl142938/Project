@@ -7,13 +7,17 @@
 	</head>
 
 	<body>
-		<div id="finishApp">
-			<div v-loading="loading">
+		<div id="constructApp">
+			<div style="margin-bottom:20px;text-align: right;">
+				<el-switch style="margin-right: 50px;" @change="gotoPage" v-model="value1" active-text="待施工" inactive-color="green" inactive-text="施工中">
+				</el-switch>
+			</div>
+			<div v-loading="loading" >
 				<el-table :data="pageinfo.list" border style="width: 100%">
 					<el-table-column type="expand" style="text-align: center;">
 						<template slot-scope="props">
-							<el-table :data="props.row.list" border style="margin: 0 auto;" >
-								<el-table-column label="详细记录" >
+							<el-table :data="props.row.list" border style="margin: 0 auto;">
+								<el-table-column label="详细记录">
 									<el-table-column prop="infoname" label="项目名称">
 									</el-table-column>
 									<el-table-column prop="price" label="项目价格">
@@ -53,7 +57,8 @@
 					<el-table-column label="操作" align="center">
 						<template slot-scope="temp">
 							<!--<el-button size="mini" type="danger" @click="">修改</el-button>-->
-							<el-button size="mini" type="danger" @click="gotoinspect(temp.row)">检查</el-button>
+							<el-button v-if="temp.row.ser.state==0||temp.row.ser.state==5" size="mini" type="danger" @click="updateState(temp.row.ser.smid,1)">开始施工</el-button>
+							<el-button v-if="temp.row.ser.state==1" size="mini" type="danger" @click="updateState(temp.row.ser.smid,2)">结束施工</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -65,8 +70,9 @@
 		</div>
 	</body>
 	<script>
-		var finishApp = new Vue({
+		var constructApp = new Vue({
 			data: {
+				value1:true,
 				loading: true,
 				pageinfo: {},
 				currentPage: 1,
@@ -75,7 +81,7 @@
 			mounted() {
 				this.gotoPage();
 			},
-			methods:{
+			methods: {
 				handleSizeChange(val) {
 					this.pageSize = val;
 					this.gotoPage();
@@ -87,19 +93,30 @@
 				gotoPage() {
 					let _this = this;
 					_this.loading = true;
-					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryPage/${_this.currentPage}/${_this.pageSize}/2`, function(res) {
+					var state=0;
+					var status=0;
+					if(!_this.value1){
+						state=1,
+						status=1
+					}
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryPage/${_this.currentPage}/${_this.pageSize}/${state}`,{
+						"status":status
+					}, function(res) {
 						_this.pageinfo = res;
 						setTimeout(() => {
 							_this.loading = false;
 						}, 1000);
 					})
 				},
-				gotoinspect(ser) {
-					window.sessionStorage.setItem("ser", JSON.stringify(ser));
-					showWindowDialog('fcl/inspect.html', '检查');
+				updateState(id, state) {
+					let  _this=this;
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/updateCourseState/${id}/${state}`, function(res) {
+						alert("成功");
+						_this.gotoPage();
+					})
 				}
 			}
-		}).$mount("#finishApp");
+		}).$mount("#constructApp");
 	</script>
 
 </html>
