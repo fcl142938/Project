@@ -118,12 +118,14 @@
 				showView(url, title) {
 					var bool = true;
 					var number;
+					
 					this.editableTabs.forEach(temp => {
 						if(temp.title == title) {
 							bool = false;
 							number=temp.name;
 						}
 					})
+					/*window.sessionStorage.setItem("number",number);*/
 					$("#cnt").load(url);
 					if(bool) {
 						this.addTab(this.editableTabsValue, url, title);
