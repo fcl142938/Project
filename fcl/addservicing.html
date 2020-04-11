@@ -37,11 +37,14 @@
 				</el-form-item>
 			</el-form>
 			<el-table :data="tableData" style="width: 100%">
-				<el-table-column prop="infoid" label="编号">
+				<el-table-column label="编号">
+					<template slot-scope="temp">
+						{{temp.$index+1}}
+					</template>
 				</el-table-column>
 				<el-table-column prop="infoname" label="维修项目名">
 				</el-table-column>
-				<el-table-column prop="countprice" label="维修价格">
+				<el-table-column prop="price" label="维修价格">
 				</el-table-column>
 				<el-table-column align="center">
 					<template slot="header" slot-scope="scope">
