@@ -17,10 +17,10 @@
 			<el-container>
 				<el-aside width="200px" style="border: 1px gainsboro solid;border-radius: 5px;padding:0 10px;">
 					<h5>类别分类</h5>
-					<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+					<el-tree :data="dataType" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
 				</el-aside>
-				<el-main>
-					<el-table ref="multipleTable" :data="pageinfo.list" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+				<el-main v-loading="loadingTy">
+					<el-table ref="multipleTable" :data="pageinfo.list" tooltip-effect="dark" style="width: 100%" @select-all="handleSelectionChange" @select="handleSelectionChange">
 						<el-table-column prop="infoid" label="维修编号" width="180" align="center">
 						</el-table-column>
 						<el-table-column prop="infoname" label="项目名称" align="center">
@@ -32,103 +32,134 @@
 						<el-table-column type="selection" width="55">
 						</el-table-column>
 					</el-table>
-					<el-button type="success" size="mini" style="margin: 10px 5px 0 420px;">返回</el-button>
-					<el-badge :value="multipleSelection.length" class="item">
-						<el-button size="small" @click="addser">添加</el-button>
-					</el-badge>
+					<div style="text-align: center;" v-if="pageinfo.list !== undefined&&pageinfo.list.length!=0">
+						<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[5,10,15,20]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageinfo.total">
+						</el-pagination>
+						<el-button type="success" size="mini" style="margin: 10px 5px 0 420px;">返回</el-button>
+						<el-badge :value="multipleSelection.length-numbers" class="item">
+							<el-button size="small" @click="addser">添加</el-button>
+						</el-badge>
+					</div>
+
 				</el-main>
 			</el-container>
 		</div>
 		<script>
 			var fclshowApp = new Vue({
 				data: {
-					data: [{
-						label: '一级 1',
-						children: [{
-							label: '二级 1-1',
-							children: [{
-								label: '三级 1-1-1'
-							}]
-						}]
-					}, {
-						label: '一级 2',
-						children: [{
-							label: '二级 2-1',
-							children: [{
-								label: '三级 2-1-1'
-							}]
-						}, {
-							label: '二级 2-2',
-							children: [{
-								label: '三级 2-2-1'
-							}]
-						}]
-					}, {
-						label: '一级 3',
-						children: [{
-							label: '二级 3-1',
-							children: [{
-								label: '三级 3-1-1'
-							}]
-						}, {
-							label: '二级 3-2',
-							children: [{
-								label: '三级 3-2-1'
-							}]
-						}]
-					}],
+					numbers:window.sessionStorage.getItem("numbers"),
+					dataType: [],
 					defaultProps: {
-						children: 'children',
-						label: 'label'
+						children: 'list',
+						label: 'typename'
 					},
-					pageinfo: {
-						list: [{
-								"infoid": 1,
-								"infoname": 'sfsd',
-								"price": 12,
-								"infomark": '454'
-							},
-							{
-								"infoid": 1,
-								"infoname": 'sfsd',
-								"price": 12,
-								"infomark": '454'
-							},
-							{
-								"infoid": 1,
-								"infoname": 'sfsd',
-								"price": 12,
-								"infomark": '454'
-							}
-						]
-					},
-					multipleSelection: []
+					pageSize: 5,
+					currentPage: 1,
+					pageinfo: {},
+					multipleSelection: JSON.parse(window.sessionStorage.getItem("multipleSelectionS")),
+					parentid: 0,
+					loadingTy: true
 				},
 				methods: {
-					handleNodeClick(data) {
-						console.log(data);
+					handleSizeChange(val) {
+						this.pageSize = val;
+						this.gotoPageTy();
 					},
-					toggleSelection(rows) {
-						if(rows) {
-							rows.forEach(row => {
-								this.$refs.multipleTable.toggleRowSelection(row);
-							});
-						} else {
-							this.$refs.multipleTable.clearSelection();
-						}
+					handleCurrentChange(val) {
+						this.currentPage = val;
+						this.gotoPageTy();
+					},
+					handleNodeClick(data) {
+						this.currentPage = 1;
+						this.parentid = data.typeid;
+						this.gotoPageTy();
 					},
 					handleSelectionChange(val) {
-						this.multipleSelection = val;
+						//console.log(this.multipleSelection)				
+						let _this = this;
+						if(_this.multipleSelection.length == 0) {
+							_this.multipleSelection = val;
+						} else {
+							//合并数据
+							val.forEach(row => {
+								_this.multipleSelection.push(row);
+							})
+
+							//数据去重	
+							var arrdata = [];
+							var obj = {};
+							_this.multipleSelection.forEach(temp => {
+								if(!obj[temp.infoid]) {
+									arrdata.push(temp);
+									obj[temp.infoid] = true;
+								}
+							})
+							//确认移除数据
+
+							var arr1 = removeData(_this.pageinfo.list, val)
+							//移除数据
+							_this.multipleSelection = removeData(arrdata, arr1)
+
+						}
+
+						//						
+						//console.log(this.multipleSelection)
+					},
+					gotoPageTy() {
+						let _this = this;
+						_this.loadingTy = true;
+						$.getJSON(`http://127.0.0.1:8080/fcl/api/type/queryPage/${_this.currentPage}/${_this.pageSize}/${_this.parentid}`, function(res) {
+							_this.pageinfo = res;
+							//行选中状态
+							setTimeout(() => {
+								_this.pageinfo.list.forEach(row => {
+									_this.multipleSelection.forEach(temp => {
+										if(temp.infoid == row.infoid) {
+											_this.$refs.multipleTable.toggleRowSelection(row, true);
+										}
+									})
+								})
+								_this.loadingTy = false;
+							},100);
+
+						})
 					},
 					addser() {
-						this.multipleSelection.forEach((obj, index) => {
-							/*this.parent.tableData.push(obj)*/
+						if(this.multipleSelection.length == 0) {
+							alert("请选择");
+							return;
+						}
+					/*	this.multipleSelection.forEach((obj, index) => {
 							window.parent.app.tableData.push(obj);
-						})
-
+						})*/
+						window.parent.app.tableData = this.multipleSelection;
+						//关闭
+						closeWindowDialog();
 					}
+				},
+				mounted() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/type`, function(res) {
+						_this.dataType = res;
+					})
+					_this.gotoPageTy();
 				}
 			}).$mount("#fclshowApp")
+
+			function removeData(arr1, arr2) {
+				var arr = [];
+				arr1.forEach(temp => {
+					arr.push(temp);
+				})
+				for(let i = arr1.length - 1; i >= 0; i--) {
+					for(let j = 0; j < arr2.length; j++) {
+						if(arr1[i].infoid == arr2[j].infoid) {
+							arr.splice(i, 1);
+						}
+					}
+				}
+				return arr;
+			}
 		</script>
 	</body>
 
