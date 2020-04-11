@@ -25,6 +25,10 @@
 				}
 			}
 			
+			.el-tabs__content {
+				display: block;
+			}
+			
 			.el-col {
 				border-radius: 4px;
 				padding: 5px;
@@ -71,7 +75,7 @@
 				</el-col>
 			</el-row>
 			<el-row :gutter="20" style="background-color: #fefff3;">
-				<el-col :span="8">
+				<el-col :span="12">
 				</el-col>
 				<el-col :span="8">
 					<el-col :span="6">
@@ -88,7 +92,7 @@
 					</el-col>
 				</el-col>
 				<el-col :span="2">
-					<i class="el-icon-upload2">导出</i>
+					<i @click="daochukhzl" class="el-icon-upload2">导出</i>
 				</el-col>
 				<el-col :span="2">
 					<i class="el-icon-setting">字段设置</i>
@@ -100,13 +104,13 @@
 						车资料
 					</el-col>
 					<el-col :span="6">
-						<span @click="isShow3=true">增加车资料</span>
+						<span @click="md33">增加车资料</span>
 					</el-col>
 					<el-col :span="6">
 						<span @click="md3">修改车资料</span>
 					</el-col>
 					<el-col :span="6">
-						删除车资料
+						<span @click="shanchuche">删除车资料</span>
 					</el-col>
 				</el-col>
 				<el-col :span="10">
@@ -124,13 +128,13 @@
 						<span @click="md1">增加客户和车</span>
 					</el-col>
 					<el-col :span="3">
-						<span @click="isShow2=true">增加客户</span>
+						<span @click="md22">增加客户</span>
 					</el-col>
 					<el-col :span="3">
 						<span @click="md2">修改客户</span>
 					</el-col>
 					<el-col :span="3">
-						删除客户
+						<span @click="shanchukuhu">删除客户</span>
 					</el-col>
 					<el-col :span="3">
 						相关证照
@@ -168,7 +172,7 @@
 					<el-tab-pane label="车辆信息">
 						<template>
 							<el-table stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
-								<el-table-column prop="consumerid" label="id">
+								<el-table-column prop="consumerid" label="编号">
 								</el-table-column>
 								<el-table-column prop="carnumber" label="车牌号码">
 								</el-table-column>
@@ -189,9 +193,9 @@
 							</el-table>
 						</template>
 					</el-tab-pane>
-					<el-tab-pane label="历史消费">
+					<!--<el-tab-pane label="历史消费">
 						<template>
-							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+							<el-table stripe border ref="singleTable" :data="" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 								<el-table-column type="index" width="50">
 								</el-table-column>
 								<el-table-column property="date" label="日期" width="120">
@@ -205,7 +209,7 @@
 					</el-tab-pane>
 					<el-tab-pane label="角色管理">
 						<template>
-							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+							<el-table stripe border ref="singleTable" :data="" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 								<el-table-column type="index" width="50">
 								</el-table-column>
 								<el-table-column property="date" label="日期" width="120">
@@ -216,7 +220,7 @@
 								</el-table-column>
 							</el-table>
 						</template>
-					</el-tab-pane>
+					</el-tab-pane>-->
 				</el-tabs>
 			</el-row>
 			<el-dialog title="增加客户和车资料" :visible.sync="isShow1" width="70%" :before-close="handleClose1">
@@ -653,6 +657,9 @@
 	<script>
 		var khzl = new Vue({
 			data: {
+				a:null,
+				b:null,
+				input: '',
 				currentRow: null,
 				isShow1: false,
 				isShow2: false,
@@ -669,6 +676,7 @@
 				xuanzhongcheliangpinpai: '',
 				chexing: [],
 				xuanzhongchexing: '',
+				xuanzhongchexing1:'',
 				kehu: {
 					userid: '',
 					username: '',
@@ -691,22 +699,112 @@
 				}
 			},
 			methods: {
-				md3(){
+				daochukhzl(){
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/daochukhzl`, function(data) {
+						if(data.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '导出成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+					});
+				},
+				shanchuche(){
+					if(this.xuanzhongconsumercar == null) {
+						this.$message("请选中需要删除的车");
+					} else {
+						this.$confirm('此操作将永久删除该车, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							let _this = this;
+							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanchukehuche/${_this.xuanzhongconsumercar.consumerid}`,
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+							}
+						});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					}
+				},
+				shanchukuhu() {
+					if(this.currentRow == null) {
+						this.$message("请选中需要删除的客户");
+					} else {
+						this.$confirm('此操作将永久删除该客户, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							let _this = this;
+							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanchukehu/${_this.currentRow.userid}`, 
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+							}
+						});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					}
+				},
+				md33() {
+					if(this.currentRow == null) {
+						this.$message("请选中需要新增的客户");
+					} else {
+						this.kehu = this.currentRow;
+						this.xuanzhongcheliangpinpai = '';
+						this.xuanzhongchexing = '';
+						this.isShow3 = true;
+					}
+				},
+				md3() {
 					if(this.currentRow == null) {
 						this.$message("请选中需要修改的客户");
-					} else if(this.xuanzhongconsumercar==null){
+					} else if(this.xuanzhongconsumercar == null) {
 						this.$message("请选中需要修改的车");
-					}else{
+					} else {
 						this.kehu = this.currentRow;
-						this.kehuche=this.xuanzhongconsumercar;
-						this.xuanzhongcheliangpinpai=this.kehuche.brandname;
-						this.xuanzhongchexing=this.kehuche.motorcyclename;
+						this.kehuche = this.xuanzhongconsumercar;
+						this.xuanzhongcheliangpinpai = this.kehuche.brandname;
+						this.xuanzhongchexing = this.kehuche.motorcyclename;
+						this.a=this.xuanzhongconsumercar;
 						this.isShow3 = true;
 					}
 				},
 				isShow3quxiao() {
 					this.isShow3 = false;
-					this.kehuche= {
+					this.kehuche = {
 						consumerid: 0,
 						userid: '',
 						carnumber: '',
@@ -721,8 +819,17 @@
 				},
 				isShow3queding() {
 					this.isShow3 = false;
+					if(this.a==null){
+						this.kehuche.motorcycleid = this.xuanzhongchexing;
+						this.kehuche.userid = this.kehu.userid;
+						this.addkehuche();
+					}else{
+						this.xiugaiche();
+					}
+				},
+				xiugaiche(){
 					let _this = this;
-					this.kehuche.userid=this.currentRow.userid;
+					this.kehuche.userid = this.currentRow.userid;
 					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xiugaikehuche`, {
 						type: "post",
 						contentType: "application/json",
@@ -734,7 +841,7 @@
 							} else {
 								_this.$message(date.msg);
 							}
-							this.kehuche= {
+							this.kehuche = {
 								consumerid: 0,
 								userid: '',
 								carnumber: '',
@@ -762,6 +869,13 @@
 				},
 				isShow2queding() {
 					this.isShow2 = false;
+					if(this.a==null){
+						this.addkehu();
+					}else{
+						this.xiugaikehu();
+					}
+				},
+				xiugaikehu(){
 					let _this = this;
 					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xiugaikehu`, {
 						type: "post",
@@ -774,7 +888,7 @@
 							} else {
 								_this.$message(date.msg);
 							}
-							this.kehu = {
+							_this.kehu = {
 								userid: '',
 								username: '',
 								userphone: '',
@@ -784,6 +898,15 @@
 							}
 						}
 					});
+				},
+				md22() {
+						this.isShow2 = true;
+						this.b=this.currentRow;
+						let str = '';
+						for(let i = 1; i <= 12; i++) {
+							str = str + String.fromCharCode(Math.floor(Math.random() * 24 + 65));
+						}
+						this.kehu.userid = str;
 				},
 				md2() {
 					if(this.currentRow == null) {
@@ -883,19 +1006,19 @@
 							useraddress: '',
 							userbrithday: '',
 							userremark: ''
-						}
-						this.kehuche= {
-								consumerid: 0,
-								userid: '',
-								carnumber: '',
-								motorcycleid: '',
-								drivername: '',
-								driverphone: '',
-								driverbrithday: '',
-								driverdate: '',
-								carcourse: '',
-								buycar: ''
-							}
+						};
+						this.kehuche = {
+							consumerid: 0,
+							userid: '',
+							carnumber: '',
+							motorcycleid: '',
+							drivername: '',
+							driverphone: '',
+							driverbrithday: '',
+							driverdate: '',
+							carcourse: '',
+							buycar: ''
+						};
 						done();
 					}).catch(() => {
 						console.debug('取消操作');
