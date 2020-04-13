@@ -20,8 +20,8 @@
 	<body>
 		<div class="container">
 			<div id="settlementCenterApp" class="row" v-cloak>
-				<h1>结算中心<el-button style="float: right;" onclick="">关闭</el-button></h1>
-				<hr />
+				<!--<h1>结算中心<el-button style="float: right;" onclick="">关闭</el-button></h1>
+				<hr />-->
 				<div>
 					<el-form :inline="true" :model="s" class="demo-form-inline" label-width="70px">
 						<el-form-item label="开单日期">
@@ -48,18 +48,18 @@
 						<el-form-item label="服务顾问">
 							<el-input v-model="s.staffname"></el-input>
 						</el-form-item>
-						<el-form-item label="业务类型">
-							<el-select v-model="" placeholder="请选择业务类型">
+						<!--<el-form-item label="业务类型">
+							<el-select v-model="s.staffname" placeholder="请选择业务类型">
 								<el-option label="区域一" value="shanghai"></el-option>
 								<el-option label="区域二" value="beijing"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="单据类型">
-							<el-select v-model="" placeholder="请选择单据类型">
+							<el-select v-model="s.staffname" placeholder="请选择单据类型">
 								<el-option label="区域一" value="shanghai"></el-option>
 								<el-option label="区域二" value="beijing"></el-option>
 							</el-select>
-						</el-form-item>
+						</el-form-item>-->
 						<el-form-item label="备注">
 							<el-input v-model="s.userremark"></el-input>
 						</el-form-item>
@@ -185,7 +185,10 @@
 			methods: {
 				onQuery() {
 					let _this = this;
-					alert(_this.s.state);
+					console.info("状态ID:"+_this.s.state);
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/queryByMaxSettlementCenter/${_this.s.state}`, function(sc) {
+						_this.sc = sc;
+					});
 				},
 				onHg() {
 					if(window.confirm('是否给当前数据进行回滚操作')) {
@@ -229,8 +232,7 @@
 				},
 				goToSettlementCenter() {
 					let _this = this;
-					alert(_this.s.state);
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/${_this.s.state}`, function(sc) {
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/sc`, function(sc) {
 						_this.sc = sc;
 					});
 				},

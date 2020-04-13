@@ -20,8 +20,8 @@
 	<body>
 		<div class="container">
 			<div id="memberQueryApp" class="row" v-cloak>
-				<h3>会员操作</h3>
-				<hr />
+				<!--<h3>会员操作</h3>
+				<hr />-->
 				<div>
 					<el-form :inline="true" :model="member" class="demo-form-inline" label-width="80px">
 						<el-form-item label="会员名称">
@@ -29,7 +29,7 @@
 						</el-form-item>
 						<el-form-item>
 							<el-button type="success" @click="onQuery()">查询</el-button>
-							<el-button type="primary" @click="onAdd()">新会员</el-button>
+							<el-button type="primary" @click="onAdd('tyh/memberAdd.html')">新会员</el-button>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -54,8 +54,8 @@
 					<el-button v-if="pageInfo.hasNextPage" @click="nextPage" type="primary">下一页</el-button>
 					<el-button @click="lastPage" type="primary">尾页</el-button>
 				</div>-->
-				<div class="block">
-					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+				<div class="block" v-if="pageInfo.list!== undefined && pageInfo.list.length!=0">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :total="pageInfo.total" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</div>
 			</div>
@@ -67,10 +67,9 @@
 	<script>
 		var memberQueryApp = new Vue({
 			data: {
-				currentPage1: 5,
-				currentPage2: 5,
-				currentPage3: 5,
-				currentPage4: 4,
+				currentPage: 1,
+				pageSize: 1,
+				val: '全部',
 				member: {
 					name: ''
 				},
@@ -88,25 +87,32 @@
 				pageInfo: {}
 			},
 			methods: {
-				onAdd() {
-					location.href = "memberAdd.html";
+				onAdd(url) {
+					$("#cnt").load(url);
+				},
+				changestate() {
+					this.state = this.val;
+					this.currentPage = 1;
+					this.goToQueryMember();
 				},
 				handleSizeChange(val) {
-					console.log(`每页 ${val} 条`);
+					this.pageSize = val;
+					this.goToQueryMember();
 				},
 				handleCurrentChange(val) {
-					console.log(`当前页: ${val}`);
+					this.currentPage = val;
+					this.goToQueryMember();
 				},
-				goToQueryMember(pageNum, pageSize) {
+				goToQueryMember() {
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/${pageNum}/${pageSize}`, function(m) {
-						console.info(m);
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/${_this.currentPage}/${_this.pageSize}`, function(m) {
+						console.info(m);	
 						_this.pageInfo = m;
 					});
 				}
 			},
 			mounted() {
-				this.goToQueryMember(1, 1);
+				this.goToQueryMember();
 			}
 		}).$mount('#memberQueryApp');
 	</script>
