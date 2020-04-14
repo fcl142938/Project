@@ -20,9 +20,8 @@
 			#btn{
 				margin-top: 3px;
 			}
-			#el2{
-				background-color: #C0C4CC;
-				height: 50px;
+			#el{
+			  margin-left: 450px;
 			}
 			#ef2{
 				margin-top: 5px;
@@ -55,6 +54,10 @@
         color: white;
     }
     .menu>li{font-size:10px}
+    
+    #page{
+    	text-align: center;
+    }
 
       
 
@@ -64,9 +67,7 @@
 	<body>
 		<div id="leaveApp" v-loading="loading">
 			<el-row>
-				<div>
-					<h1 class="lf" style="font-size: 30px; font-family: '微软雅黑';color: black;">通讯名录</h1>
-				</div>
+				
 					<el-row id="el">
 						<el-col :span="4">	
 						<el-input v-model="format.name" placeholder=""></el-input>
@@ -75,7 +76,7 @@
 						<el-col :span="4">	
 					<el-form  id="btn">
 						<el-form-item  >
-								<el-button id="q" icon="el-icon-search" size="mini" type="warning" @click="query">搜索</el-button>
+								<el-button id="q" icon="el-icon-search" size="mini"  @click="query">搜索</el-button>
 						</el-form-item>
 					</el-form>
 					</el-col>
@@ -83,7 +84,7 @@
 
 				<el-row :span="24">
 					<el-col :span="24">
-						<el-table  :data="pageInfo.list" border :row-class-name="tableRowClassName" style="width:100%" >
+						<el-table  :data="pageInfo.list"  :row-class-name="tableRowClassName" style="width:100%" >
 						<el-table-column prop="staffid" label="编号"  width="120">
 						</el-table-column>
 						<el-table-column prop="departmentname" label="部门"  width="115">
@@ -105,7 +106,7 @@
 				</el-row>
 			    <el-row>
 				<el-col :span="24">
-					<el-pagination v-if="pageInfo.total!=0" :background="true"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
+					<el-pagination id="page" v-if="pageInfo.total!=0" :background="true"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</el-col>
 			   </el-row>

@@ -20,8 +20,8 @@
 	<body>
 		<div class="container">
 			<div id="jobDefinitionApp" class="row" v-cloak>
-				<h1>岗位定义<el-button style="float: right;" onclick="">关闭</el-button></h1>
-				<hr />
+				<!--<h1>岗位定义<el-button style="float: right;" onclick="">关闭</el-button></h1>
+				<hr />-->
 				<div>
 					<el-form :inline="true" :model="position" class="demo-form-inline" label-width="80px">
 						<el-form-item label="岗位编码">
@@ -60,12 +60,16 @@
 						</el-table>
 					</template>
 				</div>
-				<div style="margin-left: 40%;">
+				<!--<div style="margin-left: 40%;">
 					<el-button @click="fristPage" type="primary">首页</el-button>
 					<el-button v-if="pageInfo.hasPreviousPage" @click="prePage" type="primary">上一页</el-button>
 					第<span>{{pageInfo.pageNum}}</span>页 共<span>{{pageInfo.pages}}</span>页 （总数<span>{{pageInfo.total}}</span>）
 					<el-button v-if="pageInfo.hasNextPage" @click="nextPage" type="primary">下一页</el-button>
 					<el-button @click="lastPage" type="primary">尾页</el-button>
+				</div>-->
+				<div class="block" v-if="pageInfo.list!== undefined && pageInfo.list.length!=0">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :total="pageInfo.total" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper">
+					</el-pagination>
 				</div>
 			</div>
 		</div>
@@ -76,6 +80,9 @@
 	<script>
 		var jobDefinitionApp = new Vue({
 			data: {
+				currentPage: 1,
+				pageSize: 3,
+				val: '全部',
 				position: {
 					positionid: '',
 					departmentid: '',
@@ -147,27 +154,28 @@
 					_this.position.positionid = positionid;
 					_this.position.positionname = positionname;
 				},
-				fristPage() {
-					this.goToQueryPositionAll(1, this.pageInfo.pageSize);
+				changestate() {
+					this.state = this.val;
+					this.currentPage = 1;
+					this.goToQueryPositionAll();
 				},
-				prePage() {
-					this.goToQueryPositionAll(this.pageInfo.prePage, this.pageInfo.pageSize);
+				handleSizeChange(val) {
+					this.pageSize = val;
+					this.goToQueryPositionAll();
 				},
-				nextPage() {
-					this.goToQueryPositionAll(this.pageInfo.nextPage, this.pageInfo.pageSize);
+				handleCurrentChange(val) {
+					this.currentPage = val;
+					this.goToQueryPositionAll();
 				},
-				lastPage() {
-					this.goToQueryPositionAll(this.pageInfo.lastPage, this.pageInfo.pageSize);
-				},
-				goToQueryPositionAll(pageNum, pageSize) {
+				goToQueryPositionAll() {
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/${pageNum}/${pageSize}`, function(p) {
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/${_this.currentPage}/${_this.pageSize}`, function(p) {
 						_this.pageInfo = p;
 					});
 				}
 			},
 			mounted() {
-				this.goToQueryPositionAll(1, 3);
+				this.goToQueryPositionAll();
 			}
 		}).$mount('#jobDefinitionApp');
 	</script>
