@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<title>技工星级</title>
+		<title>外勤车辆</title>
 		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="../css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../css/index.css" />
@@ -21,20 +21,20 @@
 		<div class="container">
 
 			<div id="jgxjApp" class="row" v-cloak>
-				<h1>技工星级</h1>
+				<h1>外勤车辆</h1>
 				<div id="gb">
 					&nbsp;&nbsp;
 					<!--<el-button onclick="">关闭</el-button>-->
 				</div>
 				<div id="yy" style="background-color: ;">
 					<el-form :inline="true" :model="star" class="demo-form-inline" label-width="80px">
-						<el-form-item label="等级编码">
-							<el-input v-model="star.agid" style="width: 200px;"></el-input>
+						<el-form-item label="*车牌号">
+							<el-input v-model="star.rescuenumber" style="width: 200px;"></el-input>
 						</el-form-item>
-						<el-form-item label="等级名称">
-							<el-input v-model="star.agname" style="width: 200px;"></el-input>
-							<el-form-item label="提成权重">
-								<el-input v-model="star.agprice" style="width: 200px;"></el-input>
+						<el-form-item label="*当前里程">
+							<el-input v-model="star.renumber" style="width: 200px;"></el-input>
+							<el-form-item label="*状态">
+								<el-input v-model="star.state" style="width: 200px;"></el-input>
 							</el-form-item>
 							<el-form-item>
 								<el-button type="success" @click="onAdd()">添加</el-button>
@@ -48,9 +48,9 @@
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.agid)">删除</el-button>
+									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.rescueid)">删除</el-button>
 									<br><br>
-									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.agid)">修改</el-button>									
+									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.rescueid)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
@@ -58,17 +58,17 @@
 					</template>
 				</div>
 				
-				<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
+				<el-dialog title="修改车辆" :visible.sync="modify" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
-						<el-form-item label="等级编码">
-							<el-input v-model="carlist.agid" readonly></el-input>
+						<el-form-item label="车牌号">
+							<el-input v-model="carlist.rescuenumber" readonly></el-input>
 						</el-form-item>
-						<el-form-item label="等级名称">
-							<el-input v-model="carlist.agname"></el-input>
+						<el-form-item label="当前里程">
+							<el-input v-model="carlist.renumber"></el-input>
 						</el-form-item>
-						<el-form-item label="提成权重">
-							<el-input v-model="carlist.agprice"></el-input>
+						<el-form-item label="状态">
+							<el-input v-model="carlist.state"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -87,16 +87,20 @@
 	<script>
 		var jgxjApp = new Vue({
 			data: {
-				stsy: [{
-					name: '等级编码',
-					value: 'agid'
+				stsy: [	{
+					name: '车辆编号',
+					value: 'rescueid'
+				},{
+					name: '车牌号',
+					value: 'rescuenumber'
 				}, {
-					name: '等级名称',
-					value: 'agname'
+					name: '当前里程',
+					value: 'renumber'
 				}, {
-					name: '提成权重',
-					value: 'agprice'
+					name: '状态',
+					value: 'state'
 				},
+			
 				{
 					name: '操作',
 					value: '0'
@@ -104,9 +108,10 @@
 				vehicleInfo: [],
 				list:[],
 				star:{
-					agid:'',
-					agname:'',
-					agprice:''			
+					rescueid:'',
+					rescuenumber:'',
+					renumber:'',
+					state:''			
 				},
 				modify:false,
 				carlist: []
@@ -116,7 +121,7 @@
 				delOne(sid) {				
 					let _this = this;
 					if(window.confirm('是否确定删除？')) {
-						$.ajax(`http://127.0.0.1:8080/lx/api/xm1/deleteStar/${sid}`, {
+						$.ajax(`http://127.0.0.1:8080/lx/api/car/deleteCar/${sid}`, {
 							type: "delete",
 							dataType: "json",
 							success(msg) {
@@ -132,17 +137,17 @@
 				},
 				queryAll(n,s){
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/xm1/queryStarAll/${n}/${s}`,function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/car/queryCarAll/${n}/${s}`,function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;	
 					});
 				},
 				//根据sid查询状态信息
-				queryBySid(agid){
+				queryBySid(rescueid){
 					//alert(sid)
 					let _this = this;	
 					_this.modify = true;
-					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/xm1/queryStarBySid/${agid}`,function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/car/queryCarBySid/${rescueid}`,function(pg) {
 						_this.carlist = pg;	
 						
 					});
@@ -150,7 +155,7 @@
 				//修改数据
 				modifyall() {
 					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/lx/api/xm1/modifStar",{
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/car/modifCar",{
 						type:'put',
 						data:JSON.stringify(_this.carlist),
 						contentType: 'application/json; charset=UTF-8',
@@ -168,7 +173,7 @@
 				onAdd(){
 					let _this=this;
 					/*alert(JSON.stringify(_this.formLabelAlign))*/
-					jQuery.ajax("http://127.0.0.1:8080/lx/api/xm1/addStar",{
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/car/addCar",{
 						type:'post',
 						dataType:"json",
 						data:JSON.stringify(_this.star),
