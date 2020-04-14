@@ -816,6 +816,7 @@
 						carcourse: '',
 						buycar: ''
 					}
+					this.a=null;
 				},
 				isShow3queding() {
 					this.isShow3 = false;
@@ -841,7 +842,7 @@
 							} else {
 								_this.$message(date.msg);
 							}
-							this.kehuche = {
+							_this.kehuche = {
 								consumerid: 0,
 								userid: '',
 								carnumber: '',
@@ -852,7 +853,8 @@
 								driverdate: '',
 								carcourse: '',
 								buycar: ''
-							}
+							};
+							_this.a=null;
 						}
 					});
 				},
@@ -865,7 +867,8 @@
 						useraddress: '',
 						userbrithday: '',
 						userremark: ''
-					}
+					};
+					this.a=null;
 				},
 				isShow2queding() {
 					this.isShow2 = false;
@@ -895,7 +898,8 @@
 								useraddress: '',
 								userbrithday: '',
 								userremark: ''
-							}
+							};
+							_this.a=null;
 						}
 					});
 				},
@@ -913,6 +917,7 @@
 						this.$message("请选中需要修改的客户");
 					} else {
 						this.kehu = this.currentRow;
+						this.a=this.kehu;
 						this.isShow2 = true;
 					}
 				},
@@ -1007,6 +1012,7 @@
 							userbrithday: '',
 							userremark: ''
 						};
+						this.a=null;
 						this.kehuche = {
 							consumerid: 0,
 							userid: '',
