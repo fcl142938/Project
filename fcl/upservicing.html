@@ -7,28 +7,24 @@
 	</head>
 
 	<body>
-		<div id="fclApp">
-			<el-page-header @back="goBack" content="接车页面">
+		<div id="fclUpApp">
+			<el-page-header @back="goBack" content="返工页面">
 			</el-page-header>
-			<el-switch style="float: right;margin-right: 50px;" @change="changeState" v-model="value1" active-text="站内接车" inactive-color="green" inactive-text="站外接车">
-			</el-switch>
-			<el-form :model="servicing" style="clear: both;text-align: left;margin-left: 200px;" class="demo-ruleForm">
+			<el-form :model="servicing"  style="clear: both;text-align: left;margin-left: 200px;" class="demo-ruleForm">
 				<el-form-item>
-					<el-select filterable v-if="value1" v-model="sermain.rescueid" placeholder="请选择救援车牌号" @change="uprlist">
+					<el-select filterable v-if="value1" v-model="sermain.rescueid" placeholder="请选择救援车牌号"  disabled>
 						<el-option v-for="item in FclSerAllVo.rlist" :label="item.rescuenumber" :data-price="item.price" :value="item.rescueid">
 						</el-option>
 					</el-select>
-					<el-select filterable v-model="sermain.gid" collapse-tags style="margin-left: 10px;" @change="upglist" placeholder="请选择维修组">
+					<el-select filterable v-model="sermain.gid" collapse-tags style="margin-left: 10px;"  placeholder="请选择维修组" disabled>
 						<el-option v-for="item in FclSerAllVo.alist" :label="item.gname" :data-price="item.price" :value="item.gid">
 						</el-option>
 					</el-select>
-					<el-select filterable v-model="sermain.consumerid" collapse-tags style="margin-left: 10px;" placeholder="请选择客户车牌号">
+					<el-select filterable v-model="name" collapse-tags style="margin-left: 10px;" placeholder="请选择客户车牌号" disabled>
 						<el-option v-for="item in FclSerAllVo.clist" :label="item.carnumber" :value="item.consumerid">
 						</el-option>
 					</el-select>
-				</el-form-item>
-				<el-form-item>
-					<el-input style="width:500px;" v-model="sermain.consumermark" placeholder="请输入维修备注"></el-input>
+					<el-input style="width:200px;" v-model="sermain.consumermark" placeholder="请输入维修备注" readonly="readonly"></el-input>
 				</el-form-item>
 			</el-form>
 			<el-table :data="tableData" style="width: 100%">
@@ -50,7 +46,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<div class="text-center" style="margin: 20px  auto  10px;">
+			<div class="text-right" style="margin: 20px  100px   10px;">
 				<el-button size="mini" type="danger" @click="addSermain">开单</el-button>
 			</div>
 
@@ -66,27 +62,15 @@
 					price: '20',
 					gprice: '20',
 					name: '',
-					tableData: [{
-						"infoid": 0,
-						"infoname": '救援费',
-						"price": 12,
-						"infomark": '救援费',
-						"bool": true
-					}, {
-						"infoid": -1,
-						"infoname": '技工费',
-						"price": 12,
-						"infomark": '技工费',
-						"bool": true
-					}],
+					tableData: [],
 					sermain: {
-						rescueid: '',
+						rescueid: '1',
 						consumerid: '',
 						gid: '',
 						consumermark: ''
 					},
-					rescueid: 0,
-					numbers: 2
+					name:'',
+					rescueid: 0
 				},
 				methods: {
 					deleteRow(infoid) {
@@ -98,51 +82,17 @@
 						});
 						this.tableData.splice(index1, 1)
 					},
-					uprlist() {
-						//console.log(this.FclSerAllVo)
-						let _this = this;
-						_this.FclSerAllVo.rlist.forEach(temp => {
-							if(temp["rescueid"] == _this.sermain.rescueid) {
-								_this.tableData[0].price = temp.price;
-								_this.price = temp.price;
-							}
-						})
-					},
-					upglist() {
-						let _this = this;
-						_this.FclSerAllVo.alist.forEach(temp => {
-							if(temp["gid"] == _this.sermain.gid) {
-								if(!_this.value1) {
-									_this.tableData[0].price = temp.gprice;
-								} else {
-									_this.tableData[1].price = temp.gprice;
-								}
-								_this.gprice = temp.gprice;
-							}
-						})
-					},
 					gotoPages() {
 						window.sessionStorage.setItem("multipleSelectionS", JSON.stringify(this.tableData));
-						window.sessionStorage.setItem("numbers", this.numbers);
+						var numbers=2;
+						if(!this.value1){
+							numbers=1;
+						}
+						window.sessionStorage.setItem("numbers", numbers);
 						showWindowDialog('fcl/addservicinginfo.html', '添加');
 					},
 					goBack() {
 						$("#cnt").load("fcl/servicing_meetcar.html");
-					},
-					changeState() {
-						if(!this.value1) {
-							this.tableData.splice(0, 1);
-							this.numbers = 1;
-						} else {
-							this.numbers = 2;
-							this.tableData.unshift({
-								"infoid": 0,
-								"infoname": '救援费',
-								"price": this.price,
-								"infomark": '救援费',
-								"bool": true
-							})
-						}
 					},
 					addSermain() {
 
@@ -159,19 +109,20 @@
 								rescueid: _this.rescueid,
 								consumerid: _this.sermain.consumerid,
 								gid: _this.sermain.gid,
-								consumermark: _this.sermain.consumermark
+								consumermark: _this.sermain.consumermark,
+								smid:_this.sermain.smid
 							},
 							"list": _this.tableData
 						};
 						//console.log(vo)
 						$.ajax({
-							url: `http://127.0.0.1:8080/fcl/api/sermain/addSerMain`,
+							url: `http://127.0.0.1:8080/fcl/api/sermain/UpSerMain`,
 							dataType: "json",
 							type: "POST",
 							data: JSON.stringify(vo),
 							contentType: "application/json",
 							success: function(data) {
-								alert("添加成功");
+								alert("修改成功");
 								_this.goBack();
 							}
 						})
@@ -181,9 +132,29 @@
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryRescuecar`, function(res) {
 						_this.FclSerAllVo = res;
-					})
+						//初始化
+						var vo = JSON.parse(window.sessionStorage.getItem("serUp"));
+						console.log(vo);
+						_this.sermain = vo.ser;
+						if(_this.sermain.rescueid == 0) {
+							_this.sermain.rescueid = "";
+							_this.value1 = false;
+						}
+						_this.name=vo.name;
+						vo.list.forEach(temp => {
+							_this.tableData.push({
+								"infoid": temp.infoid,
+								"infoname":temp.infoname,
+								"price": temp.price,
+								"infomark": temp.infomark,
+								"bool": true
+							});
+						})
+					});
+
 				}
-			}).$mount("#fclApp");
+
+			}).$mount("#fclUpApp");
 		</script>
 	</body>
 

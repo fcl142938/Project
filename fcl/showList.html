@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="showApp">
+			<el-table :data="list" style="width: 100%;margin-top: 20px;">
+
+				<el-table-column label="编号" align="center">
+					<template slot-scope="temp">
+						{{temp.$index+1 }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="infoname" label="项目名称" align="center">
+				</el-table-column>
+				<el-table-column prop="price" label="项目价格" align="center">
+				</el-table-column>
+				<el-table-column prop="infomark" label="项目描述" align="center">
+				</el-table-column>
+			</el-table>
+			<div class="text-right" style="margin:20px 20px"><el-button size="mini" type="primary"  @click="this.closeWindowDialog()">返回</el-button></div>
+			
+		</div>
+	</body>
+	<script>
+		var showApp = new Vue({
+			data: {
+				list: JSON.parse(window.sessionStorage.getItem("list"))
+			}
+		}).$mount("#showApp")
+	</script>
+
+</html>
