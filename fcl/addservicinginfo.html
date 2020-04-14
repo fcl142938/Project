@@ -89,9 +89,9 @@
 							var arrdata = [];
 							var obj = {};
 							_this.multipleSelection.forEach(temp => {
-								if(!obj[temp.infoid]) {
+								if(!obj[temp.infoname]) {
 									arrdata.push(temp);
-									obj[temp.infoid] = true;
+									obj[temp.infoname] = true;
 								}
 							})
 							//确认移除数据
@@ -99,6 +99,13 @@
 							var arr1 = removeData(_this.pageinfo.list, val)
 							//移除数据
 							_this.multipleSelection = removeData(arrdata, arr1)
+							_this.pageinfo.list.forEach(row => {
+									_this.multipleSelection.forEach(temp => {
+										if(temp.infoid == row.infoid) {
+											_this.$refs.multipleTable.toggleRowSelection(row, true);
+										}
+									})
+							})
 
 						}
 
@@ -154,7 +161,10 @@
 				for(let i = arr1.length - 1; i >= 0; i--) {
 					for(let j = 0; j < arr2.length; j++) {
 						if(arr1[i].infoid == arr2[j].infoid) {
-							arr.splice(i, 1);
+							if(arr1[i].bool==undefined){
+								arr.splice(i, 1);
+							}
+							
 						}
 					}
 				}
