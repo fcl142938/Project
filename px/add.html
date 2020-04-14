@@ -73,7 +73,7 @@
 				<el-form-item label="员工部门">
 					  <el-col :span="6">
                       <el-select v-model="department.departmentname" placeholder="请选择" style="width: 130px;" @change="depid">
-                             <el-option  :value="temp.departmentid" v-for="(temp,i) in department" >{{temp.departmentname}}</el-option>
+                             <el-option  :value="temp.departmentid":label="temp.departmentname" v-for="(temp,i) in department" ></el-option>
                      </el-select>
                      </el-col>
 				</el-form-item>
@@ -82,7 +82,7 @@
 				<el-form-item label="员工岗位" prop="positionid">
 					  <el-col :span="6">
                       <el-select v-model="user.positionid" placeholder="请选择" style="width: 130px;">
-                             <el-option  :value="temp.positionid" v-for="(temp,i) in position" >{{temp.positionname}}</el-option>
+                             <el-option  :value="temp.positionid":label="temp.positionname" v-for="(temp,i) in position" ></el-option>
                      </el-select>
                      </el-col>
 				</el-form-item>
@@ -245,7 +245,7 @@
 											});
 											
 											personApp.isShow=false;//非常重要
-										/*	$("#tab-"+_this.number).click();*/
+										   window.parent.personApp.goToPage(null,1,3);
 										}
 									}
 								});
