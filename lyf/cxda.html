@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
-	<!--	<link rel="stylesheet" href="../css/index.css" />-->
+		<!--	<link rel="stylesheet" href="../css/index.css" />-->
 		<!--<script type="text/javascript" src="../js/vue.js"></script>
 		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>-->
@@ -71,13 +71,13 @@
 			<el-row :gutter="20" style="background-color: #fefff3;">
 				<el-col :span="7" style="height: 100%;">
 					<el-col :span="6">
-						<i class="el-icon-edit-outline" @click="isShow3=true">新增</i>
+						<i class="el-icon-edit-outline" @click="xzpp">新增</i>
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-edit" @click="isShow3=true">修改</i>
+						<i class="el-icon-edit" @click="xgpp">修改</i>
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-delete">删除</i>
+						<i class="el-icon-delete" @click="shanpinpai">删除</i>
 					</el-col>
 					<el-col :span="24">
 						<el-col :span="15">
@@ -89,14 +89,12 @@
 					</el-col>
 					<el-col :span="20">
 						<template>
-							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-								<el-table-column type="index" width="50">
+							<el-table stripe border ref="singleTable" :data="carbrand" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column property="brandid" label="编码" width="100">
 								</el-table-column>
-								<el-table-column property="date" label="日期" width="120">
+								<el-table-column property="brandname" label="品牌" width="153">
 								</el-table-column>
-								<el-table-column property="name" label="姓名" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="地址">
+								<el-table-column property="brandletter" label="首字母" width="100">
 								</el-table-column>
 							</el-table>
 						</template>
@@ -104,16 +102,16 @@
 				</el-col>
 				<el-col :span="17">
 					<el-col :span="2">
-						<i class="el-icon-edit-outline" @click="isShow2=true">新增</i>
+						<i class="el-icon-edit-outline" @click="xzchexing">新增</i>
 					</el-col>
 					<el-col :span="2">
-						<i class="el-icon-edit" @click="isShow2=true">修改</i>
+						<i class="el-icon-edit" @click="xgchexing">修改</i>
 					</el-col>
 					<el-col :span="2">
-						<i class="el-icon-delete">删除</i>
+						<i class="el-icon-delete" @click="scchexing">删除</i>
 					</el-col>
 					<el-col :span="2">
-						<i class="el-icon-search">查询</i>
+						<i class="el-icon-picture">照片</i>
 					</el-col>
 					<el-col :span="24">
 						<el-col :span="6">
@@ -125,14 +123,22 @@
 					</el-col>
 					<el-col :span="20">
 						<template>
-							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-								<el-table-column type="index" width="50">
+							<el-table stripe border ref="singleTable" :data="motorcycle" highlight-current-row @current-change="handleCurrentChange1">
+								<el-table-column prop="motorcyclename" label="车型" width="162">
 								</el-table-column>
-								<el-table-column property="date" label="日期" width="120">
+								<el-table-column prop="motorcycleprice" label="参考价格" width="150">
 								</el-table-column>
-								<el-table-column property="name" label="姓名" width="120">
+								<el-table-column label="发动机" width="150">
+									<template slot-scope="temp">
+										<span v-if="temp.row.motorid==1">奥利给</span>
+										<span v-if="temp.row.motorid==2">哈撒给</span>
+									</template>
 								</el-table-column>
-								<el-table-column property="address" label="地址">
+								<el-table-column prop="" label="车辆年款" width="150">
+								</el-table-column>
+								<el-table-column prop="" label="功率" width="150">
+								</el-table-column>
+								<el-table-column prop="" label="进口国产" width="150">
 								</el-table-column>
 							</el-table>
 						</template>
@@ -142,21 +148,17 @@
 			<el-dialog title="品牌定义" :visible.sync="isShow3" width="20%" :before-close="handleClose1">
 				<el-row :gutter="24" style="background-color: #f3fffd;">
 					<el-col :span="24">
-						<span>品牌编码：</span>
-						<el-input style="width: 70%;">
-					</el-col>
-					<el-col :span="24">
 						<span>品牌名称：</span>
-						<el-input style="width: 70%;">
+						<el-input v-model="pinpai.brandname" style="width: 70%;">
 					</el-col>
 					<el-col :span="24">
 						<span>首字母：</span>
-						<el-input style="width: 74%;">
+						<el-input v-model="pinpai.brandletter" style="width: 74%;">
 					</el-col>
 				</el-row>
 				<span slot="footer" class="dialog-footer">
-	    			<el-button @click="isShow3 = false">取 消</el-button>
-	    			<el-button type="primary" @click="isShow3 = false">确 定</el-button>
+	    			<el-button @click="md1qx">取 消</el-button>
+	    			<el-button type="primary" @click="md1qd">确 定</el-button>
   				</span>
 			</el-dialog>
 			<el-dialog title="车型定义" :visible.sync="isShow2" width="50%" :before-close="handleClose1">
@@ -164,8 +166,8 @@
 					<el-col :span="16">
 						<el-col :span="24">
 							<span>车辆品牌：</span>
-							<el-input style="width: 30%;"></el-input>
-							<el-input style="width: 53%;"></el-input>
+							<el-input v-model="pinpai.brandid" :disabled="true" style="width: 30%;"></el-input>
+							<el-input v-model="pinpai.brandname" :disabled="true" style="width: 53%;"></el-input>
 						</el-col>
 						<el-col :span="24">
 							<el-col :span="12">
@@ -174,7 +176,7 @@
 							</el-col>
 							<el-col :span="12">
 								<span>车型名称：</span>
-								<el-input style="width: 70%;">
+								<el-input v-model="chexing.motorcyclename" style="width: 70%;">
 							</el-col>
 						</el-col>
 						<el-col :span="24">
@@ -184,9 +186,10 @@
 							</el-col>
 							<el-col :span="12">
 								<span>参考价格：</span>
-								<el-input style="width: 70%;">
+								<el-input v-model="chexing.motorcycleprice" style="width: 70%;">
 							</el-col>
-						</el-col><el-col :span="24">
+						</el-col>
+						<el-col :span="24">
 							<el-col :span="12">
 								<span>车辆年款：</span>
 								<el-input style="width: 70%;">
@@ -195,7 +198,8 @@
 								<span>功率：</span>
 								<el-input style="width: 80%;">
 							</el-col>
-						</el-col><el-col :span="24">
+						</el-col>
+						<el-col :span="24">
 							<el-col :span="12">
 								<span>燃油标号：</span>
 								<el-input style="width: 70%;">
@@ -207,7 +211,10 @@
 						</el-col>
 						<el-col :span="24">
 							<span>发动机品牌：</span>
-							<el-input style="width: 82%;">
+							<el-select v-model="chexing.motorid" placeholder="请选择" style="width: 82%;">
+								<el-option label="奥利给" :value="1"></el-option>
+								<el-option label="哈撒给" :value="2"></el-option>
+							</el-select>
 						</el-col>
 					</el-col>
 					<el-col :span="8">
@@ -215,56 +222,302 @@
 					</el-col>
 				</el-row>
 				<span slot="footer" class="dialog-footer">
-	    			<el-button @click="isShow2 = false">取 消</el-button>
-	    			<el-button type="primary" @click="isShow2 = false">确 定</el-button>
+	    			<el-button @click="md2qx">取 消</el-button>
+	    			<el-button type="primary" @click="md2qd">确 定</el-button>
   				</span>
 			</el-dialog>
 		</div>
 	</body>
-<!--	<script type="text/javascript" src="../js/index.js"></script>-->
+	<!--	<script type="text/javascript" src="../js/index.js"></script>-->
 	<script>
 		var indexApp = new Vue({
 			data: {
-				tableData: [{
-					date: '2016-05-02',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄'
-				}, {
-					date: '2016-05-04',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1517 弄'
-				}, {
-					date: '2016-05-01',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1519 弄'
-				}, {
-					date: '2016-05-03',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1516 弄'
-				}],
-				currentRow: null,
+				carbrand: [],
+				motorcycle:[],
+				xuanzhongpinpai: null,
+				xuanzhongchexing:null,
 				isShow2: false,
 				isShow3: false,
-				checked: false
+				checked: false,
+				pinpai: {
+					brandid: 0,
+					brandname: '',
+					brandletter: ''
+				},
+				chexing:{
+					motorcycleid:0,
+					motorcyclename:'',
+					motorcycleprice:'',
+					brandid:'',
+					motorid:''
+				},
+				a:null,
+				b:null
 			},
 			methods: {
+				scchexing(){
+					if(this.xuanzhongchexing == null) {
+						this.$message("请选中需要删除的车型");
+					} else {
+						this.$confirm('此操作将永久删除该车型, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							let _this = this;
+							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanchexing/${_this.xuanzhongchexing.motorcycleid}`, 
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+							}
+						});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					}
+				},
+				xgchexing(){
+					if(this.xuanzhongchexing==null){
+						this.$message("请选中需要修改的车型");
+					}else{
+						this.pinpai=this.xuanzhongpinpai;
+						this.b=this.xuanzhongpinpai;
+						this.chexing=this.xuanzhongchexing;
+						this.chexing.brandid=this.xuanzhongpinpai.brandid;
+						this.isShow2 = true;
+					}
+				},
+				md2qx() {
+					this.isShow2 = false;
+					this.chexing={
+						motorcycleid:0,
+						motorcyclename:'',
+						motorcycleprice:'',
+						brandid:'',
+						motorid:''
+					};
+					this.b=null;
+				},
+				md2qd() {
+					alert()
+					if(this.b==null){
+						this.isShow2 = false;
+						this.addchexing();
+					}else{
+						this.isShow2 = false;
+						this.xgchexing1();
+					}
+				},
+				xgchexing1() {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xgchexing`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.chexing),
+						dataType: "json",
+						success(date) {
+							if(date.code == "200") {
+								_this.$message(date.msg);
+							} else {
+								_this.$message(date.msg);
+							}
+							_this.chexing={
+								motorcycleid:0,
+								motorcyclename:'',
+								motorcycleprice:'',
+								brandid:'',
+								motorid:''
+							};
+							_this.b=null;
+						}
+					});
+				},
+				addchexing() {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/addchexing`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.chexing),
+						dataType: "json",
+						success(date) {
+							if(date.code == "200") {
+								_this.$message(date.msg);
+							} else {
+								_this.$message(date.msg);
+							}
+						}
+					});
+				},
+				xzchexing() {
+					if(this.xuanzhongpinpai==null){
+						this.$message("请选中需要新增的品牌");
+					}else{
+						this.pinpai=this.xuanzhongpinpai;
+						this.chexing.brandid=this.xuanzhongpinpai.brandid;
+						this.isShow2 = true;
+					}
+				},
+				shanpinpai() {
+					if(this.xuanzhongpinpai == null) {
+						this.$message("请选中需要删除的品牌");
+					} else {
+						this.$confirm('此操作将永久删除该品牌, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							let _this = this;
+							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanpinpai/${_this.xuanzhongpinpai.brandid}`, 
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+							}
+						});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					}
+				},
+				xzpp() {
+					this.isShow3 = true;
+				},
+				xgpp() {
+					if(this.xuanzhongpinpai == null) {
+						this.$message("请选中需要修改的品牌");
+					} else {
+						this.pinpai = this.xuanzhongpinpai;
+						this.a=this.pinpai;
+						this.isShow3 = true;
+					}
+				},
+				md1qx() {
+					this.isShow3 = false;
+					this.pinpai={
+								brandid: 0,
+								brandname: '',
+								brandletter: ''
+							};
+					this.a=null;
+				},
+				md1qd() {
+					this.isShow3 = false;
+					if(this.a==null){
+						this.addpp();
+					}else{
+						this.xiugaipinpai();
+					}
+					
+				},
+				addpp() {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/addpinpai`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.pinpai),
+						dataType: "json",
+						success(date) {
+							if(date.code == "200") {
+								_this.$message(date.msg);
+							} else {
+								_this.$message(date.msg);
+							}
+							_this.pinpai={
+								brandid: 0,
+								brandname: '',
+								brandletter: ''
+							};
+							_this.a=null;
+						}
+					});
+				},
+				xiugaipinpai() {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xiugaipinpai`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.pinpai),
+						dataType: "json",
+						success(date) {
+							if(date.code == "200") {
+								_this.$message(date.msg);
+							} else {
+								_this.$message(date.msg);
+							}
+							_this.pinpai={
+								brandid: 0,
+								brandname: '',
+								brandletter: ''
+							};
+							_this.a=null;
+						}
+					});
+				},
 				handleCurrentChange(val) {
-					alert(JSON.stringify(val))
-					this.currentRow = val;
+					this.xuanzhongpinpai = val;
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/chachexing/${val.brandid}`, function(data) {
+						_this.motorcycle = data;
+					});
+				},
+				handleCurrentChange1(val) {
+					this.xuanzhongchexing = val;
 				},
 				handleClose1(done) {
 					//确认框
 					this.$confirm('是否关闭').then(() => {
-						//正确
+						this.pinpai={
+								brandid: 0,
+								brandname: '',
+								brandletter: ''
+							};
+						this.a=null;
+						this.b=null;
+						this.chexing={
+							motorcycleid:0,
+							motorcyclename:'',
+							motorcycleprice:'',
+							brandid:'',
+							motorid:''
+						};
 						done(); //关闭
 					}).catch(() => {
 						//错误
 						console.debug('取消操作');
 					});
 				},
+				goToPage() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cxdaqcpp`, function(data) {
+						_this.carbrand = data;
+					});
+				},
 			},
 			mounted() {
-
+				this.goToPage();
 			}
 		}).$mount('#cxda');
 	</script>
