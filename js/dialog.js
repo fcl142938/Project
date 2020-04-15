@@ -7,11 +7,11 @@ $("body").append($alertDialogDom);
 
 //显示窗体
 function showWindowDialog(url, title) {
+	//alert(url);
 	$("#windowDialog").find(".modal-title").text(title);
 	$("#windowDialog").modal();
-	$("#windowDialog").on('shown.bs.modal', function (e) {
- 		$("#windowDialog").find(".modal-body").load(url); //ajax加载页面
-	});
+	$("#windowDialog").find(".modal-body").html("");
+	$("#windowDialog").find(".modal-body").load(url); //ajax加载页面
 }
 
 function closeWindowDialog() {

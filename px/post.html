@@ -17,12 +17,14 @@
 			.el-table .success-row {
 				background: #EBF6FA;
 			}
-			#btn{
+			/*#btn{
 				margin-top: 3px;
-			}
-			#el2{
-				background-color: #C0C4CC;
-				height: 50px;
+				
+			}*/
+			#el{
+				margin-left: 450px;
+				
+				
 			}
 			#ef2{
 				margin-top: 5px;
@@ -44,9 +46,9 @@
         border: 1px solid #999999;
         background-color: #f4f4f4;
         z-index:50;
-       position: absolute;
-       margin-left: -250px;
-       margin-top: -30px;
+        position: absolute;
+        margin-left: -250px;
+        margin-top: -30px;
        
     }
 
@@ -55,6 +57,15 @@
         color: white;
     }
     .menu>li{font-size:10px}
+    #div1{
+    	width: 950px;
+    	
+    }
+    #page{
+    	text-align: center;
+    }
+   
+    
 
       
 
@@ -64,35 +75,31 @@
 	<body>
 		<div id="personApp" v-loading="loading">
 			<el-row>
-				<div>
-					<h1 class="lf" style="font-size: 30px; font-family: '微软雅黑';color: black;">组织结构定义</h1>
-				</div>
-
+				<div id="div1">
 				<el-row id="el">
-						<el-col :span="4">	
+						<el-col :span="6">	
 						<el-input v-model="format.name" placeholder=""></el-input>
 						</el-col>
 						
-						<el-col :span="4">	
+						<el-col :span="6">	
 					<el-form  id="btn">
 						<el-form-item  >
-								<el-button id="q" icon="el-icon-search" size="mini" type="warning" @click="query">搜索</el-button>
+								<el-button id="q" type="primary"  size="mini"  @click="query">搜索</el-button>
 						</el-form-item>
 					</el-form>
 					</el-col>
+					<el-col :span="6">	
+						<el-button  type="primary"  @click="showDialog" >增加员工</el-button>
+			
+					</el-col>
+					<el-col :span="6">
+					<el-button type="primary" @click="xls" >导出</el-button>
+					</el-col>
 				</el-row>
-				<el-row id="el2">
-					<el-form  id="ef2">
-						<el-row>
-						<el-col>
-							<el-button  icon="el-icon-edit" type="primary" round @click="showDialog">增加员工</el-button>
-							<el-button icon="el-icon-upload2" type="warning" round @click="xls">导出</el-button>
-						</el-col>
-					  </el-row>
-                      </el-form >
-				</el-row>
+				</div>
 				<el-row :span="24">
-					<el-col :span="4">
+					<el-col :span="3">
+							<h5>公司部门</h5>
 						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"  @node-contextmenu="rightClick"></el-tree>
 							 <div v-show="menuVisible">
                               <ul id="menu" class="menu">
@@ -104,30 +111,30 @@
 					</el-col>
 				
 					
-					<el-col :span="20">
-						<el-table  :data="pageInfo.list" border :row-class-name="tableRowClassName" style="width:100%">
-						<el-table-column prop="staffid" label="编号"  width="70">
+					<el-col :span="21">
+						<el-table  :data="pageInfo.list"  :row-class-name="tableRowClassName" style="width:100%" >
+						<!--<el-table-column prop="staffid" label="编号"  >
 						</el-table-column>
-						<el-table-column prop="departmentname" label="部门"  width="70">
+						<el-table-column prop="departmentname" label="部门"  >
 						</el-table-column>
-						<el-table-column prop="positionname" label="职位"  width="70">
+						<el-table-column prop="positionname" label="职位"  >
+						</el-table-column>-->
+						<el-table-column prop="staffname" label="姓名"  >
 						</el-table-column>
-						<el-table-column prop="staffname" label="姓名"  width="70">
+						<el-table-column prop="staffsex" label="性别"  >
 						</el-table-column>
-						<el-table-column prop="staffsex" label="性别"  width="70">
+						<el-table-column prop="saddress" label="地址"  >
 						</el-table-column>
-						<el-table-column prop="saddress" label="地址"  width="70">
+						<el-table-column prop="sstarttime" label="入职"  >
 						</el-table-column>
-						<el-table-column prop="sstarttime" label="入职"  width="70">
+						<el-table-column prop="staffaccount" label="账号"  >
 						</el-table-column>
-						<el-table-column prop="staffaccount" label="账号"  width="70">
-						</el-table-column>
-						<el-table-column prop="price" label="月薪"  width="70">
+						<el-table-column prop="price" label="月薪"  >
 						</el-table-column>
 							<el-table-column label="操作">
 							<template slot-scope="temp">
-								 <el-button type="primary" icon="el-icon-edit" circle @click="showDialogs(temp.row.staffid)"></el-button>
-								  <el-button type="danger" icon="el-icon-delete" circle @click="deletebyid(temp.row.staffid)"></el-button>
+								 <el-button  type="danger"  icon="el-icon-edit"  circle @click="showDialogs(temp.row.staffid)"></el-button>
+								  <el-button  type="danger" icon="el-icon-delete" circle @click="deletebyid(temp.row.staffid)"></el-button>
 							   
 							</template>
 						</el-table-column>
@@ -136,12 +143,14 @@
 					</el-table>
 					</el-col>
 				</el-row>
+				
 			    <el-row>
-				<el-col :span="24">
-					<el-pagination v-if="pageInfo.total!=0" :background="true"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
+				<el-col :span="24" >
+					<el-pagination id="page"  v-if="pageInfo.total!=0"   @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</el-col>
 			   </el-row>
+			  
 				<!--模态框-->
 			<el-dialog :destroy-on-close="true" @opened="handlOpen" title="新增员工" :visible.sync="isShow" :before-close="handleClose" center>
 				<div id="modalcnt"></div>
@@ -222,6 +231,7 @@
 										type: 'success',
 										message: '删除成功!'
 									});
+									
 								}
 							}
 						});
@@ -263,7 +273,6 @@
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/px/api/user/${staffname}/${pageNum}/${pageSize}`, function(date) {
 						_this.pageInfo = date;
-					    
 						
 					});
 				},
@@ -306,6 +315,7 @@
 										type: 'success',
 										message: '删除成功!'
 									});
+									_this.goToPage(null,1,3);
 								}
 							}
 						});

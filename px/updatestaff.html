@@ -28,7 +28,15 @@
 						<el-input v-model="user.staffname" placeholder="" style="width: 130px;"></el-input>
 					</el-col>
 				</el-form-item>
-				</el-col> 
+				</el-col>
+				  <el-col :span="12">
+				<el-form-item label="入职日期" prop="sstarttime">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input type="date" v-model="user.sstarttime" placeholder="" style="width: 170px;"></el-input>
+					</el-col>
+				</el-form-item>
+				</el-col>
 			   </el-row >
 			   
 			   
@@ -58,26 +66,6 @@
 			   
 			     
 	      
-	          	<el-row :span="24" >
-	          	  <el-col :span="12">
-				<el-form-item label="员工部门" prop="positionid">
-					  <el-col :span="6">
-                      <el-select v-model="user.positionid" placeholder="请选择" style="width: 130px;">
-                             <el-option  :value="temp.departmentid" v-for="(temp,i) in department">{{temp.departmentname}}</el-option>
-                     
-                     </el-select>
-                     </el-col>
-				</el-form-item>
-				  </el-col> 
-				  <el-col :span="12">
-				<el-form-item label="入职日期" prop="sstarttime">
-					<el-col :span="6">
-						<!--非常重要-->
-						<el-input type="date" v-model="user.sstarttime" placeholder="" style="width: 170px;"></el-input>
-					</el-col>
-				</el-form-item>
-				</el-col> 
-			   </el-row >
 			   
 			         
 	          	<el-row :span="24" >
@@ -174,6 +162,7 @@
 											});
 											
 											personApp.isShows=false;//非常重要
+											window.parent.personApp.goToPage(null,1,3);
 										/*	$("#tab-"+_this.number).click();*/
 										}
 									}
