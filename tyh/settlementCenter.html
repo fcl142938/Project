@@ -25,10 +25,10 @@
 				<div>
 					<el-form :inline="true" :model="s" class="demo-form-inline" label-width="70px">
 						<el-form-item label="开单日期">
-							<el-date-picker type="date" size="small" v-model="s.starttime" style="width: 100%;"></el-date-picker>
+							<el-date-picker value-format="yyyy-MM-dd HH:mm:ss" type="date" size="small" v-model="s.starttime" style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="结束日期">
-							<el-date-picker type="date" size="small" v-model="s.entime" style="width: 100%;"></el-date-picker>
+							<el-date-picker value-format="yyyy-MM-dd HH:mm:ss" type="date" size="small" v-model="s.entime" style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="销售单号">
 							<el-input v-model="s.smid"></el-input>
@@ -185,10 +185,39 @@
 			methods: {
 				onQuery() {
 					let _this = this;
-					console.info("状态ID:"+_this.s.state);
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/queryByMaxSettlementCenter/${_this.s.state}`, function(sc) {
-						_this.sc = sc;
-					});
+					if(_this.s.state == "") {
+						_this.s.state = null;
+					}
+					if(_this.s.smid == "") {
+						_this.s.smid = null;
+					}
+					if(_this.s.carnumber == "") {
+						_this.s.carnumber = null;
+					}
+					if(_this.s.username == "") {
+						_this.s.username = null;
+					}
+					if(_this.s.staffname == "") {
+						_this.s.staffname = null;
+					}
+					if(_this.s.userremark == "") {
+						_this.s.userremark = null;
+					}
+					if(_this.s.starttime == ""){
+						_this.s.starttime = null;
+					}
+					if(_this.s.entime == ""){
+						_this.s.entime = null;
+					}
+					console.info(_this.s.starttime);
+					console.info(_this.s.entime);
+					$.ajax(`http://127.0.0.1:8080/tyh/api/sc/queryByMaxSettlementCenter/${_this.s.state}/${_this.s.smid}/${_this.s.carnumber}/${_this.s.username}/${_this.s.staffname}/${_this.s.userremark}/${_this.s.starttime}/${_this.s.entime}`, {
+							type: "get",
+							success(sc) {
+								_this.sc = sc;
+								console.info(sc);
+							}
+						});
 				},
 				onHg() {
 					if(window.confirm('是否给当前数据进行回滚操作')) {
@@ -237,7 +266,14 @@
 					});
 				},
 				onOpenReceipts() {
-					location.href = "tyh/receipts.html";
+					let _this = this;
+					if(_this.smid != ""){
+						window.sessionStorage.setItem('smid', _this.smid);
+						location.href = "tyh/receipts.html";
+					} else{
+						alert("请选择单据");
+					}
+					
 				}
 			},
 			mounted() {
