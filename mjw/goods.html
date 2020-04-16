@@ -14,7 +14,6 @@
 				display: block;
 				visibility: hidden;
 			}
-			
 			/*.el-header {
 				background-color: #B3C0D1;
 				color: #333;
@@ -33,9 +32,10 @@
 	</head>
 
 	<body>
-		<div id="goodsApp"><!-- style="background-color: whitesmoke;"-->
+		<div id="goodsApp">
+			<!-- style="background-color: whitesmoke;"-->
 			<div class="mobileBackColor" style="">
-				<h1 style="float: left;,color: #82848A;">商品资料</h1>
+				
 				<div style="width: 400px; float: right; margin-top: 25px;">
 					<el-button style="float: right;" type="info" plain>关闭</el-button>
 					<el-button style="float: right;" type="success" plain>搜索</el-button>
@@ -45,55 +45,7 @@
 
 			</div>
 			<el-container style="height: 500px; border: 1px solid #eee">
-				<el-aside width="200px" ><!--style="background-color: rgb(238, 241, 246)"-->
-					<el-menu>
-						<el-submenu index="1">
-							<template slot="title"><i class="el-icon-message"></i>导航一</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="1-1">选项1</el-menu-item>
-								<el-menu-item index="1-2">选项2</el-menu-item>
-							</el-menu-item-group>
-							<el-menu-item-group title="分组2">
-								<el-menu-item index="1-3">选项3</el-menu-item>
-							</el-menu-item-group>
-							<el-submenu index="1-4">
-								<template slot="title">选项4</template>
-								<el-menu-item index="1-4-1">选项4-1</el-menu-item>
-							</el-submenu>
-						</el-submenu>
-						<el-submenu index="2">
-							<template slot="title"><i class="el-icon-menu"></i>导航二</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="2-1">选项1</el-menu-item>
-								<el-menu-item index="2-2">选项2</el-menu-item>
-							</el-menu-item-group>
-							<el-menu-item-group title="分组2">
-								<el-menu-item index="2-3">选项3</el-menu-item>
-							</el-menu-item-group>
-							<el-submenu index="2-4">
-								<template slot="title">选项4</template>
-								<el-menu-item index="2-4-1">选项4-1</el-menu-item>
-							</el-submenu>
-						</el-submenu>
-						<el-submenu index="3">
-							<template slot="title"><i class="el-icon-setting"></i>导航三</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="3-1">选项1</el-menu-item>
-								<el-menu-item index="3-2">选项2</el-menu-item>
-							</el-menu-item-group>
-							<el-menu-item-group title="分组2">
-								<el-menu-item index="3-3">选项3</el-menu-item>
-							</el-menu-item-group>
-							<el-submenu index="3-4">
-								<template slot="title">选项4</template>
-								<el-menu-item index="3-4-1">选项4-1</el-menu-item>
-							</el-submenu>
-						</el-submenu>
-					</el-menu>
-				</el-aside>
+				
 
 				<el-container>
 					<el-header style="text-align: right; font-size: 12px">
@@ -105,221 +57,168 @@
 
 					<el-main>
 						<template>
-							<el-table style="width: auto" height="500" ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+							<el-table style="width: auto"  ref="singleTable" :data="pageinfo.list" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 
-								<el-table-column property="date" label="登记门面" width="120">
+								<el-table-column property="shname" label="商品名称" >
 								</el-table-column>
-								<el-table-column property="name" label="照片名" width="120">
+								<el-table-column  property="sldate"  label="进货日期" >
+																	
 								</el-table-column>
-								<el-table-column property="address" label="商品名称">
+								<el-table-column property="slbuyprice" label="进价">
 								</el-table-column>
-								<el-table-column property="date" label="商品品牌" width="120">
+								<el-table-column property="slprice" label="售价" >
 								</el-table-column>
-								<el-table-column property="name" label="适用车型" width="120">
+								<el-table-column property="buynumber" label="进货数量" >
 								</el-table-column>
-								<el-table-column property="address" label="数量单位">
+								<el-table-column property="slnumber" label="库存">
 								</el-table-column>
-								<el-table-column property="date" label="商品大类" width="120">
+								<el-table-column property="materialid" label="供应商" >
 								</el-table-column>
-								<el-table-column property="name" label="商品中类" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="商品小类">
-								</el-table-column>
-								<el-table-column property="date" label="收入分类" width="120">
-								</el-table-column>
-								<el-table-column property="name" label="原厂副厂" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="商品等级">
-								</el-table-column>
-								<el-table-column property="address" label="商品产地">
-								</el-table-column>
-								<el-table-column property="address" label="厂商名称">
-								</el-table-column>
-								<el-table-column property="address" label="原厂编码">
-								</el-table-column>
-								<el-table-column property="address" label="加价率">
-								</el-table-column>
-								<el-table-column property="address" label="互换码">
-								</el-table-column>
-								<el-table-column property="address" label="售价按">
-								</el-table-column>
+								
 							</el-table>
-							<div style="margin-top: 20px">
-
-							</div>
+					<div style="margin-top: 20px">
+						<el-button type="primary" @click="prePage()">上一页</el-button>
+						<el-button type="primary" @click="nextPage()">下一页</el-button>
+					</div>
 						</template>
 					</el-main>
 				</el-container>
 			</el-container>
 
 			<el-dialog title="服务项目自定义" :visible.sync="dialogFormVisible" center>
-				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+				<el-form ref="addentity" :model="addentity" label-width="80px">
+
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="项目编码" prop="name">
+							<el-form-item label="商品名称">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.shname"></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="项目名称" prop="name">
+							<el-form-item label="进货日期">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-date-picker type="date" v-model="addentity.sldate" placeholder="选择日期" style="width: 100%;"></el-date-picker>
 
 							</el-form-item>
+
 						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="适用车型" prop="name">
+							<el-form-item label="进价">
 
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="原厂编码" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-<el-row>
-						<el-col :span="12">
-							<el-form-item label="条形码" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.slbuyprice"></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="包装规格" prop="name">
+							<el-form-item label="售价">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.slprice"></el-input>
 
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="体积A" prop="name">
+							<el-form-item label="进货数量">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.buynumber"></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="毛重" prop="name">
+							<el-form-item label="库存">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.slnumber"></el-input>
 
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="净重" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
-
+							<el-form-item label="供应商">
+								<el-select class="quyu" v-model="addentity.materialid" placeholder="请选择活动区域">
+									<el-option label="请选择" value="无" disabled="disabled"></el-option>
+									<el-tree :data="adddata" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+								</el-select>
 							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="进货价" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
 						</el-col>
+
 					</el-row>
-					<el-form-item label="互换码" prop="name">
-
-						<el-input v-model="ruleForm.name"></el-input>
-
-					</el-form-item>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="数量单位" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-
-						<el-col :span="12">
-							<el-form-item label="商品大类" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="收入分类" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-
-						<el-col :span="12">
-							<el-form-item label="原厂副厂" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-<el-row>
-						<el-col :span="12">
-							<el-form-item label="商品等级" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-
-						<el-col :span="12">
-							<el-form-item label="商品产地" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="厂商名称" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-
-						<el-col :span="12">
-							<el-form-item label="售价表" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-
 				</el-form>
+				<!--<el-form :model="addentity"  ref="addentity" label-width="100px" class="demo-ruleForm">
+					<el-row>
+						<el-col :span="12">
+							<el-form-item label="商品名称" >
+
+								<el-input v-model="addentity.shname"></el-input>
+
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="进货日期" >
+
+								<el-date-picker type="date" v-model="addentity.sldate" placeholder="选择日期" style="width: 100%;"></el-date-picker>
+
+							</el-form-item>
+
+						</el-col>
+					</el-row>
+					<el-row>
+						<el-col :span="12">
+							<el-form-item label="进价" >
+
+								<el-input v-model="addentity.slbuyprice"></el-input>
+
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="售价" >
+
+								<el-input v-model="addentity.slprice"></el-input>
+
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<el-row>
+						<el-col :span="12">
+							<el-form-item label="进货数量">
+
+								<el-input v-model="addentity.buynumber"></el-input>
+
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="库存">
+
+								<el-input v-model="addentity.slnumber"></el-input>
+
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<el-row>
+						<el-col :span="12">
+
+							<el-form-item label="活动区域">
+								<el-select v-model="ruleForm.name" placeholder="请选择活动区域">
+									<el-option label="请选择" disabled="disabled"></el-option>
+									<el-tree :data="adddata" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+								</el-select>
+							</el-form-item>
+
+						</el-col>
+
+					</el-row>
+
+				</el-form>-->
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
-					<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+					<el-button type="primary" @click="addgoods()">确 定</el-button>
 				</div>
 			</el-dialog>
 
@@ -328,6 +227,25 @@
 		<script>
 			var goodsApp = new Vue({
 				data: {
+					pageinfo:{},
+					defaultProps: {
+						children: 'children',
+						label: 'label'
+					},
+					adddata: [],
+
+					address: {
+
+					},
+					addentity: {
+						materialid: "",
+						shname: "",
+						slbuyprice: "",
+						slprice: "",
+						sldate: "",
+						buynumber: "",
+						slnumber: ""
+					},
 					tableData: [{
 						date: '2016-05-02',
 						name: '王小虎',
@@ -345,6 +263,7 @@
 						name: '王小虎',
 						address: '上海市普陀区金沙江路 1516 弄'
 					}],
+
 					dialogFormVisible: false,
 					ruleForm: {
 						name: '',
@@ -405,13 +324,113 @@
 					}
 				},
 				methods: {
+					 prePage() {
+						
+						if(this.pageinfo.hasPreviousPage) {
+							this.showlist(this.pageinfo.prePage, 1);
+							
+						} else {
+							this.$message('没有上一页了！');
+						}
+
+					},
+					nextPage() {
+						
+						if(this.pageinfo.hasNextPage) {
+							this.showlist(this.pageinfo.nextPage, 1);
+							
+							
+						} else {
+							this.$message('没有下一页了！');
+						}
+
+					},
+					showlist(pageNum,pageSize){
+						let _this = this;
+						$.getJSON(`http://127.0.0.1:8080/api/shoppings/shoppingsinfo/${pageNum}/${pageSize}`,function(val){
+							_this.pageinfo=val;
+							
+							
+						});
+						
+						
+					},
+					addgoods() {
+						let _this = this;
+					
+						$.ajax(`http://127.0.0.1:8080/api/shoppings/addshopping`, {
+							type: 'post',
+							dataType: 'json',
+							data: JSON.stringify(_this.addentity),
+							contentType: 'application/json',
+							success(msg) {
+								if(msg > 0) {
+									
+									_this.$message('新增成功！');
+								} else {
+									
+									_this.$message('新增失败！');
+								}
+							}
+						});
+
+						this.dialogFormVisible = false;
+
+					},
+					handleNodeClick(data) {
+						console.log(data);
+						if(data.materialid != null) {
+							$(".quyu").text(data.label);
+							this.addentity.materialid = data.materialid;
+						}
+					},
 					handleCurrentChange(val) {
 						this.currentRow = val;
+
+					},
+					addressshow() {
+						$.ajaxSettings.async = false;
+						let _this = this;
+						var obj = {};
+
+						$.getJSON("http://127.0.0.1:8080/api/materials/address", function(val) {
+
+							$.each(val, function(i, data) {
+								obj = {
+									label: '',
+									children: []
+								};
+
+								obj.label = `${data.mladdress}`;
+
+								$.getJSON(`http://127.0.0.1:8080/api/materials/address/${data.mladdress}`, function(val2) {
+
+									$.each(val2, function(j, shuju) {
+
+										//	_this.obj.push({lable:`${mlname.mlname}`});
+
+										obj.children.push({
+											label: `${shuju.mlname}`,
+											materialid: `${shuju.materialid}`
+										});
+
+									});
+
+								});
+
+								_this.adddata.push(obj);
+
+							});
+
+							console.log(_this.adddata);
+
+						});
 
 					}
 				},
 				mounted() {
-
+					this.addressshow();
+					this.showlist(1,1);
 				}
 
 			}).$mount('#goodsApp');

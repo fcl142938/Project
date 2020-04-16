@@ -14,7 +14,6 @@
 				display: block;
 				visibility: hidden;
 			}
-			
 			/*.el-header {
 				background-color: #B3C0D1;
 				color: #333;
@@ -33,7 +32,8 @@
 	</head>
 
 	<body>
-		<div id="supplierApp"><!-- style="background-color: whitesmoke;"-->
+		<div id="supplierApp">
+			<!-- style="background-color: whitesmoke;"-->
 			<div class="mobileBackColor" style="">
 				<h1 style="float: left;,color: #82848A;">商品资料</h1>
 				<div style="width: 400px; float: right; margin-top: 25px;">
@@ -44,27 +44,21 @@
 				</div>
 
 			</div>
+
 			<el-container style="height: 1000px; border: 1px solid #eee">
-				<el-aside width="200px" ><!--style="background-color: rgb(238, 241, 246)"-->
+				<el-aside width="200px">
+					<!--style="background-color: rgb(238, 241, 246)"-->
 					<el-menu>
-						<el-submenu index="1">
-							<template slot="title"><i class="el-icon-message"></i>北京</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="1-1">选项1</el-menu-item>
-								<el-menu-item index="1-2">选项2</el-menu-item>
-							</el-menu-item-group>
+						<template v-for="(val,i) in this.address">
+							<el-submenu index="" :data-type="val.mladdress">
 
-						</el-submenu>
-						<el-submenu index="2">
-							<template slot="title"><i class="el-icon-message"></i>上海</template>
-							<el-menu-item-group>
-								<template slot="title">分组一</template>
-								<el-menu-item index="1-1">选项1</el-menu-item>
-								<el-menu-item index="1-2">选项2</el-menu-item>
-							</el-menu-item-group>
+								<template slot="title">
+									<div @click="showlist(val.mladdress,1,1)"><i class="el-icon-message"></i>{{val.mladdress}}</div>
+								</template>
 
-						</el-submenu>
+							</el-submenu>
+
+						</template>
 
 					</el-menu>
 				</el-aside>
@@ -72,7 +66,7 @@
 				<el-container>
 					<el-header style="text-align: right; font-size: 12px">
 						<span @click="dialogFormVisible = true" style="font-size: 20px; margin-right: 10px;"><i class="el-icon-edit-outline"></i>增加</span>
-						<span style="font-size: 20px;  margin-right: 10px;"><i class="el-icon-delete"></i>删除</span>
+						<span style="font-size: 20px;  margin-right: 10px;" @click="delById()"><i class="el-icon-delete"></i>删除</span>
 						<span style="font-size: 20px; margin-right: 10px;"><i class="el-icon-document-copy"></i>保存</span>
 						<span style="font-size: 20px; margin-right: 10px;"><i class="el-icon-folder-opened"></i>导出</span>
 						<span @click="showLianXiRen = true" style="font-size: 20px; margin-right: 10px;"><i class="el-icon-folder-opened"></i>联系人</span>
@@ -81,233 +75,75 @@
 
 					<el-main>
 						<template>
-							<el-table style="width: auto" height="500" ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+							<el-table style="width: auto" height="500" ref="singleTable" :data="pageinfo.list" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 
-								<el-table-column property="date" label="厂商代码" width="120">
+								<el-table-column property="materialid" label="厂商代码">
 								</el-table-column>
-								<el-table-column property="name" label="厂商名称" width="120">
+								<el-table-column property="mlname" label="厂商名称">
 								</el-table-column>
-								<el-table-column property="address" label="地址">
+								<el-table-column property="mladdress" label="厂商地址">
 								</el-table-column>
-								<el-table-column property="date" label="经营情况" width="120">
-								</el-table-column>
-								<el-table-column property="name" label="网址" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="开户行">
-								</el-table-column>
-								<el-table-column property="date" label="银行账号" width="120">
-								</el-table-column>
-								<el-table-column property="name" label="付款方式" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="厂商等级">
-								</el-table-column>
-								<el-table-column property="date" label="经营品牌" width="120">
-								</el-table-column>
-								<el-table-column property="name" label="厂商类别" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="联系人">
-								</el-table-column>
-								<el-table-column property="address" label="电话">
-								</el-table-column>
-								<el-table-column property="address" label="手机">
-								</el-table-column>
-								<el-table-column property="address" label="Email">
-								</el-table-column>
-								<el-table-column property="address" label="账期（天）">
-								</el-table-column>
-								<el-table-column property="address" label="备注">
+								<el-table-column property="mlphone" label="厂商电话">
 								</el-table-column>
 
 							</el-table>
 							<div style="margin-top: 20px">
-
+								<el-button type="primary" @click="prePage()">上一页</el-button>
+								<el-button type="primary" @click="nextPage()">下一页</el-button>
 							</div>
 						</template>
 
 					</el-main>
 					<el-main>
 
-						<h1>联系人</h1>
-						<template>
-							<el-table style="width: auto" height="500" ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-
-								<el-table-column property="date" label="联系人" width="120">
-								</el-table-column>
-								<el-table-column property="name" label="职位" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="手机" width="120">
-								</el-table-column>
-								<el-table-column property="date" label="电话" width="120">
-								</el-table-column>
-								<el-table-column property="date" label="Email" width="120">
-								</el-table-column>
-
-							</el-table>
-							<div style="margin-top: 20px">
-
-							</div>
-						</template>
 					</el-main>
 				</el-container>
 			</el-container>
 
 			<el-dialog title="服务项目自定义" :visible.sync="dialogFormVisible" center>
-				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+				<el-form :model="addentity"  ref="addentity" label-width="100px" class="demo-ruleForm">
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="厂商代码" prop="name">
+							<el-form-item label="厂商地址" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.mladdress"></el-input>
 
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="厂商名称" prop="name">
 
-								<el-input v-model="ruleForm.name"></el-input>
+								<el-input v-model="addentity.mlname"></el-input>
 
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="12">
-							<el-form-item label="地址" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="经营情况" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="网址" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="开户行" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="银行账号" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="经营品牌" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="联系人" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="电话" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="手机" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="Email" prop="name">
-
-								<el-input v-model="ruleForm.name"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-form-item label="备注" prop="name">
-
-							<el-input v-model="ruleForm.name"></el-input>
-
-						</el-form-item>
-						<el-form-item label="账期（天）" prop="name">
-
-							<el-input v-model="ruleForm.name"></el-input>
-
-						</el-form-item>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="付款方式" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
 
 						<el-col :span="12">
-							<el-form-item label="厂商等级" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="厂商类别" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
+							<el-form-item label="厂商电话" prop="name">
 
+								<el-input v-model="addentity.mlphone"></el-input>
+
+							</el-form-item>
 						</el-col>
 					</el-row>
 
 				</el-form>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
-					<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+					<el-button type="primary" @click="add()">确 定</el-button>
 				</div>
 			</el-dialog>
-			<el-dialog title="其他联系人" :visible.sync="showLianXiRen" >
+			<el-dialog title="其他联系人" :visible.sync="showLianXiRen">
 				<div class="mobileBackColor" style="">
-				<h1 style="float: left;,color: #82848A;">XX 的联系人</h1>
-				<div style="width: 400px; float: right; margin-top: 25px;">
-					<el-button style="float: right;" type="info" plain>关闭</el-button>
-					
-					
+					<h1 style="float: left;,color: #82848A;">XX 的联系人</h1>
+					<div style="width: 400px; float: right; margin-top: 25px;">
+						<el-button style="float: right;" type="info" plain>关闭</el-button>
+
+					</div>
 
 				</div>
-
-			</div>
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-row>
 						<el-col :span="12">
@@ -356,30 +192,29 @@
 
 							</el-form-item>
 						</el-col>
-						
+
 					</el-row>
-					
+
 					<template>
-							<el-table style="width: auto" height="500" ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+						<el-table style="width: auto" height="500" ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 
-								<el-table-column property="date" label="联系人" width="120">
-								</el-table-column>
-								<el-table-column property="name" label="职位" width="120">
-								</el-table-column>
-								<el-table-column property="address" label="手机" width="120">
-								</el-table-column>
-								<el-table-column property="date" label="电话" width="120">
-								</el-table-column>
-								<el-table-column property="date" label="Email" width="120">
-								</el-table-column>
+							<el-table-column property="date" label="联系人" width="120">
+							</el-table-column>
+							<el-table-column property="name" label="职位" width="120">
+							</el-table-column>
+							<el-table-column property="address" label="手机" width="120">
+							</el-table-column>
+							<el-table-column property="date" label="电话" width="120">
+							</el-table-column>
+							<el-table-column property="date" label="Email" width="120">
+							</el-table-column>
 
-							</el-table>
-							<div style="margin-top: 20px">
+						</el-table>
+						<div style="margin-top: 20px">
 
-							</div>
-						</template>
-					
-					
+						</div>
+					</template>
+
 				</el-form>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -391,6 +226,17 @@
 		<script>
 			var supplierApp = new Vue({
 				data: {
+					currentRow:{},
+					addentity: {
+
+						mladdress: "",
+						mlname: "",
+						mlphone: ""
+
+					},
+					dizhi: "",
+					pageinfo: {},
+					address: {},
 					tableData: [{
 						date: '2016-05-02',
 						name: '王小虎',
@@ -409,7 +255,7 @@
 						address: '上海市普陀区金沙江路 1516 弄'
 					}],
 					dialogFormVisible: false,
-					showLianXiRen:false,
+					showLianXiRen: false,
 					ruleForm: {
 						name: '',
 						region: '',
@@ -469,12 +315,94 @@
 					}
 				},
 				methods: {
+					delById(){
+						
+							let _this = this;
+
+						$.ajax(`http://127.0.0.1:8080/api/materials/delByid/${_this.currentRow.materialid}`, {
+							type: 'delete',
+							dataType: 'json',
+							
+							contentType: 'application/json',
+							success(msg) {
+								if(msg > 0) {
+									_this.showlist(_this.dizhi, 1, 1);
+									_this.$message('删除成功！');
+										
+								} else {
+									_this.$message('删除失败！');
+								}
+							}
+						});
+					},
+					add(){
+						let _this = this;
+						
+						$.ajax(`http://127.0.0.1:8080/api/materials/add`, {
+							type: 'post',
+							dataType: 'json',
+							data: JSON.stringify(_this.addentity),
+							contentType: 'application/json',
+							success(msg) {
+								if(msg > 0) {
+									alert('新增成功！');
+									_this.showlist(_this.dizhi, 1, 1);
+									_this.dialogFormVisible = false;
+									
+
+								} else {
+									alert('新增失败！');
+								}
+							}
+						});
+						
+						
+						
+					},
+					prePage() {
+
+						if(this.pageinfo.hasPreviousPage) {
+							this.showlist(this.dizhi, this.pageinfo.prePage, 1);
+
+						} else {
+							this.$message('没有上一页了！');
+						}
+
+					},
+					nextPage() {
+
+						if(this.pageinfo.hasNextPage) {
+							this.showlist(this.dizhi, this.pageinfo.nextPage, 1);
+
+						} else {
+							this.$message('没有下一页了！');
+						}
+
+					},
+					showlist(data, pageNum, pageSize) {
+
+						let _this = this;
+						_this.dizhi = data;
+						$.getJSON(`http://127.0.0.1:8080/api/materials/showlist/${data}/${pageNum}/${pageSize}`, function(val) {
+							_this.pageinfo = val;
+
+						});
+					},
 					handleCurrentChange(val) {
 						this.currentRow = val;
+						
+					},
+					addressshow() {
+						let _this = this;
+						$.getJSON("http://127.0.0.1:8080/api/materials/address", function(val) {
+							_this.address = val;
 
+						});
 					}
 				},
 				mounted() {
+					this.addressshow();
+					console.log(this.address);
 
 				}
 
