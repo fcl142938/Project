@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title>添加会员</title>
@@ -15,27 +16,34 @@
 			}
 		</style>
 	</head>
+
 	<body>
 		<div class="container">
 			<div id="memberAddApp" class="row" v-cloak>
-				<h3>添加会员<el-button style="float: right;" onclick="javascript:history.back(-1)">返回</el-button></h3>
-				<hr />
+				<!--<h3>添加会员<el-button style="float: right;" onclick="javascript:history.back(-1)">返回</el-button></h3>
+				<hr />-->
 				<div>
-					<el-form :model="users" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="会员名：" prop="userName">
-							<el-input v-model="users.userName"></el-input>
+					<el-form :model="m" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="会员名：" prop="membername">
+							<el-input v-model="m.membername"></el-input>
 						</el-form-item>
-						<el-form-item label="密码：" prop="userPassword">
-							<el-input v-model="users.userPassword"></el-input>
+						<el-form-item label="密码：" prop="memberpwd">
+							<el-input v-model="m.memberpwd"></el-input>
 						</el-form-item>
-						<el-form-item label="确认密码：" prop="userPasswords">
-							<el-input v-model="users.userPasswords"></el-input>
+						<el-form-item label="确认密码：" prop="memberpwds">
+							<el-input v-model="m.memberpwds"></el-input>
 						</el-form-item>
-						<el-form-item label="电话：" prop="userTel">
-							<el-input v-model="users.userTel"></el-input>
+						<el-form-item label="会员类型" prop="region">
+							<el-select v-model="m.gradeid" placeholder="请选择会员级别">
+								<el-option label="普通会员" value="1"></el-option>
+								<el-option label="超级会员" value="2"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="余额：" prop="money">
+							<el-input v-model="m.money"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click="onRegister()">注册</el-button>
+							<el-button type="m" @click="onRegister">注册</el-button>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -48,26 +56,19 @@
 	<script>
 		var memberAddApp = new Vue({
 			data: {
-				job: {
-					jid: '',
-					jname: ''
-				},
-				pageInfo:{},
-				users: {
-					userId: '',
-					userName: '',
-					userPassword: '',
-					userPasswords: '',
-					userCardNo: '',
-					userTel: '',
-					userAddress: '',
-					userPostNumber: '',
-					userIsadmin: '',
-					userQuestion: '',
-					userAnswer: ''
+				m: {
+					memberid: '',
+					gradeid: '',
+					membername: '',
+					memberpwd: '',
+					memberintegrate: '',
+					countintegrate: '',
+					money: '',
+					countmoney: '',
+					starttime: ''
 				},
 				rules: {
-					userName: [{
+					membername: [{
 							required: true,
 							message: '请输入用户名',
 							trigger: 'blur'
@@ -79,7 +80,7 @@
 							trigger: 'blur'
 						}
 					],
-					userPassword: [{
+					memberpwd: [{
 							required: true,
 							message: '请输入密码',
 							trigger: 'blur'
@@ -91,7 +92,7 @@
 							trigger: 'blur'
 						}
 					],
-					userPasswords: [{
+					memberpwds: [{
 							required: true,
 							message: '请再次输入密码',
 							trigger: 'blur'
@@ -102,27 +103,35 @@
 							message: '长度在 6到 15 个字符',
 							trigger: 'blur'
 						}
-					],
-					userTel: [{
-							required: true,
-							message: '请输入电话',
-							trigger: 'blur'
-						},
-						{
-							min: 11,
-							max: 11,
-							message: '长度在 11 个字符',
-							trigger: 'blur'
-						}
 					]
 				}
 			},
 			methods: {
-
+				onRegister() {
+					let _this = this;
+					if(_this.m.memberpwd == _this.m.memberpwds) {
+						$.ajax(`http://127.0.0.1:8080/tyh/api/m/tyhInsertByMember`, {
+							type: "post",
+							dataType: "json",
+							contentType: "application/json",
+							data: JSON.stringify(_this.m),
+							success(msg) {
+								if(msg.code == "200") {
+									alert("已成功注册成为本店会员");
+								} else {
+									alert("新增失败");
+								}
+							}
+						});
+					} else{
+						alert("密码不一致");
+					}
+				}
 			},
 			mounted() {
 
 			}
 		}).$mount('#memberAddApp');
 	</script>
+
 </html>

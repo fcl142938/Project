@@ -29,12 +29,7 @@
 					</el-col>
 				</el-form-item>
 				</el-col> 
-			   </el-row >
-			   
-			   
-	     
-	          	<el-row :span="24" >
-	          	  <el-col :span="12">
+					  <el-col :span="12">
 				<el-form-item label="员工地址" prop="saddress">
 					<el-col :span="6">
 						<!--非常重要-->
@@ -42,6 +37,12 @@
 					</el-col>
 				</el-form-item>
 				  </el-col> 
+			   </el-row >
+			   
+			   
+	     
+	          	<el-row :span="24" >
+	          
 				  <el-col :span="12">
 				<el-form-item label="员工性别" prop="staffsex">
 					  <el-col :span="6">
@@ -52,22 +53,6 @@
                      </el-col>
 				</el-form-item>
 				</el-col> 
-			   </el-row >
-			   
-			      
-			   
-			     
-	      
-	          	<el-row :span="24" >
-	          	  <el-col :span="12">
-				<el-form-item label="员工部门" prop="positionid">
-					  <el-col :span="6">
-                      <el-select v-model="user.positionid" placeholder="请选择" style="width: 130px;">
-                             <el-option  :value="temp.departmentid" v-for="(temp,i) in department">{{temp.departmentname}}</el-option>
-                     
-                     </el-select>
-                     </el-col>
-				</el-form-item>
 				  </el-col> 
 				  <el-col :span="12">
 				<el-form-item label="入职日期" prop="sstarttime">
@@ -76,7 +61,36 @@
 						<el-input type="date" v-model="user.sstarttime" placeholder="" style="width: 170px;"></el-input>
 					</el-col>
 				</el-form-item>
-				</el-col> 
+				</el-col>
+			   </el-row >
+			   
+			      
+			   
+			     
+	      
+	          	<el-row :span="24" >
+	          	  <el-col :span="12">
+				<el-form-item label="员工部门">
+					  <el-col :span="6">
+                      <el-select v-model="department.departmentname" placeholder="请选择" style="width: 130px;" @change="depid">
+                             <el-option  :value="temp.departmentid":label="temp.departmentname" v-for="(temp,i) in department" ></el-option>
+                     </el-select>
+                     </el-col>
+				</el-form-item>
+				</el-col>
+				  <el-col :span="12">
+				<el-form-item label="员工岗位" prop="positionid">
+					  <el-col :span="6">
+                      <el-select v-model="user.positionid" placeholder="请选择" style="width: 130px;">
+                             <el-option  :value="temp.positionid":label="temp.positionname" v-for="(temp,i) in position" ></el-option>
+                     </el-select>
+                     </el-col>
+				</el-form-item>
+				</el-col>
+				
+				
+				
+				 
 			   </el-row >
 			   
 			         
@@ -142,6 +156,7 @@
 					
 				    },
 				department:{},
+				position:{},
 				loading: true,
 				shoppRules:{
 				staffname:[{
@@ -194,6 +209,13 @@
 				
 			},
 			methods:{
+				depid(){
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/px/api/user/${_this.department.departmentname}`, function(date) {
+						_this.position = date;	
+					});
+					
+				},
 				
 	             adduser() {
 					let _this = this;
@@ -223,7 +245,7 @@
 											});
 											
 											personApp.isShow=false;//非常重要
-										/*	$("#tab-"+_this.number).click();*/
+										   window.parent.personApp.goToPage(null,1,3);
 										}
 									}
 								});

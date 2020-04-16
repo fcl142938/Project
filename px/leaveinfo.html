@@ -5,56 +5,90 @@
 		<title></title>
 	</head>
 	<body>
-		<div id="leaveinfoapp">
-			 <el-row :span="24">
-	       	 <el-col :span="12">
-	       	 	<h3>离职登记</h3>
-	       	 </el-col>
-	       	     <el-col :span="12">
-	       		<el-form :span="12" id="btn">
-						<el-form-item  >
-								<el-button icon="el-icon-success" size="mini" type="success" @click="">保存</el-button>
-						</el-form-item>
-					</el-form>
-					 </el-col>
-	       </el-row>
-	       <el-form :model="user"  label-width="100px">
-				<el-form-item label="员工姓名" prop="username">
+		<div id="leaveinfo">
+				<el-button icon="el-icon-success" size="mini" type="success" @click="adddeps" style="margin-left: 250px;">保存</el-button>
+		<el-form :model="staff"  ref="shoppForm" label-width="100px">
+			<el-row :span="24">
+				<el-col :span="9">
+			<el-form-item  label="离职员工">
+				 <el-col :span="6">
+                      <el-select v-model="staff.staffname" placeholder="请选择" style="width: 130px;">
+                             <el-option  :value="temp.staffname" v-for="(temp,i) in staff" >{{temp.staffname}}</el-option>
+                     </el-select>
+                    </el-col>
+			</el-form-item  >
+			</el-col>
+			<el-col :span="12">
+			<el-form-item label="离职时间" prop="sendtime">
 					<el-col :span="6">
 						<!--非常重要-->
-						<el-input v-model="user.username" placeholder="" style="width: 220px;"></el-input>
+						<el-input type="date" v-model="staff.sendtime" placeholder="" style="width: 170px;"></el-input>
 					</el-col>
-				</el-form-item>
-				<el-form-item label="离职日期" prop="userdate">
-					<el-col :span="6">
-						<!--非常重要-->
-						<el-input  type="date" v-model="user.userdate" placeholder="" style="width: 220px;"></el-input>
-					</el-col>
-				</el-form-item>
-				
-					<el-form-item label="离职原因" prop="useryy">
-					<el-col :span="6">
-						<!--非常重要-->
-						<el-input type="textarea" v-model="user.useryy" placeholder="" style="width: 220px;"></el-input>
-					</el-col>
-				</el-form-item>
-			
-			
+			</el-form-item>
+			</el-col>
+			</el-row>
+		
+		</el-form>
 		</div>
 	</body>
 	<script>
-		var leaveinfoapp=new Vue({
-			 el:"#leaveinfoapp",
-			 data:{
-			 	user:{
-			 		username:"",
-			 		userdate:"",
-			 		useryy:""
-			 	}
-			 	
-			 }
+		var adddep=new Vue({
+			el:"#leaveinfo",
+			data:{
+				staff:[]
+				
+				
+			},
+			methods:{
+				adddeps(){
+					let _this = this;
+					this.$refs['shoppForm'].validate(valid => {
+						if(valid) {
+							//验证通过
+							//自定义加载块
+							const loading = this.$loading({
+								lock: true,
+								text: '努力更新中....',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.5)'
+							});
+							//延迟2秒，模拟网络延迟
+							setTimeout(() => {
+					            $.post(`http://127.0.0.1:8080/px/api/user/updateleave/${_this.staff.sendtime}/${_this.staff.staffname}`,function(res){
+					            	if(res.code=="200"){
+					            		 loading.close(); //关闭加载块【非常重要】
+											_this.$message({
+												type: 'success',
+												message: '修改成功'
+											});
+											
+											leaveApp.isShow=false;//非常重要
+											window.parent.leaveApp.goToPage(null,1,3);
+					            	}
+					            	
+					            	
+					            })
+							}, 2000);
+						} 
+					});
+					
+				}
+				
+			},
+			mounted() {
+				setTimeout(() => {
+					this.loading = false;
+				}, 1000);
+				
+				  let _this = this;
+				 	$.getJSON(`http://127.0.0.1:8080/px/api/user/queryname`, function(date) {
+						_this.staff = date;
+					});
+				
+			}
 			
 		})
 		
 	</script>
 </html>
+

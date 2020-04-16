@@ -26,6 +26,10 @@
 				font-size: 18px;
 			}
 			
+			.el-tabs__content {
+				display: block;
+			}
+			
 			.el-row {
 				&:last-child {
 					margin-bottom: 0;
@@ -80,25 +84,21 @@
 				<el-col :span="10">
 					<el-col :span="8">
 						<span>车牌号码：</span>
-						<el-input style="width: 60%;">
-					</el-col>
-					<el-col :span="8">
-						<span>车架号：</span>
-						<el-input style="width: 60%;">
+						<el-input v-model="chepai" style="width: 60%;">
 					</el-col>
 				</el-col>
 				<el-col :span="8">
 					<el-col :span="5">
-						<i class="el-icon-edit-outline" @click="isShow3=true">新增</i>
+						<i class="el-icon-edit-outline" @click="md33">新增</i>
 					</el-col>
 					<el-col :span="5">
-						<i class="el-icon-edit" @click="isShow3=true">修改</i>
+						<i class="el-icon-edit" @click="md3">修改</i>
 					</el-col>
 					<el-col :span="5">
-						<i class="el-icon-delete">删除</i>
+						<i class="el-icon-delete" @click="shanchuche">删除</i>
 					</el-col>
 					<el-col :span="5">
-						<i class="el-icon-search">查询</i>
+						<i class="el-icon-search" @click="cha">查询</i>
 					</el-col>
 				</el-col>
 				<el-col :span="2">
@@ -113,35 +113,49 @@
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
 				<template>
-					<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-						<el-table-column type="index" width="50">
-						</el-table-column>
-						<el-table-column property="date" label="日期" width="120">
-						</el-table-column>
-						<el-table-column property="name" label="姓名" width="120">
-						</el-table-column>
-						<el-table-column property="address" label="地址">
-						</el-table-column>
-					</el-table>
-				</template>
+							<el-table stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column prop="consumerid" label="编号">
+								</el-table-column>
+								<el-table-column prop="carnumber" label="车牌号码">
+								</el-table-column>
+								<el-table-column prop="brandname" label="车辆品牌">
+								</el-table-column>
+								<el-table-column prop="motorcyclename" label="车辆型号">
+								</el-table-column>
+								<el-table-column prop="drivername" label="驾驶员">
+								</el-table-column>
+								<el-table-column prop="driverphone" label="驾驶员电话">
+								</el-table-column>
+								<el-table-column prop="driverbrithday" label="出生日期">
+								</el-table-column>
+								<el-table-column prop="motorletter" label="发动机号">
+								</el-table-column>
+								<el-table-column prop="motorname" label="发动机品牌">
+								</el-table-column>
+							</el-table>
+						</template>
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
 				<el-tabs type="border-card">
 					<el-tab-pane label="客户信息">
 						<template>
-							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-								<el-table-column type="index" width="50">
+							<el-table stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
+								<el-table-column prop="userid" label="客户编码">
 								</el-table-column>
-								<el-table-column property="date" label="日期" width="120">
+								<el-table-column prop="username" label="姓名">
 								</el-table-column>
-								<el-table-column property="name" label="姓名" width="120">
+								<el-table-column prop="userphone" label="电话">
 								</el-table-column>
-								<el-table-column property="address" label="地址">
+								<el-table-column prop="useraddress" label="地址">
+								</el-table-column>
+								<el-table-column prop="userbrithday" label="生日">
+								</el-table-column>
+								<el-table-column prop="userremark" label="备注">
 								</el-table-column>
 							</el-table>
 						</template>
 					</el-tab-pane>
-					<el-tab-pane label="历史维修">
+					<!--<el-tab-pane label="历史维修">
 						<template>
 							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 								<el-table-column type="index" width="50">
@@ -154,44 +168,50 @@
 								</el-table-column>
 							</el-table>
 						</template>
-					</el-tab-pane>
+					</el-tab-pane>-->
 				</el-tabs>
 			</el-row>
 			<el-dialog title="车辆资料编辑" :visible.sync="isShow3" width="70%" :before-close="handleClose1">
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>车牌号码：</span>
-						<el-input style="width: 70%;">
+						<el-input v-model="kehuche.carnumber" style="width: 70%;">
 					</el-col>
 					<el-col :span="6">
-						<span>车辆车牌：</span>
-						<el-input style="width: 70%;">
+						<span>车辆品牌：</span>
+						<el-select @change="xuanzhong2()" v-model="xuanzhongcheliangpinpai" placeholder="请选择" style="width: 70%;">
+							<el-option v-for="temp in cheliangpinpaiList" :label="temp.brandname" :value="temp.brandid">
+							</el-option>
+						</el-select>
 					</el-col>
 					<el-col :span="6">
 						<span>车辆型号：</span>
-						<el-input style="width: 67%;">
+						<el-select v-model="xuanzhongchexing" placeholder="请选择" style="width: 67%;">
+							<el-option v-for="temp in chexing" :label="temp.motorcyclename" :value="temp.motorcycleid">
+							</el-option>
+						</el-select>
 					</el-col>
 					<el-col :span="6">
 						<span>驾驶员：</span>
-						<el-input style="width: 75%;">
+						<el-input v-model="kehuche.drivername" style="width: 75%;">
 					</el-col>
 				</el-row>
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>驾驶员电话：</span>
-						<el-input style="width: 66%;">
+						<el-input v-model="kehuche.driverphone" style="width: 66%;">
 					</el-col>
 					<el-col :span="6">
 						<span>出生日期：</span>
-						<el-input type="date" style="width: 70%;">
+						<el-input v-model="kehuche.driverbrithday" type="date" style="width: 70%;">
 					</el-col>
 					<el-col :span="6">
 						<span>车辆归属：</span>
 						<el-input style="width: 67%;">
 					</el-col>
 					<el-col :span="6">
-						<span>驾证到期：</span>
-						<el-input type="date" style="width: 71%;">
+						<span>入场日期：</span>
+						<el-input v-model="kehuche.driverdate" type="date" style="width: 71%;">
 					</el-col>
 				</el-row>
 				<el-row :gutter="20" style="background-color: #f3fffd;">
@@ -209,7 +229,7 @@
 					</el-col>
 					<el-col :span="6">
 						<span>里程：</span>
-						<el-input style="width: 79%;">
+						<el-input v-model="kehuche.carcourse" style="width: 79%;">
 					</el-col>
 				</el-row>
 				<el-row :gutter="20" style="background-color: #f3fffd;">
@@ -223,7 +243,7 @@
 					</el-col>
 					<el-col :span="6">
 						<span>购买日期：</span>
-						<el-input type="date" style="width: 71%;">
+						<el-input v-model="kehuche.buycar" type="date" style="width: 71%;">
 					</el-col>
 				</el-row>
 				<el-row :gutter="20" style="background-color: #f3fffd;">
@@ -240,7 +260,7 @@
 						<el-input style="width: 67%;">
 					</el-col>
 					<el-col :span="6">
-						 <el-checkbox v-model="checked" style="line-height: 40px;">在我投保车</el-checkbox>
+						<el-checkbox v-model="checked" style="line-height: 40px;">在我投保车</el-checkbox>
 					</el-col>
 				</el-row>
 				<el-row :gutter="20" style="background-color: #f3fffd;">
@@ -272,12 +292,12 @@
 					</el-col>
 					<el-col :span="6">
 						<span>客户编码：</span>
-						<el-input :disabled="true" style="width: 66%;">
+						<el-input v-model="kehuche.userid" :disabled="true" style="width: 66%;">
 					</el-col>
 				</el-row>
 				<span slot="footer" class="dialog-footer">
-	    			<el-button @click="isShow3 = false">取 消</el-button>
-	    			<el-button type="primary" @click="isShow3 = false">确 定</el-button>
+	    			<el-button @click="isShow3quxiao">取 消</el-button>
+	    			<el-button type="primary" @click="isShow3queding">确 定</el-button>
   				</span>
 			</el-dialog>
 		</div>
@@ -286,45 +306,235 @@
 	<script>
 		var indexApp = new Vue({
 			data: {
-				tableData: [{
-					date: '2016-05-02',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄'
-				}, {
-					date: '2016-05-04',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1517 弄'
-				}, {
-					date: '2016-05-01',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1519 弄'
-				}, {
-					date: '2016-05-03',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1516 弄'
-				}],
-				currentRow: null,
+				chepai:'',
+				chexing: [],
+				xuanzhongchexing: '',
+				consumercar:[],
+				consumerinfo:[],
 				isShow3: false,
-				checked: false
+				checked: false,
+				xuanzhongche:null,
+				xuanzhongkehu:null,
+				cheliangpinpaiList: [],
+				a:null,
+				kehu: {
+					userid: '',
+					username: '',
+					userphone: '',
+					useraddress: '',
+					userbrithday: '',
+					userremark: ''
+				},
+				kehuche: {
+					consumerid: 0,
+					userid: '',
+					carnumber: '',
+					motorcycleid: '',
+					drivername: '',
+					driverphone: '',
+					driverbrithday: '',
+					driverdate: '',
+					carcourse: '',
+					buycar: ''
+				}
 			},
 			methods: {
+				cha(){
+					alert()
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/chachepai/${_this.chepai}`, function(data) {
+						_this.consumercar = data;
+					});
+				},
+				shanchuche(){
+					if(this.xuanzhongche == null) {
+						this.$message("请选中需要删除的车");
+					} else {
+						this.$confirm('此操作将永久删除该车, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							let _this = this;
+							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanchukehuche/${_this.xuanzhongche.consumerid}`,
+							{
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								if(data.code == "200") {
+									_this.$message({
+										type: 'success',
+										message: '删除成功!'
+									});
+								} else {
+									_this.$message(date.msg);
+								}
+							}
+						});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					}
+				},
+				xuanzhong2() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/chexing/${_this.xuanzhongcheliangpinpai}`, function(data) {
+						_this.chexing = data;
+					});
+				},
+				md3() {
+					if(this.xuanzhongche == null) {
+						this.$message("请选中需要修改的车");
+					} else {
+						this.kehuche = this.xuanzhongche;
+						this.xuanzhongcheliangpinpai = this.kehuche.brandname;
+						this.xuanzhongchexing = this.kehuche.motorcyclename;
+						this.a=this.xuanzhongche;
+						this.isShow3 = true;
+					}
+				},
+				md33() {
+					if(this.xuanzhongkehu == null) {
+						this.$message("请选中需要新增的客户");
+					} else {
+						this.kehuche.userid = this.xuanzhongche.userid;
+						this.kehu = this.xuanzhongkehu;
+						this.xuanzhongcheliangpinpai = '';
+						this.xuanzhongchexing = '';
+						this.isShow3 = true;
+					}
+				},
+				isShow3quxiao() {
+					this.isShow3 = false;
+					this.kehuche = {
+						consumerid: 0,
+						userid: '',
+						carnumber: '',
+						motorcycleid: '',
+						drivername: '',
+						driverphone: '',
+						driverbrithday: '',
+						driverdate: '',
+						carcourse: '',
+						buycar: ''
+					};
+					this.a=null;
+				},
+				isShow3queding() {
+					this.isShow3 = false;
+					if(this.a==null){
+						this.kehuche.motorcycleid = this.xuanzhongchexing;
+						this.kehuche.userid = this.kehu.userid;
+						this.addkehuche();
+					}else{
+						this.xiugaiche();
+					}
+				},
+				addkehuche() {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/addkehuche`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.kehuche),
+						dataType: "json",
+						success(date) {
+							if(date.code == "200") {
+								_this.$message(date.msg);
+							} else {
+								_this.$message(date.msg);
+							}
+						}
+					});
+				},
+				xiugaiche(){
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xiugaikehuche`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.kehuche),
+						dataType: "json",
+						success(date) {
+							if(date.code == "200") {
+								_this.$message(date.msg);
+							} else {
+								_this.$message(date.msg);
+							}
+							_this.kehuche = {
+								consumerid: 0,
+								userid: '',
+								carnumber: '',
+								motorcycleid: '',
+								drivername: '',
+								driverphone: '',
+								driverbrithday: '',
+								driverdate: '',
+								carcourse: '',
+								buycar: ''
+							};
+							_this.a=null;
+						}
+					});
+				},
+				goToPage() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/clzl`, function(data) {
+						_this.consumercar = data;
+					});
+				},
 				handleCurrentChange(val) {
-					alert(JSON.stringify(val))
-					this.currentRow = val;
+					this.xuanzhongche = val;
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {
+						_this.consumerinfo = data;
+					});
+				},
+				handleCurrentChange1(val) {
+					this.xuanzhongkehu = val;
+					let _this = this;
 				},
 				handleClose1(done) {
 					//确认框
 					this.$confirm('是否关闭').then(() => {
-						//正确
+						this.kehu = {
+							userid: '',
+							username: '',
+							userphone: '',
+							useraddress: '',
+							userbrithday: '',
+							userremark: ''
+						};
+						this.a=null;
+						this.kehuche = {
+							consumerid: 0,
+							userid: '',
+							carnumber: '',
+							motorcycleid: '',
+							drivername: '',
+							driverphone: '',
+							driverbrithday: '',
+							driverdate: '',
+							carcourse: '',
+							buycar: ''
+						};
 						done(); //关闭
 					}).catch(() => {
 						//错误
 						console.debug('取消操作');
 					});
 				},
+				cheliangpinpai() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cheliangpinpai`, function(data) {
+						_this.cheliangpinpaiList = data;
+					});
+				}
 			},
 			mounted() {
-				
+				this.goToPage();
+				this.cheliangpinpai();
 			}
 		}).$mount('#clzl');
 	</script>

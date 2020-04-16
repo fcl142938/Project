@@ -49,29 +49,29 @@
 									<div>
 										<i class="mdi mdi-currency-usd mr-3 icon-lg text-danger"></i>
 										<div>
-											<small>收入</small>
-											<h5>$577545</h5>
+											<small>今日收入</small>
+											<h5>{{FclShowVo.countprice}}</h5>
 										</div>
 									</div>
 									<div>
 										<i class="mdi mdi-eye mr-3 icon-lg text-success"></i>
 										<div>
-											<small>浏览次数</small>
-											<h5>9833550</h5>
+											<small>今日接车</small>
+											<h5>{{FclShowVo.jcar}}</h5>
 										</div>
 									</div>
 									<div>
 										<i class="mdi mdi-download mr-3 icon-lg text-warning"></i>
 										<div>
-											<small>维修次数</small>
-											<h5>2233783</h5>
+											<small>今日完工</small>
+											<h5>{{FclShowVo.overNumber}}</h5>
 										</div>
 									</div>
 									<div>
 										<i class="mdi mdi-flag mr-3 icon-lg text-danger"></i>
 										<div>
-											<small>返工次数</small>
-											<h5>3497843</h5>
+											<small>今日返工</small>
+											<h5>{{FclShowVo.returnNumber}}</h5>
 										</div>
 									</div>
 								</div>
@@ -96,84 +96,29 @@
 						<div class="col-md-12 stretch-card">
 							<div class="card">
 								<div class="card-body">
-									<h3>数据表</h3>
+									<h3>今日接车</h3>
 									<div class="table-responsive">
 										<table id="recent-purchases-listing" class="table">
 											<thead>
 												<tr>
-													<th>Name</th>
-													<th>Status report</th>
-													<th>Office</th>
-													<th>Price</th>
-													<th>Date</th>
-													<th>Gross amount</th>
+													<th>编号</th>
+													<th>车牌号</th>
+													<th>技工组</th>
+													<th>入厂日期</th>
+													<th>总价格</th>
+													<th>类型</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>Jeremy Ortega</td>
-													<td>Levelled up</td>
-													<td>Catalinaborough</td>
-													<td>$790</td>
-													<td>06 Jan 2018</td>
-													<td>$2274253</td>
+												<tr v-for="(temp,i) in se">
+													<td>{{temp.ser.smid}}</td>
+													<td>{{temp.name}}</td>
+													<td>{{temp.gname}}</td>
+													<td>{{temp.ser.starttime}}</td>
+													<td>{{temp.ser.countprice}}</td>
+													<td>{{temp.ser.rescueid === 0 ? '站内接车' : '站外接车'}}</td>
 												</tr>
-												<tr>
-													<td>Alvin Fisher</td>
-													<td>Ui design completed</td>
-													<td>East Mayra</td>
-													<td>$23230</td>
-													<td>18 Jul 2018</td>
-													<td>$83127</td>
-												</tr>
-												<tr>
-													<td>Emily Cunningham</td>
-													<td>support</td>
-													<td>Makennaton</td>
-													<td>$939</td>
-													<td>16 Jul 2018</td>
-													<td>$29177</td>
-												</tr>
-												<tr>
-													<td>Minnie Farmer</td>
-													<td>support</td>
-													<td>Agustinaborough</td>
-													<td>$30</td>
-													<td>30 Apr 2018</td>
-													<td>$44617</td>
-												</tr>
-												<tr>
-													<td>Betty Hunt</td>
-													<td>Ui design not completed</td>
-													<td>Lake Sandrafort</td>
-													<td>$571</td>
-													<td>25 Jun 2018</td>
-													<td>$78952</td>
-												</tr>
-												<tr>
-													<td>Myrtie Lambert</td>
-													<td>Ui design completed</td>
-													<td>Cassinbury</td>
-													<td>$36</td>
-													<td>05 Nov 2018</td>
-													<td>$36422</td>
-												</tr>
-												<tr>
-													<td>Jacob Kennedy</td>
-													<td>New project</td>
-													<td>Cletaborough</td>
-													<td>$314</td>
-													<td>12 Jul 2018</td>
-													<td>$34167</td>
-												</tr>
-												<tr>
-													<td>Ernest Wade</td>
-													<td>Levelled up</td>
-													<td>West Fidelmouth</td>
-													<td>$484</td>
-													<td>08 Sep 2018</td>
-													<td>$50862</td>
-												</tr>
+
 											</tbody>
 										</table>
 									</div>
@@ -190,115 +135,25 @@
 		<script>
 			var menuCountApp = new Vue({
 				data: {
-					term: {
-						year:4,
-						month:5,
-						departmentId:5
-					},
-					dataArr: [{
-						"name": "雷军",
-						"money": 37633
-					}, {
-						"name": "郭忠意",
-						"money": 5722
-					}, {
-						"name": "尹红文",
-						"money": 6514
-					}, {
-						"name": "丁磊",
-						"money": 1000
-					}, {
-						"name": "鲁昌盛",
-						"money": 4222
-					}]
-				},
-				methods: {
-					changeView(type) {
-						var xAxis = new Array();
-						var legend = new Array();
-						for(var i = 0; i < this.dataArr.length; i++) {
-							xAxis[i] = this.dataArr[i].name;
-							legend[i] = this.dataArr[i].money;
-
-						}
-						var option = null;
-						if(type == 'bar') {
-							option = {
-								title: {
-									text: this.term.year + '年' + this.term.month + '月' + this.departmentName + '月度报销统计图'
-								},
-								tooltip: {},
-								legend: {
-									data: ['报销金额']
-								},
-								xAxis: {
-									data: xAxis
-								},
-								yAxis: {},
-								series: [{
-									name: '报销金额',
-									type: 'bar',
-									barWidth: 30,
-									data: legend
-								}]
-							};
-						} else if(type == "pie") {
-							option = {
-								title: {
-									text: this.term.year + '年' + this.term.month + '月' + this.departmentName + '月度报销统计图'
-								},
-								tooltip: {},
-								series: [{
-									name: '报销金额',
-									type: 'pie',
-									radius: '60%',
-									label: {
-										normal: {
-											formatter: '{b}:({d}%)',
-											textStyle: {
-												fontWeight: 'normal',
-												fontSize: 15
-											}
-										}
-									}
-								}],
-								dataset: {
-									source: this.dataArr
-								}
-							};
-						} else {
-							option = {
-								title: {
-									text: this.term.year + '年' + this.term.month + '月' + this.departmentName + '月度报销统计图'
-								},
-								tooltip: {},
-								legend: {
-									data: ['报销金额']
-								},
-								xAxis: {
-									data: xAxis
-								},
-								yAxis: {},
-								series: [{
-									name: '报销金额',
-									type: 'line',
-									barWidth: 30,
-									data: legend
-								}]
-							};
-						}
-						var dom = document.getElementById('echartsDom');
-						$("#echartsDom").height('400px');
-						var myChart = echarts.init(dom);
-						if(myChart != null && myChart != "" && myChart != undefined) { //关键
-							myChart.dispose();
-						}
-						var myChart = echarts.init(dom);
-						myChart.setOption(option);
+					se: [],
+					FclShowVo: {
+						"countprice": 100,
+						"jcar": 3,
+						"overNumber": 1,
+						"returnNumber": 1
 					}
 				},
+				methods: {},
 				mounted() {
-					this.changeView('pie');
+					//this.changeView('pie');
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryShow`, function(res) {
+						_this.se = res;
+					})
+
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryShowData`, function(res) {
+						_this.FclShowVo = res;
+					})
 				}
 			}).$mount("#menuCountApp")
 		</script>
