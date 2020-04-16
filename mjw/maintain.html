@@ -156,7 +156,7 @@
 
 						<el-col :span="12">
 							<el-form-item label="项目类别" prop="region">
-								<el-select v-model="Typeinfo.typeid"  placeholder="请选择活动区域">
+								<el-select v-model="Typeinfo.typeid" placeholder="请选择活动区域">
 									<el-option label="大众" value="1"></el-option>
 									<el-option label="奔驰" value="2"></el-option>
 									<el-option label="宝马" value="3"></el-option>
@@ -221,7 +221,7 @@
 
 				</el-form>
 				<div slot="footer" class="dialog-footer">
-					
+
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
 					<el-button v-show='shouButt2' type="primary" @click="add()">确 定</el-button>
 					<el-button v-show='shouButt' type="primary" @click="updet()">保 存</el-button>
@@ -233,8 +233,8 @@
 		<script>
 			var maintain = new Vue({
 				data: {
-					shouButt:false,
-					shouButt2:true,
+					shouButt: false,
+					shouButt2: true,
 					Typeinfo: {
 						infoid: '',
 						infomark: '',
@@ -265,12 +265,12 @@
 					}
 				},
 				methods: {
-					newinfo(){
-						
+					newinfo() {
+
 					},
-					updet(){
+					updet() {
 						console.log(this.Typeinfo);
-						
+
 						let _this = this;
 						alert(JSON.stringify(_this.Typeinfo));
 						$.ajax(`http://127.0.0.1:8080/api/weixius/pingpai`, {
@@ -288,13 +288,12 @@
 								}
 							}
 						});
-						
-					}
-					,
+
+					},
 					queryOne() {
 						let _this = this;
-						this.shouButt=true;
-						this.shouButt2=false;
+						this.shouButt = true;
+						this.shouButt2 = false;
 						$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpai/${_this.currentRow.infoid}`, function(val) {
 
 							_this.Typeinfo = val;
@@ -305,12 +304,12 @@
 
 					},
 					add() {
-						this.shouButt=false;
-						this.shouButt2=true;
+						this.shouButt = false;
+						this.shouButt2 = true;
 						console.log(this.Typeinfo);
 
 						let _this = this;
-						alert(JSON.stringify(_this.Typeinfo));
+						
 						$.ajax(`http://127.0.0.1:8080/api/weixius/pingpai`, {
 							type: 'post',
 							dataType: 'json',
@@ -321,7 +320,7 @@
 									alert('新增成功！');
 									_this.show(_this.typeid);
 									_this.dialogFormVisible = false;
-									
+
 								} else {
 									alert('新增失败！');
 								}
@@ -353,7 +352,7 @@
 					},
 					shoumenu(typeid) {
 						let _this = this;
-						
+
 						$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpais/${typeid}`, function(val) {
 
 							_this.menulist = val;
@@ -363,7 +362,7 @@
 					},
 					show(typeid) {
 						let _this = this;
-_this.typeid = typeid;
+						_this.typeid = typeid;
 						$.getJSON(`http://127.0.0.1:8080/api/weixius/TypeInfo/1/2/${typeid}`, function(val) {
 
 							_this.pageinfo = val;
