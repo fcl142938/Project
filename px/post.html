@@ -17,18 +17,17 @@
 			.el-table .success-row {
 				background: #EBF6FA;
 			}
-			/*#btn{
+			#btn{
 				margin-top: 3px;
 				
-			}*/
+			}
 			#el{
-				margin-left: 450px;
 				
-				
+            /*  margin-left: 480px;	*/
 			}
-			#ef2{
+			/*#ef2{
 				margin-top: 5px;
-			}
+			}*/
 			#q{
 				margin-left: 20px;
 				
@@ -74,32 +73,28 @@
 
 	<body>
 		<div id="personApp" v-loading="loading">
-			<el-row>
-				<div id="div1">
-				<el-row id="el">
-						<el-col :span="6">	
-						<el-input v-model="format.name" placeholder=""></el-input>
-						</el-col>
-						
-						<el-col :span="6">	
-					<el-form  id="btn">
-						<el-form-item  >
-								<el-button id="q" icon="el-icon-search" size="mini"  @click="query">搜索</el-button>
-						</el-form-item>
-					</el-form>
-					</el-col>
-					<el-col :span="6">	
-						<el-button  icon="el-icon-edit"  round @click="showDialog" >增加员工</el-button>
 			
-					</el-col>
-					<el-col :span="6">
-					<el-button icon="el-icon-upload2" round @click="xls" >导出</el-button>
-					</el-col>
+				<div id="div1">
+				<el-row  id="el" class="text-right" style="padding-right: 20px;">
+						
+						<el-input v-model="format.name" placeholder="" size="mini" style="width:100px"></el-input>
+						
+						
+							
+						<el-button id="q" type="primary"  size="mini"  @click="query">搜索</el-button>
+					    
+					
+						<el-button  type="primary"  @click="showDialog" size="mini">增加员工</el-button>
+					
+					<el-button type="primary" @click="xls" size="mini">导出</el-button>
+					
 				</el-row>
 				</div>
 				<el-row :span="24">
-					<el-col :span="4">
-						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"  @node-contextmenu="rightClick"></el-tree>
+					<el-col :span="3">
+							<h5>公司部门</h5>
+							
+						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"  @node-contextmenu="rightClick" ></el-tree>
 							 <div v-show="menuVisible">
                               <ul id="menu" class="menu">
                                  <li class="menu_item" @click="showDialogs1">增加部门</li>
@@ -110,30 +105,30 @@
 					</el-col>
 				
 					
-					<el-col :span="20">
+					<el-col :span="21">
 						<el-table  :data="pageInfo.list"  :row-class-name="tableRowClassName" style="width:100%" >
-						<el-table-column prop="staffid" label="编号"  width="70">
+						<!--<el-table-column prop="staffid" label="编号"  >
 						</el-table-column>
-						<el-table-column prop="departmentname" label="部门"  width="70">
+						<el-table-column prop="departmentname" label="部门"  >
 						</el-table-column>
-						<el-table-column prop="positionname" label="职位"  width="70">
+						<el-table-column prop="positionname" label="职位"  >
+						</el-table-column>-->
+						<el-table-column prop="staffname" label="姓名"  >
 						</el-table-column>
-						<el-table-column prop="staffname" label="姓名"  width="70">
+						<el-table-column prop="staffsex" label="性别"  >
 						</el-table-column>
-						<el-table-column prop="staffsex" label="性别"  width="70">
+						<el-table-column prop="saddress" label="地址"  >
 						</el-table-column>
-						<el-table-column prop="saddress" label="地址"  width="70">
+						<el-table-column prop="sstarttime" label="入职"  >
 						</el-table-column>
-						<el-table-column prop="sstarttime" label="入职"  width="70">
+						<el-table-column prop="staffaccount" label="账号"  >
 						</el-table-column>
-						<el-table-column prop="staffaccount" label="账号"  width="70">
-						</el-table-column>
-						<el-table-column prop="price" label="月薪"  width="70">
+						<el-table-column prop="price" label="月薪"  >
 						</el-table-column>
 							<el-table-column label="操作">
 							<template slot-scope="temp">
-								 <el-button  icon="el-icon-edit" circle @click="showDialogs(temp.row.staffid)"></el-button>
-								  <el-button  icon="el-icon-delete" circle @click="deletebyid(temp.row.staffid)"></el-button>
+								 <el-button  type="danger"  icon="el-icon-edit"  circle @click="showDialogs(temp.row.staffid)"></el-button>
+								  <el-button  type="danger" icon="el-icon-delete" circle @click="deletebyid(temp.row.staffid)"></el-button>
 							   
 							</template>
 						</el-table-column>
@@ -145,7 +140,7 @@
 				
 			    <el-row>
 				<el-col :span="24" >
-					<el-pagination id="page"  v-if="pageInfo.total!=0" :background="true"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
+					<el-pagination id="page"  v-if="pageInfo.total!=0"   @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</el-col>
 			   </el-row>
@@ -176,7 +171,14 @@
 				 menuVisible: false,
 				 did:"",
 				 len:"",
-		       datas:[],
+				 dep:"null",
+				 pos:"null",
+		       datas:[{
+		       	   positionname:"全部",
+		       	   list:[],
+		       	   state:"0"
+		     
+		       }],
               defaultProps: {
               children: 'list',
                label: 'positionname'
@@ -190,12 +192,21 @@
 				pagesize:3,
 			},
 			methods: {
+				deps(){
+					 let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/fcl/api/department`, function(date) {
+						_this.datas[0].list = date;
+
+					});
+				},
+			
 				xls(){
 					let _this = this;
+					var name=this.format.name;
 					if(this.format.name=='')
-						{this.format.name=null};
+						{name=null};
 						
-					$.getJSON(`http://127.0.0.1:8080/api/px/xcl/${_this.format.name}/${_this.pagenum}/${_this.pagesize}`, function(date) {
+					$.getJSON(`http://127.0.0.1:8080/api/px/xcl/${name}/${_this.pagenum}/${_this.pagesize}/${_this.dep}/${_this.pos}`, function(date) {
                               	if(date.code == "200") {
 									_this.$message({
 										type: 'success',
@@ -230,6 +241,9 @@
 										type: 'success',
 										message: '删除成功!'
 									});
+									_this.goToPage();
+									_this.deps();
+									
 								}
 							}
 						});
@@ -245,11 +259,12 @@
 				
 				//右键点击
             rightClick(MouseEvent, object, Node, element) {
+            	
             	let _this = this;
+           
             	this.datas.forEach(row=>{
             		if(row.departmentid==object.departmentid){
-            		    _this.len= row.list.length
-            			
+            		    _this.len= row.list.length	
             		}
             	})
             		
@@ -261,39 +276,42 @@
                 menu.style.display = "block";
                 menu.style.left = MouseEvent.clientX - 0 + 'px'
                 menu.style.top = MouseEvent.clientY - 80 + 'px'
+             
             },
             foo() { // 取消鼠标监听事件 菜单栏
                 this.menuVisible = false
                 document.removeEventListener('click', this.foo) // 要及时关掉监听，不关掉的是一个坑，不信你试试，虽然前台显示的时候没有啥毛病，加一个alert你就知道了
             },
 
-				goToPage(staffname,pageNum,pageSize) {
+				goToPage() {
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/px/api/user/${staffname}/${pageNum}/${pageSize}`, function(date) {
+					var name=this.format.name;
+					if(this.format.name==''){
+						name=null;
+					}
+					$.getJSON(`http://127.0.0.1:8080/px/api/user/${name}/${_this.pagenum}/${_this.pagesize}/${_this.dep}/${_this.pos}`, function(date) {
 						_this.pageInfo = date;
-					    
 						
 					});
 				},
 				
 				handleSizeChange(val) {
-					if(this.format.name=='')
-						{this.format.name=null};
+					
+						
 						this.pageSize=val;
-					this.goToPage( this.format.name,this.pageInfo.pageNum, val);
+					this.goToPage( );
 				},
 				handleCurrentChange(val) {
-					if(this.format.name=='')
-						{this.format.name=null};
+					
+						
 						this.pagenum=val;
-					this.goToPage(this.format.name, val, this.pageInfo.pageSize, );
+					this.goToPage( );
 				},
 				
 			 
 				query(){
-						if(this.format.name=='')
-						{this.format.name=null};
-					   this.goToPage(this.format.name,1,3);
+						
+					   this.goToPage();
 				},
 				deletebyid(staffid){
 						let _this = this;
@@ -314,6 +332,7 @@
 										type: 'success',
 										message: '删除成功!'
 									});
+									_this.goToPage();
 								}
 							}
 						});
@@ -327,7 +346,26 @@
 				},
 				
 				 handleNodeClick(data) {
-                  console.log(data);
+                  	let _this = this;
+                  
+                  	if(data.state==0){
+                  		_this.dep=null;
+                  		_this.pos=null;
+                  		_this.goToPage();
+                  		return
+                  	}
+                  	
+					if(data.positionid != undefined) {
+						 _this.pos=data.positionname;
+						  _this.dep=null
+						_this.goToPage();
+					       
+					} else {
+						_this.dep=data.positionname;
+						_this.pos=null;
+						_this.goToPage();
+						
+					}
                 },
                 handlOpen(){
 					$("#modalcnt").load('px/add.html');
@@ -382,12 +420,10 @@
 				setTimeout(() => {
 					this.loading = false;
 				}, 1000);
-				this.goToPage(null,1,3);
+				this.goToPage();
 				  let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/fcl/api/department`, function(date) {
-						_this.datas = date;
+				  _this.deps();
 					
-					});
 			}
 		});
 	</script>

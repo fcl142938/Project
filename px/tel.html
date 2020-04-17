@@ -21,7 +21,7 @@
 				margin-top: 3px;
 			}
 			#el{
-			  margin-left: 450px;
+			  /*margin-left: 650px;*/
 			}
 			#ef2{
 				margin-top: 5px;
@@ -66,47 +66,47 @@
 
 	<body>
 		<div id="leaveApp" v-loading="loading">
-			<el-row>
+			
 				
-					<el-row id="el">
-						<el-col :span="4">	
-						<el-input v-model="format.name" placeholder=""></el-input>
-						</el-col>
+					<el-row  id="el" class="text-right" style="padding-right: 20px;">
 						
-						<el-col :span="4">	
-					<el-form  id="btn">
-						<el-form-item  >
-								<el-button id="q" icon="el-icon-search" size="mini"  @click="query">搜索</el-button>
-						</el-form-item>
-					</el-form>
+						<el-input v-model="format.name" size="mini" placeholder="" style="width:100px"></el-input>
+						
+						
+					
+					
+						
+								<el-button id="q" type="primary" size="mini"  @click="query">搜索</el-button>
+						
+					
 					</el-col>
 				</el-row
 
 				<el-row :span="24">
 					<el-col :span="24">
 						<el-table  :data="pageInfo.list"  :row-class-name="tableRowClassName" style="width:100%" >
-						<el-table-column prop="staffid" label="编号"  width="120">
+						<el-table-column prop="staffid" label="编号"  >
 						</el-table-column>
-						<el-table-column prop="departmentname" label="部门"  width="115">
+						<el-table-column prop="departmentname" label="部门"  >
 						</el-table-column>
-						<el-table-column prop="positionname" label="职位"  width="115">
+						<el-table-column prop="positionname" label="职位"  >
 						</el-table-column>
-						<el-table-column prop="staffname" label="姓名"  width="115">
+						<el-table-column prop="staffname" label="姓名"  >
 						</el-table-column>
-						<el-table-column prop="staffsex" label="性别"  width="115">
+						<el-table-column prop="staffsex" label="性别"  >
 						</el-table-column>
-						<el-table-column prop="saddress" label="地址"  width="115">
+						<el-table-column prop="saddress" label="地址"  >
 						</el-table-column>
-						<el-table-column prop="sstarttime" label="入职时间"  width="115">
+						<el-table-column prop="sstarttime" label="入职时间"  >
 						</el-table-column>
-							<el-table-column prop="price" label="月薪"  width="115">
+							<el-table-column prop="price" label="月薪" >
 						</el-table-column>
 					</el-table>
 					</el-col>
 				</el-row>
 			    <el-row>
 				<el-col :span="24">
-					<el-pagination id="page" v-if="pageInfo.total!=0" :background="true"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
+					<el-pagination id="page" v-if="pageInfo.total!=0"   @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" :total="pageInfo.total" :page-sizes="[3,6]" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</el-col>
 			   </el-row>
@@ -139,9 +139,9 @@
 					   this.goToPage(this.format.name,1,3);
 				},
 
-				goToPage(staffname,pageNum,pageSize) {
+				goToPage(staffname,pageNum,pageSize,departmentname,positionname) {
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/px/api/user/${staffname}/${pageNum}/${pageSize}`, function(date) {
+					$.getJSON(`http://127.0.0.1:8080/px/api/user/${staffname}/${pageNum}/${pageSize}/${departmentname}/${positionname}`, function(date) {
 						_this.pageInfo = date;
 
 					});
@@ -151,13 +151,13 @@
 					if(this.format.name=='')
 						{this.format.name=null};
 						this.pageSize=val;
-					this.goToPage( this.format.name,this.pageInfo.pageNum, val);
+					this.goToPage( this.format.name,this.pageInfo.pageNum, val,null,null);
 				},
 				handleCurrentChange(val) {
 					if(this.format.name=='')
 						{this.format.name=null};
 						this.pagenum=val;
-					this.goToPage(this.format.name, val, this.pageInfo.pageSize, );
+					this.goToPage(this.format.name, val, this.pageInfo.pageSize,null,null );
 				},
 				
 			
@@ -180,7 +180,7 @@
 				setTimeout(() => {
 					this.loading = false;
 				}, 1000);
-				this.goToPage(null,1,3);
+				this.goToPage(null,1,3,null,null);
 			
 			}
 		});

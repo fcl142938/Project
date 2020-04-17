@@ -20,6 +20,20 @@
 	       </el-row>
 	       
 	       <el-form :model="user"  ref="shoppForm" label-width="100px">
+	       	
+	      			<el-row :span="24" >
+				  <el-col :span="12">
+				<el-form-item label="员工岗位" prop="positionid">
+					  <el-col :span="6">
+                      <el-select v-model="user.positionid"  style="width: 130px;">
+                         <el-option  :value="temp.positionid":label="temp.positionname" v-for="(temp,i) in position" ></el-option>
+                     </el-select>
+                     </el-col>
+				</el-form-item>
+				</el-col>
+			   </el-row >
+			   
+			   
 	          	<el-row :span="24" >
 				  <el-col :span="12">
 				<el-form-item label="员工姓名" prop="staffname">
@@ -28,8 +42,19 @@
 						<el-input v-model="user.staffname" placeholder="" style="width: 130px;"></el-input>
 					</el-col>
 				</el-form-item>
-				</el-col> 
+				</el-col>
+				  <el-col :span="12">
+				<el-form-item label="入职日期" prop="sstarttime">
+					<el-col :span="6">
+						<!--非常重要-->
+						<el-input type="date" v-model="user.sstarttime" placeholder="" style="width: 170px;"></el-input>
+					</el-col>
+				</el-form-item>
+				</el-col>
 			   </el-row >
+			   
+			   
+			   
 			   
 			   
 	     
@@ -58,26 +83,6 @@
 			   
 			     
 	      
-	          	<el-row :span="24" >
-	          	  <el-col :span="12">
-				<el-form-item label="员工部门" prop="positionid">
-					  <el-col :span="6">
-                      <el-select v-model="user.positionid" placeholder="请选择" style="width: 130px;">
-                             <el-option  :value="temp.departmentid" v-for="(temp,i) in department">{{temp.departmentname}}</el-option>
-                     
-                     </el-select>
-                     </el-col>
-				</el-form-item>
-				  </el-col> 
-				  <el-col :span="12">
-				<el-form-item label="入职日期" prop="sstarttime">
-					<el-col :span="6">
-						<!--非常重要-->
-						<el-input type="date" v-model="user.sstarttime" placeholder="" style="width: 170px;"></el-input>
-					</el-col>
-				</el-form-item>
-				</el-col> 
-			   </el-row >
 			   
 			         
 	          	<el-row :span="24" >
@@ -129,6 +134,7 @@
 			data:{
 				/*number:window.sessionStorage.getItem("number"),*/
 				user:{
+					positionname:"",
 					staffid:"",
 					positionid:"",
 					staffname:"",
@@ -140,14 +146,16 @@
 					price:"",
 					idcd:""
 					
+					
 				    },
-				department:{},
+				position:[],
 				loading: true,
 			},
 			methods:{
 				
 	             adduser() {
 					let _this = this;
+					
 					this.$refs['shoppForm'].validate(valid => {
 						if(valid) {
 							//验证通过
@@ -174,6 +182,7 @@
 											});
 											
 											personApp.isShows=false;//非常重要
+											window.parent.personApp.goToPage();
 										/*	$("#tab-"+_this.number).click();*/
 										}
 									}
@@ -190,6 +199,7 @@
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/px/api/user/sta/${staffid}`, function(date) {
 						_this.user = date;
+						
 					});
 					
 				}
@@ -202,6 +212,10 @@
 				let _this = this;
 				_this.staffid = sessionStorage.getItem('id');
 				_this.querybyid(_this.staffid);
+				
+					$.getJSON(`http://127.0.0.1:8080/px/api/user/position`, function(date) {
+						_this.position = date;
+					});
 				
 				
 			},
