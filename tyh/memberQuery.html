@@ -47,8 +47,19 @@
 							</el-table-column>
 							<el-table-column prop="gradename" label="等级">
 							</el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="temp">
+									<el-button @click="onCz(temp.row.memberid)" type="success" size="small" round>充值</el-button>
+									<el-button @click="onDel(temp.row.memberid)" type="danger" size="small" round>删除</el-button>
+								</template>
+							</el-table-column>
 						</el-table>
 					</template>
+				</div>
+				<div>
+					<el-dialog :destroy-on-close="true" @opened="handlOpen" title="登录会员" :visible.sync="isShow" :before-close="handleClose" center>
+						<div id="hy"></div>
+					</el-dialog>
 				</div>
 				<div>
 					<template>
@@ -90,6 +101,8 @@
 	<script>
 		var memberQueryApp = new Vue({
 			data: {
+				isShow: false,
+				memberid: '',
 				mo: [],
 				currentPage: 1,
 				pageSize: 3,
@@ -112,10 +125,34 @@
 				pageInfo: {}
 			},
 			methods: {
-				onXz(val){
+				handlOpen() {
+					$("#hy").load('tyh/topUp.html');
+				},
+				onDel(memberid) {
+					let _this = this;
+					if(window.confirm('是否移除当前会员')) {
+						$.ajax(`http://127.0.0.1:8080/tyh/api/m/tyhDelByMember/${memberid}`, {
+							type: "delete",
+							dataType: "json",
+							success(res) {
+								if(res.code == "200") {
+									alert("删除成功");
+								} else {
+									alert("删除失败");
+								}
+							}
+						});
+					}
+				},
+				onCz(memberid) {
+					this.isShow=true;
+					let _this = this;
+					window.sessionStorage.setItem('memberid', memberid);
+				},
+				onXz(val) {
 					let _this = this;
 					_this.mo.memberid = val.memberid;
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/tyhQueryByMemberinfo/${val.memberid}`,function(mo){
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/tyhQueryByMemberinfo/${val.memberid}`, function(mo) {
 						console.info(mo);
 						_this.mo = mo;
 					});

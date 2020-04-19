@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>会员充值</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<style>
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="topUpApp" class="container" v-cloak>
+			<div class="row">
+				<div>
+					<el-form :model="m" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="充值金额：" prop="money">
+							<el-input v-model="m.money" style="width: 600px;"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="m" @click="onCz">充值</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/dialogs.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script>
+		var topUpApp = new Vue({
+			data: {
+				m: {
+					memberid: '',
+					gradeid: '',
+					membername: '',
+					memberpwd: '',
+					memberintegrate: '',
+					countintegrate: '',
+					money: '',
+					countmoney: '',
+					starttime: '',
+					gradename: ''
+				}
+			},
+			methods: {
+				onCz() {
+					let _this = this;
+					_this.m.memberid = window.sessionStorage.getItem('memberid');
+					_this.m.memberintegrate = _this.m.money;
+					_this.m.countintegrate = _this.m.money;
+					$.ajax(`http://127.0.0.1:8080/tyh/api/m/tyhUpdateByCz`, {
+						type: "put",
+						dataType: "json",
+						contentType: "application/json",
+						data: JSON.stringify(_this.m),
+						success(res) {
+							if(res.code == "200") {
+								alert("充值成功");
+							} else {
+								alert("充值失败");
+							}
+						}
+					});
+				}
+			},
+			mounted() {
+
+			}
+		}).$mount('#topUpApp');
+	</script>
+
+</html>
