@@ -37,9 +37,7 @@
 			<div class="mobileBackColor" style="">
 				
 				<div style="width: 400px; float: right; margin-top: 25px;">
-					<el-button style="float: right;" type="info" plain>关闭</el-button>
-					<el-button style="float: right;" type="success" plain>搜索</el-button>
-					<el-input style="width: 200px; margin-right: 20px; float: right;"></el-input>
+
 
 				</div>
 
@@ -49,10 +47,13 @@
 
 				<el-container>
 					<el-header style="text-align: right; font-size: 12px">
-						<span @click="dialogFormVisible = true" style="font-size: 20px; margin-right: 10px;"><i class="el-icon-edit-outline"></i>增加</span>
-						<span style="font-size: 20px;  margin-right: 10px;"><i class="el-icon-delete"></i>删除</span>
-						<span style="font-size: 20px; margin-right: 10px;"><i class="el-icon-document-copy"></i>保存</span>
-						<span style="font-size: 20px; margin-right: 10px;"><i class="el-icon-folder-opened"></i>导出</span>
+						<span @click="dialogFormVisible = true" style="font-size: 20px; margin-right: 10px;">
+							
+						
+
+						<el-button type="primary" ><i class="el-icon-edit-outline"></i>增加</span></el-button>
+						<el-button type="primary" ><span style=""><i class="el-icon-delete"></i>删除</span></el-button>
+						<el-button type="primary" ><span ><i class="el-icon-document-copy"></i>保存</span></el-button>
 					</el-header>
 
 					<el-main>
@@ -76,9 +77,13 @@
 								</el-table-column>
 								
 							</el-table>
-					<div style="margin-top: 20px">
-						<el-button type="primary" @click="prePage()">上一页</el-button>
+					<div style="margin-top: 20px; text-align: center;">
+						
+							<el-button type="primary" @click="prePage()">上一页</el-button>
 						<el-button type="primary" @click="nextPage()">下一页</el-button>
+							
+						
+						
 					</div>
 						</template>
 					</el-main>
@@ -151,74 +156,15 @@
 
 					</el-row>
 				</el-form>
-				<!--<el-form :model="addentity"  ref="addentity" label-width="100px" class="demo-ruleForm">
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="商品名称" >
-
-								<el-input v-model="addentity.shname"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="进货日期" >
-
-								<el-date-picker type="date" v-model="addentity.sldate" placeholder="选择日期" style="width: 100%;"></el-date-picker>
-
-							</el-form-item>
-
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="进价" >
-
-								<el-input v-model="addentity.slbuyprice"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="售价" >
-
-								<el-input v-model="addentity.slprice"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="进货数量">
-
-								<el-input v-model="addentity.buynumber"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="库存">
-
-								<el-input v-model="addentity.slnumber"></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="12">
-
-							<el-form-item label="活动区域">
-								<el-select v-model="ruleForm.name" placeholder="请选择活动区域">
-									<el-option label="请选择" disabled="disabled"></el-option>
-									<el-tree :data="adddata" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-								</el-select>
-							</el-form-item>
-
-						</el-col>
-
-					</el-row>
-
-				</el-form>-->
+				
 				<div slot="footer" class="dialog-footer">
-					<el-button @click="dialogFormVisible = false">取 消</el-button>
+					
+						<el-button @click="dialogFormVisible = false">取 消</el-button>
 					<el-button type="primary" @click="addgoods()">确 定</el-button>
+					
+						
+					
+					
 				</div>
 			</el-dialog>
 
