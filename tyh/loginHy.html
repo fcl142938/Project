@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>登录会员</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<style>
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<div id="loginHyApp" class="row" v-cloak>
+				<div>
+					<el-form :model="m" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="会员名：" prop="membername" style="width:600px">
+							<el-input v-model="m.membername"></el-input>
+						</el-form-item>
+						<el-form-item label="密码：" prop="memberpwd" style="width:600px">
+							<el-input v-model="m.memberpwd"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="m" @click="goToHy">登录</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/dialogs.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script>
+		var loginHyApp = new Vue({
+			data: {
+				xfjf: {
+					mid: '',
+					memberid: '',
+					medate: '',
+					makeintegral: '',
+					countintegral: '',
+					countmoney: '',
+					makemoney: '',
+					state: '',
+					smid: ''
+				},
+				hyjf: {
+					memberid: '',
+					membername: '',
+					memberpwd: '',
+					memberintegrate: '',
+					countintegrate: '',
+					gradeid: '',
+					countmoney: '',
+					money: '',
+					starttime: ''
+				},
+				mo: {
+					mid: '',
+					memberid: '',
+					medate: '',
+					makeintegral: '',
+					countintegral: '',
+					countmoney: '',
+					makemoney: '',
+					state: '',
+					smid: ''
+				},
+				isShow: false,
+				m: {
+					memberid: '',
+					membername: '',
+					memberpwd: '',
+					memberintegrate: '',
+					countintegrate: '',
+					gradeid: '',
+					countmoney: '',
+					money: '',
+					starttime: ''
+				},
+				rules: {
+					membername: [{
+							required: true,
+							message: '请输入用户名',
+							trigger: 'blur'
+						},
+						{
+							min: 2,
+							max: 10,
+							message: '长度在 2 到 10 个字符',
+							trigger: 'blur'
+						}
+					],
+					memberpwd: [{
+							required: true,
+							message: '请输入密码',
+							trigger: 'blur'
+						},
+						{
+							min: 6,
+							max: 15,
+							message: '长度在 6到 15 个字符',
+							trigger: 'blur'
+						}
+					]
+				}
+			},
+			methods: {
+				goToHy() {
+					let _this = this;
+					//登录会员
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/tyhloginHy/${_this.m.membername}/${_this.m.memberpwd}`, function(msg) {
+						if(msg.code == "200") {
+							//根据会员ID查询会员信息
+							$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/tyhQueryByHyName/${_this.m.membername}`, function(m) {
+								_this.mo.memberid = m.memberid;
+								console.info(_this.mo.memberid);
+								_this.mo.smid = window.sessionStorage.getItem('smid');
+								_this.mo.makeintegral = window.sessionStorage.getItem('price');
+								_this.mo.makemoney = window.sessionStorage.getItem('price');
+								var date = new Date();
+								var year = date.getFullYear();
+								var month = date.getMonth() + 1;
+								var day = date.getDate();
+								var hour = date.getHours();
+								var minute = date.getMinutes();
+								var second = date.getSeconds();
+								_this.mo.medate = year + "-" + month + "-" + day + "-" + hour + ":" + minute + ":" + second;
+								console.info(_this.mo);
+								/*console.info("mid====="+m.memberid);*/
+								_this.hyjf.memberid = m.memberid;
+								_this.hyjf.memberintegrate = window.sessionStorage.getItem('price');
+								_this.hyjf.countintegrate = window.sessionStorage.getItem('price');
+								_this.hyjf.money = window.sessionStorage.getItem('price');
+								_this.xfjf.smid = window.sessionStorage.getItem('smid');
+								_this.xfjf.makeintegral = window.sessionStorage.getItem('price');
+								_this.xfjf.countintegral = m.memberintegrate
+								_this.xfjf.makemoney = window.sessionStorage.getItem('price');
+								_this.xfjf.countmoney = m.money;
+								if(m.money > _this.hyjf.money) {
+									//修改会员积分/金额
+									$.ajax(`http://127.0.0.1:8080/tyh/api/sc/tyhUpdateByMIntegral`, {
+										type: "put",
+										dataType: "json",
+										contentType: "application/json",
+										data: JSON.stringify(_this.hyjf),
+										success(res) {
+											if(res.code == "200") {
+												console.info("成功修改会员表");
+											} else {
+												alert("修改会员表失败");
+											}
+										}
+									});
+									/*新增会员消费记录*/
+									$.ajax(`http://127.0.0.1:8080/tyh/api/sc/tyhInsertByJl`, {
+										type: "post",
+										dataType: "json",
+										contentType: "application/json",
+										data: JSON.stringify(_this.mo),
+										success(msg) {
+											if(msg.code == "200") {
+												//修改会员消费金额/余额
+												$.ajax(`http://127.0.0.1:8080/tyh/api/sc/tyhUpdateByMoIntegral`, {
+													type: "put",
+													dataType: "json",
+													contentType: "application/json",
+													data: JSON.stringify(_this.xfjf),
+													success(res) {
+														if(res.code == "200") {
+															console.info("成功修改会员消费表");
+														} else {
+															alert("修改会员消费表失败");
+														}
+													}
+												});
+												//收银
+												$.ajax(`http://127.0.0.1:8080/tyh/api/sc/tyhupdateBySettlementCenter/${_this.mo.smid}`, {
+													type: "put",
+													dataType: "json",
+													contentType: "application/json",
+													data: JSON.stringify(_this.mo.smid),
+													success(msg) {
+														if(msg.code == "200") {
+															alert("已收银");
+														} else {
+															alert("收银失败");
+														}
+													}
+												});
+											} else {
+												alert("新增会员消费记录失败");
+											}
+										}
+									});
+								} else {
+									alert("会员余额不足");
+								}
+							});
+						} else {
+							alert("数据有误");
+						}
+					});
+				}
+			},
+			mounted() {
+
+			}
+		}).$mount('#loginHyApp');
+	</script>
+
+</html>

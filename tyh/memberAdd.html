@@ -33,10 +33,9 @@
 						<el-form-item label="确认密码：" prop="memberpwds">
 							<el-input v-model="m.memberpwds"></el-input>
 						</el-form-item>
-						<el-form-item label="会员类型" prop="region">
+						<el-form-item label="会员类型" prop="gradename">
 							<el-select v-model="m.gradeid" placeholder="请选择会员级别">
-								<el-option label="普通会员" value="1"></el-option>
-								<el-option label="超级会员" value="2"></el-option>
+								<el-option v-for="(temp,i) in g" :label="temp.gradename" :value="temp.gradeid"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="余额：" prop="money">
@@ -56,6 +55,7 @@
 	<script>
 		var memberAddApp = new Vue({
 			data: {
+				g: [],
 				m: {
 					memberid: '',
 					gradeid: '',
@@ -65,7 +65,8 @@
 					countintegrate: '',
 					money: '',
 					countmoney: '',
-					starttime: ''
+					starttime: '',
+					gradename: ''
 				},
 				rules: {
 					membername: [{
@@ -123,13 +124,20 @@
 								}
 							}
 						});
-					} else{
+					} else {
 						alert("密码不一致");
 					}
+				},
+				goToGrade() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/tyhQueryByGrade`, function(g) {
+						console.info(g);
+						_this.g = g;
+					});
 				}
 			},
 			mounted() {
-
+				this.goToGrade();
 			}
 		}).$mount('#memberAddApp');
 	</script>

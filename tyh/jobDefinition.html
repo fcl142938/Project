@@ -32,20 +32,19 @@
 						</el-form-item>
 						<el-form-item label="部门">
 							<el-select v-model="position.departmentid" placeholder="请选择部门">
-								<el-option label="财务部" value="1"></el-option>
-								<el-option label="开发部" value="2"></el-option>
+								<el-option v-for="(temp,i) in d" :label="temp.departmentname" :value="temp.departmentid"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success" @click="onSave">添加</el-button>
-							<el-button type="primary" @click="onUpdate">保存</el-button>
-							<el-button type="danger" @click="onRemove(position.positionid)">删除</el-button>
+							<el-button size="small" type="success" @click="onSave">添加</el-button>
+							<el-button size="small" type="primary" @click="onUpdate">修改</el-button>
+							<!--<el-button type="danger" @click="onRemove(position.positionid)">删除</el-button>-->
 						</el-form-item>
 					</el-form>
 				</div>
 				<div>
 					<template>
-						<el-table :data="pageInfo.list" stripe style="width: 100%">
+						<el-table @current-change="show" :data="pageInfo.list" stripe style="width: 100%">
 							<el-table-column prop="positionid" label="岗位编码">
 							</el-table-column>
 							<el-table-column prop="positionname" label="岗位名称">
@@ -54,7 +53,9 @@
 							</el-table-column>
 							<el-table-column label="操作">
 								<template slot-scope="temp">
-									<el-button @click="show(temp.row.positionid,temp.row.positionname)" type="primary" round>选择</el-button>
+									<!--<el-button @click="show(temp.row.positionid,temp.row.positionname)" type="primary" size="small" round>选择</el-button>-->
+									<!--<el-button @click="onUpdate" type="warning" size="small" round>修改</el-button>-->
+									<el-button @click="onRemove(temp.row.positionid)" type="danger" size="small" round>删除</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -80,6 +81,7 @@
 	<script>
 		var jobDefinitionApp = new Vue({
 			data: {
+				d: [],
 				currentPage: 1,
 				pageSize: 3,
 				val: '全部',
@@ -92,21 +94,21 @@
 				pageInfo: {}
 			},
 			methods: {
-				onRemove(positionid){
+				onRemove(positionid) {
 					let _this = this;
 					if(window.confirm('是否移除当前岗位')) {
 						$.ajax(`http://127.0.0.1:8080/tyh/api/p/tyhDelPositionById/${positionid}`, {
-						type: "delete",
-						dataType: "json",
-						success(res) {
-							if(res.code == "200") {
-								alert("删除成功");
-								location.href="jobDefinition.html";
-							} else {
-								alert("删除失败");
+							type: "delete",
+							dataType: "json",
+							success(res) {
+								if(res.code == "200") {
+									alert("删除成功");
+									location.href = "jobDefinition.html";
+								} else {
+									alert("删除失败");
+								}
 							}
-						}
-					});
+						});
 					}
 				},
 				onUpdate() {
@@ -118,7 +120,7 @@
 						data: JSON.stringify(_this.position),
 						success(res) {
 							if(res.code == "200") {
-								alert("保存成功");
+								alert("修改成功");
 							} else {
 								alert("修改失败");
 							}
@@ -127,32 +129,32 @@
 				},
 				onSave() {
 					let _this = this;
-					/*console.info(_this.position.positionid);
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/tyhQueryByPositionId/${_this.position.positionid}`,function(code){
-						if(code == "200"){
-							alert("ok");
-						} else{
+					console.info(_this.position.positionid);
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/tyhQueryByPositionId/${_this.position.positionid}`, function(msg) {
+						if(msg.code == "200") {
 							alert("岗位编号已存在，请点击修改");
-						}
-					});*/
-					$.ajax(`http://127.0.0.1:8080/tyh/api/p/tyhinsertByPosition`, {
-						type: "post",
-						dataType: "json",
-						contentType: "application/json",
-						data: JSON.stringify(_this.position),
-						success(res) {
-							if(res.code == "200") {
-								alert("新增岗位成功");
-							} else {
-								alert("新增岗位失败");
-							}
+						} else {
+							$.ajax(`http://127.0.0.1:8080/tyh/api/p/tyhinsertByPosition`, {
+								type: "post",
+								dataType: "json",
+								contentType: "application/json",
+								data: JSON.stringify(_this.position),
+								success(msg) {
+									if(msg.code == "200") {
+										alert("新增岗位成功");
+									} else {
+										alert("新增岗位失败");
+									}
+								}
+							});
 						}
 					});
 				},
-				show(positionid, positionname, departmentid) {
+				show(val) {
 					let _this = this;
-					_this.position.positionid = positionid;
-					_this.position.positionname = positionname;
+					_this.position.positionid = val.positionid;
+					_this.position.positionname = val.positionname;
+					_this.position.departmentid = val.departmentid;
 				},
 				changestate() {
 					this.state = this.val;
@@ -172,10 +174,17 @@
 					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/${_this.currentPage}/${_this.pageSize}`, function(p) {
 						_this.pageInfo = p;
 					});
+				},
+				goToDepartment() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/tyhQueryByDepartment`, function(d) {
+						_this.d = d;
+					});
 				}
 			},
 			mounted() {
 				this.goToQueryPositionAll();
+				this.goToDepartment();
 			}
 		}).$mount('#jobDefinitionApp');
 	</script>
