@@ -21,11 +21,11 @@
 				margin-top: 3px;
 			}
 			#el{
-				margin-left: 450px;
+				 /*margin-left: 480px;*/	
 			}
-			#ef2{
+			/*#ef2{
 				margin-top: 5px;
-			}
+			}*/
 			#q{
 				margin-left: 20px;
 				
@@ -66,28 +66,24 @@
 
 	<body>
 		<div id="leaveApp" v-loading="loading">
-			<el-row>
+		
 				
-
-				<el-row id="el">
-						<el-col :span="6">	
-						<el-input v-model="format.name" placeholder=""></el-input>
-						</el-col>
+                  <div id="div1">
+				<el-row :span="24" id="el" class="text-right" style="padding-right: 20px;">
 						
-						<el-col :span="6">	
-					<el-form  id="btn">
-						<el-form-item  >
+						<el-input v-model="format.name" size="mini" style="width:100px"></el-input>
+						
+						
+						
 								<el-button id="q" type="primary" size="mini"  @click="query">搜索</el-button>
-						</el-form-item>
-					</el-form>
-					</el-col>
-					<el-col :span="6">	
-						<el-button  type="primary"  @click="showDialog">员工离职</el-button>
-					</el-col>
-					<el-col :span="6">	
-						<el-button type="primary"  @click="xlsc">导出</el-button>
-					</el-col>
+					
+						<el-button  type="primary" size="mini" @click="showDialog">员工离职</el-button>
+					
+						
+						<el-button type="primary" size="mini" @click="xlsc">导出</el-button>
+					
 				</el-row>
+				</div>
 				
 				<el-row :span="24">
 					<el-col :span="24">
@@ -111,7 +107,7 @@
 						
 							<el-table-column label="操作">
 							<template slot-scope="temp">
-								  <el-button  type="danger" @click="info(temp.row.staffname)">回滚</el-button>
+								  <el-button  type="danger" size="mini" @click="info(temp.row.staffname)">回滚</el-button>
 							</template>
 						</el-table-column>
 						
