@@ -190,7 +190,7 @@
 						<el-input v-model="kehu.userbrithday" type="date" style="width: 66%;">
 					</el-col>
 				</el-row>
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<!--<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>账期（天）：</span>
 						<el-input style="width: 66%;">
@@ -207,19 +207,19 @@
 						<span>顾问电话：</span>
 						<el-input style="width: 70%;">
 					</el-col>
-				</el-row>
+				</el-row>-->
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>省：</span>
 						<el-select @change="xuanzhong1()" v-model="xuanzhongsheng" placeholder="请选择" style="width: 84%;">
-							<el-option v-for="temp in sheng" :label="temp.provinces" :value="temp.id">
+							<el-option v-for="temp in sheng" :key="temp.provinces" :label="temp.provinces" :value="temp.id">
 							</el-option>
 						</el-select>
 					</el-col>
 					<el-col :span="6">
 						<span>市区：</span>
-						<el-select v-model="xuanzhongshiqu" placeholder="请选择" style="width: 79%;">
-							<el-option v-for="temp in shiqu" :label="temp.market" :value="temp.id">
+						<el-select @change="xuanzhong3()" v-model="xuanzhongshiqu" placeholder="请选择" style="width: 79%;">
+							<el-option v-for="temp in shiqu" :key="temp.market" :label="temp.market" :value="temp.id">
 							</el-option>
 						</el-select>
 					</el-col>
@@ -304,7 +304,7 @@
 						<el-input v-model="kehuche.buycar" type="date" style="width: 71%;">
 					</el-col>
 				</el-row>
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<!--<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>上牌日期：</span>
 						<el-input type="date" style="width: 70%;">
@@ -338,9 +338,9 @@
 						<span>商业险到期：</span>
 						<el-input type="date" style="width: 65%;">
 					</el-col>
-				</el-row>
+				</el-row>-->
 				<span slot="footer" class="dialog-footer">
-	    			<el-button @click="isShow1 = false">取 消</el-button>
+	    			<el-button @click="md1qx">取 消</el-button>
 	    			<el-button type="primary" @click="md11">确 定</el-button>
   				</span>
 			</el-dialog>
@@ -373,7 +373,7 @@
 						<el-input v-model="kehu.userbrithday" type="date" style="width: 66%;">
 					</el-col>
 				</el-row>
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<!--<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>账期（天）：</span>
 						<el-input style="width: 66%;">
@@ -390,7 +390,7 @@
 						<span>顾问电话：</span>
 						<el-input style="width: 70%;">
 					</el-col>
-				</el-row>
+				</el-row>-->
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>省：</span>
@@ -608,8 +608,8 @@
 				consumercar: [],
 				xuanzhongconsumercar: null,
 				sheng: [],
-				xuanzhongsheng: '',
 				shiqu: [],
+				xuanzhongsheng: '',
 				xuanzhongshiqu: '',
 				cheliangpinpaiList: [],
 				xuanzhongcheliangpinpai: '',
@@ -635,7 +635,8 @@
 					driverdate: '',
 					carcourse: '',
 					buycar: ''
-				}
+				},
+				dz:''
 			},
 			methods: {
 				cha(){
@@ -870,8 +871,36 @@
 					this.isShow1 = false;
 					this.kehuche.motorcycleid = this.xuanzhongchexing;
 					this.kehuche.userid = this.kehu.userid;
+					this.xuanzhongsheng= '';
+					this.xuanzhongshiqu= '';
 					this.addkehu();
 					this.addkehuche();
+				},
+				md1qx(){
+					this.isShow1 = false;
+					this.kehu = {
+							userid: '',
+							username: '',
+							userphone: '',
+							useraddress: '',
+							userbrithday: '',
+							userremark: ''
+						};
+						this.a=null;
+						this.xuanzhongsheng= '';
+						this.xuanzhongshiqu= '';
+						this.kehuche = {
+							consumerid: 0,
+							userid: '',
+							carnumber: '',
+							motorcycleid: '',
+							drivername: '',
+							driverphone: '',
+							driverbrithday: '',
+							driverdate: '',
+							carcourse: '',
+							buycar: ''
+						};
 				},
 				addkehu() {
 					let _this = this;
@@ -920,10 +949,36 @@
 					});
 				},
 				xuanzhong1() {
+					this.xuanzhongshiqu='';
+					let obj = {};
+					  obj = this.sheng.find((item)=>{
+					    return item.id === this.xuanzhongsheng;
+					  });
+					  this.dz=obj.provinces;
+					if(this.kehu.useraddress==''){
+						this.kehu.useraddress=obj.provinces+this.kehu.useraddress;
+					}else{
+						this.kehu.useraddress='';
+						this.kehu.useraddress=obj.provinces+this.kehu.useraddress;
+					}
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/shiqu/${_this.xuanzhongsheng}`, function(data) {
 						_this.shiqu = data;
 					});
+				},
+				xuanzhong3() {
+					if(this.xuanzhongshiqu!=''){
+						obj = this.shiqu.find((item)=>{
+					    	return item.id === this.xuanzhongshiqu;
+					  	});
+						this.kehu.useraddress=this.dz+obj.market;
+					}else{
+					let obj = {};
+					  obj = this.shiqu.find((item)=>{
+					    return item.id === this.xuanzhongshiqu;
+					  });
+						this.kehu.useraddress=this.kehu.useraddress+obj.market;
+					}
 				},
 				handleCurrentChange(val) {
 					this.currentRow = val;
@@ -958,6 +1013,8 @@
 							userremark: ''
 						};
 						this.a=null;
+						this.xuanzhongsheng= '';
+						this.xuanzhongshiqu= '';
 						this.kehuche = {
 							consumerid: 0,
 							userid: '',
