@@ -25,12 +25,12 @@
 				<div>
 					<el-form :inline="true" :model="position" class="demo-form-inline" label-width="80px">
 						<el-form-item label="岗位编码">
-							<el-input v-model="position.positionid"></el-input>
+							<el-input size="small" v-model="position.positionid"></el-input>
 						</el-form-item>
 						<el-form-item label="岗位名称">
-							<el-input v-model="position.positionname"></el-input>
+							<el-input size="small" v-model="position.positionname"></el-input>
 						</el-form-item>
-						<el-form-item label="部门">
+						<el-form-item size="small" label="部门">
 							<el-select v-model="position.departmentid" placeholder="请选择部门">
 								<el-option v-for="(temp,i) in d" :label="temp.departmentname" :value="temp.departmentid"></el-option>
 							</el-select>
