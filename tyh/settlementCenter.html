@@ -91,6 +91,8 @@
 							</el-table-column>
 							<!--<el-table-column prop="staffname" label="结算人" width="120">
 							</el-table-column>-->
+							<el-table-column prop="countprice" label="预计金额">
+							</el-table-column>
 							<el-table-column prop="price" label="结算金额">
 							</el-table-column>
 							<!--<el-table-column prop="jname" label="结算类型" width="120">
@@ -241,6 +243,7 @@
 							success(res) {
 								if(res.code == "200") {
 									alert("已回滚");
+									_this.goToSettlementCenter();
 								} else {
 									alert("回滚失败");
 								}
@@ -262,6 +265,7 @@
 								success(res) {
 									if(res.code == "200") {
 										alert("已收银");
+										_this.goToSettlementCenter();
 									} else {
 										alert("收银失败");
 									}
