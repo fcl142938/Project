@@ -21,41 +21,40 @@
 		<div class="container">
 
 			<div id="jgxjApp" class="row" v-cloak>
-				<h1>外勤车辆</h1>
+
 				<div id="gb">
 					&nbsp;&nbsp;
 					<!--<el-button onclick="">关闭</el-button>-->
 				</div>
-				<div id="yy" style="background-color: ;">
+				<div id="yy" style="float: right;">
 					<el-form :inline="true" :model="star" class="demo-form-inline" label-width="80px">
 						<el-form-item label="*车牌号">
-							<el-input v-model="star.rescuenumber" style="width: 200px;"></el-input>
+							<el-input v-model="star.rescuenumber" style="width: 200px;" size="small"></el-input>
 						</el-form-item>
 						<el-form-item label="*当前里程">
-							<el-input v-model="star.renumber" style="width: 200px;"></el-input>
-							<el-form-item label="*状态">
-								<el-input v-model="star.state" style="width: 200px;"></el-input>
-							</el-form-item>
+							<el-input v-model="star.renumber" style="width: 200px;" size="small"></el-input>
+							<!--<el-form-item label="*状态">
+								<el-input v-model="star.state" style="width: 200px;" size="small"></el-input>
+							</el-form-item>-->
 							<el-form-item>
-								<el-button type="success" @click="onAdd()">添加</el-button>
+								<el-button type="primary" @click="onAdd()" size="small">添加</el-button>
 							</el-form-item>
 					</el-form>
 				</div>
 				<div id="indexApp">
-					<table class="table table-bordered table-hover" v-cloak>
-						<template>
+				
 						<el-table :data="vehicleInfo.list" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.rescueid)">删除</el-button>
-									<br><br>
-									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.rescueid)">修改</el-button>									
+									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="delOne(scope.row.rescueid)">删除</el-button>
+									
+									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="queryBySid(scope.row.rescueid)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
-						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
-					</template>
+						<el-pagination align="center"  background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
+			
 				</div>
 				
 				<el-dialog title="修改车辆" :visible.sync="modify" width="30%" :before-close="handleClose">
@@ -87,16 +86,19 @@
 	<script>
 		var jgxjApp = new Vue({
 			data: {
-				stsy: [	{
+				stsy: [	
+				{
 					name: '车辆编号',
 					value: 'rescueid'
-				},{
+				},
+				{
 					name: '车牌号',
 					value: 'rescuenumber'
 				}, {
 					name: '当前里程',
 					value: 'renumber'
-				}, {
+				}, 
+				{
 					name: '状态',
 					value: 'state'
 				},
@@ -149,7 +151,7 @@
 					_this.modify = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/car/queryCarBySid/${rescueid}`,function(pg) {
 						_this.carlist = pg;	
-						
+					
 					});
 				},		
 				//修改数据

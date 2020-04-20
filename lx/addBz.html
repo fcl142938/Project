@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>添加班组</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<div id="addbzApp" style="width: 400px; height: 100px;">
+		<el-form :model="star" class="demo-form-inline" label-width="90px">
+						<el-form-item label="班组名称：">
+							<el-input v-model="star.gname" style="width: 200px;"></el-input>
+						</el-form-item>
+						<!--<el-form-item label="价格：">
+							<el-input v-model="star.gprice" ></el-input>
+						</el-form-item>-->
+						<div style="float: right;margin-right: 30px;">
+						<el-button type="primary" @click="onAdd()">保存</el-button>
+						</div>
+					</el-form>
+		</div>	
+	</body>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/dialogs.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script>
+		var addbzApp = new Vue({
+			data: {
+			 star: {
+          gname: '',
+          gprice: ''
+        }		
+			},
+			methods: {
+				onAdd(){
+					let _this=this;
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/bz/addBanzu",{
+						type:'post',
+						dataType:"json",
+						data:JSON.stringify(_this.star),
+						contentType: 'application/json; charset=UTF-8',
+						success(data){	
+							if(data=="ok"){
+								alert("新增失败！");
+							}else{
+								alert("新增成功！");
+							_this.isShow2=false;
+							}
+						}
+					});
+				},
+			},
+			mounted() {
+
+			}
+		}).$mount('#addbzApp');
+	</script>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>添加技工</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<div id="addbzApp" style="width: 400px; height: 640px;">
+		<el-form :model="carlist" class="demo-form-inline" label-width="90px">
+						<el-form-item label="技工姓名">
+							<el-input v-model="carlist.aname"></el-input>
+						</el-form-item>
+						<el-form-item label="分组">
+							<el-input v-model="carlist.gid"></el-input>
+						</el-form-item>
+						<el-form-item label="账号">
+							<el-input v-model="carlist.aaccount"></el-input>
+						</el-form-item>
+						<el-form-item label="密码">
+							<el-input v-model="carlist.apwd"></el-input>
+						</el-form-item>
+						<el-form-item label="等级">
+							<el-input v-model="carlist.agid"></el-input>
+						</el-form-item>
+						<el-form-item label="部门职位">
+							<el-input v-model="carlist.positionid"></el-input>
+						</el-form-item>
+						<el-form-item label="离职日期">
+        					<el-date-picker type="date" placeholder="选择日期" v-model="carlist.endtime" style="width: 100%;"></el-date-picker></el-form-item>
+        					<el-form-item label="入职日期">
+        					<el-date-picker type="date" placeholder="选择日期" v-model="carlist.startime" style="width: 100%;"></el-date-picker></el-form-item>
+						<el-form-item label="状态">
+							<el-input v-model="carlist.state"></el-input>
+						</el-form-item>
+						<div style="float: right;margin-right: 30px;">
+						<el-button type="primary" @click="onAdd()">保存</el-button>
+						</div>
+					</el-form>
+		</div>	
+	</body>
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/dialogs.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script>
+		var addbzApp = new Vue({
+			data: {
+			 carlist: {
+          aname: '',
+          gid: '',
+           aaccount: '',
+            apwd: '',
+             agid: '',
+              positionid: '',
+               endtime: '',
+                startime: '',
+                 state: ''
+        }		
+			},
+			methods: {
+				onAdd(){
+					let _this=this;
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/jg/addbanzu",{
+						type:'post',
+						dataType:"json",
+						data:JSON.stringify(_this.carlist),
+						contentType: 'application/json; charset=UTF-8',
+						success(data){	
+							if(data=="ok"){
+								alert("新增失败！");
+							}else{
+								alert("新增成功！");
+							_this.isShow2=false;
+							}
+						}
+					});
+				},
+			},
+			mounted() {
+
+			}
+		}).$mount('#addbzApp');
+	</script>
+</html>

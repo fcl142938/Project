@@ -21,41 +21,36 @@
 		<div class="container">
 
 			<div id="jgxjApp" class="row" v-cloak>
-				<h1>技工星级</h1>
 				<div id="gb">
 					&nbsp;&nbsp;
 					<!--<el-button onclick="">关闭</el-button>-->
 				</div>
-				<div id="yy" style="background-color: ;">
+				<div id="yy" style="float: right;">
 					<el-form :inline="true" :model="star" class="demo-form-inline" label-width="80px">
-						<el-form-item label="等级编码">
+						<!--<el-form-item label="等级编码">
 							<el-input v-model="star.agid" style="width: 200px;"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 						<el-form-item label="等级名称">
-							<el-input v-model="star.agname" style="width: 200px;"></el-input>
-							<el-form-item label="提成权重">
-								<el-input v-model="star.agprice" style="width: 200px;"></el-input>
+							<el-input v-model="star.agname" style="width: 200px;" size="small"></el-input>
+							<el-form-item label="价格">
+								<el-input v-model="star.agprice" style="width: 200px;" size="small"></el-input>
 							</el-form-item>
 							<el-form-item>
-								<el-button type="success" @click="onAdd()">添加</el-button>
+								<el-button size="mini"  type="primary" @click="onAdd()">添加</el-button>
 							</el-form-item>
 					</el-form>
 				</div>
 				<div id="indexApp">
-					<table class="table table-bordered table-hover" v-cloak>
-						<template>
 						<el-table :data="vehicleInfo.list" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.agid)">删除</el-button>
-									<br><br>
-									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.agid)">修改</el-button>									
+									<el-button type="primary" size="mini"  plain v-if="temp.value==0" @click="delOne(scope.row.agid)">删除</el-button>
+									<el-button type="primary" size="mini"  plain v-if="temp.value==0" @click="queryBySid(scope.row.agid)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
-						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
-					</template>
+						<el-pagination  align="center"   prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
 				</div>
 				
 				<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
@@ -67,7 +62,7 @@
 						<el-form-item label="等级名称">
 							<el-input v-model="carlist.agname"></el-input>
 						</el-form-item>
-						<el-form-item label="提成权重">
+						<el-form-item label="价格">
 							<el-input v-model="carlist.agprice"></el-input>
 						</el-form-item>
 					</el-form>
@@ -94,7 +89,7 @@
 					name: '等级名称',
 					value: 'agname'
 				}, {
-					name: '提成权重',
+					name: '价格',
 					value: 'agprice'
 				},
 				{

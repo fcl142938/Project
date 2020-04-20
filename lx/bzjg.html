@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="UTF-8">
 		<title>班组技工</title>
 		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="../css/style.css" />
@@ -10,97 +9,213 @@
 		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
 		<script type="text/javascript" src="../js/vue.js"></script>
-		<style>
-			[v-cloak] {
+			<style>
+			/*[v-cloak] {
 				display: none;
-			}
+			}*/
 		</style>
-
 	</head>
-
 	<body>
-		<div class="container">
-
-			<div id="bzjgApp"  class="row" v-cloak>
-
-				<h1>班组技工</h1>
-				<div id="ss">					
-					<el-input v-model="job.jid" style="width: 200px;"></el-input>					
-					<el-button type="success" onclick="">搜索</el-button> &nbsp;&nbsp;
-					<el-button  onclick="">关闭</el-button>
-				</div>
-				<hr />
-				<div id="" style="background-color:navajowhite;">
-					<p>
-						<el-button type="success"  onclick="">添加员工</el-button>&nbsp;&nbsp;&nbsp;&nbsp;<el-button type="primary"  onclick="">修改</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="danger" onclick="">删除</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary"  onclick="">查询</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary"  onclick="">班组权重</el-button> &nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary"  onclick="">导出</el-button>
-					</p>
-				</div>
-				<div id="indexApp">
-					<template>
-					<el-table :data="pageInfo.list" stripe style="width: 100%">
-						<el-table-column prop="jid" label="班组序号">
-						</el-table-column>
-						<el-table-column prop="jclsname" label="班组名称">
-						</el-table-column>
-						<el-table-column prop="jbh" label="技工编号">
-						</el-table-column>
-						<el-table-column prop="jname" label="技工姓名">
-						</el-table-column>
-						<el-table-column prop="jsex" label="性别">
-						</el-table-column>
-						<el-table-column prop="jsj" label="手机">
-						</el-table-column>
-						<el-table-column prop="jaddress" label="地址">
-						</el-table-column>
-						<el-table-column prop="jdate" label="出生日期">
-						</el-table-column>
-						<el-table-column prop="jzc" label="组长">
-						</el-table-column>
-						<el-table-column prop="jdlm" label="登陆名">
-						</el-table-column>
-						
+		<div id="classApp">
+			<div id="zz" style="float: right;">			
+			<template>
+   					<el-select v-model="value" size="small" placeholder="全部" @change="changequery">
+   						 <el-option
+     						v-for="item in vehicleInfo"
+      						:key="item.gid"
+      						:label="item.gname"
+      						:value="item.gid">
+   						 </el-option>
+ 					</el-select>					
+			</template>
+			<el-button @click="isShow2=true"  size="small" type="primary" >添加班组</el-button>
+			<el-dialog @opened="handlerOpen" ref="modifdialog" title="添加班组" :visible.sync="isShow2" width="30%" :before-close="handleClose2" center>
+			<div id="cnt">打开添加班组页面</div>				
+			</el-dialog>
+			<el-button @click="isShow1=true" size="small" type="success">添加技工</el-button>
+			<el-dialog @opened="handlerOpen2" ref="modifdialog" title="添加技工" :visible.sync="isShow1" width="30%" :before-close="handleClose2" center>
+			<div id="cnt2">打开添加技工页面</div>
+			</el-dialog>
+		</div>
+		<div id="indexApp">
+						<el-table :data="vehicleInfo2.list" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="delOne(scope.row.gid)">删除</el-button>
+									
+									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="queryBySid(scope.row.gid)">修改</el-button>									
+								</template>
+							</el-table-column>
 						</el-table>
-					</template>
+		<el-pagination align="center"  background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo2.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo2.pageSize">
 				</div>
-			</div>
+				<el-dialog title="修改技工信息" :visible.sync="modify" width="50%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
+						<el-form-item label="技工姓名">
+							<el-input v-model="carlist.aname"></el-input>
+						</el-form-item>
+						<el-form-item label="分组">
+							<el-input v-model="carlist.gid"></el-input>
+						</el-form-item>
+						<el-form-item label="账号">
+							<el-input v-model="carlist.aaccount"></el-input>
+						</el-form-item>
+						<el-form-item label="密码">
+							<el-input v-model="carlist.apwd"></el-input>
+						</el-form-item>
+						<el-form-item label="等级">
+							<el-input v-model="carlist.agid"></el-input>
+						</el-form-item>
+						<el-form-item label="部门职位">
+							<el-input v-model="carlist.positionid"></el-input>
+						</el-form-item>
+						<el-form-item label="离职日期">
+        					<el-date-picker type="date" placeholder="选择日期" v-model="carlist.endtime" style="width: 100%;"></el-date-picker></el-form-item>
+        					<el-form-item label="入职日期">
+        					<el-date-picker type="date" placeholder="选择日期" v-model="carlist.startime" style="width: 100%;"></el-date-picker></el-form-item>
+						<el-form-item label="状态">
+							<el-input v-model="carlist.state"></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="modify = false">取 消</el-button>
+   				 <el-button type="primary" @click="modifyall">保存</el-button>
+  				</span>
+			</el-dialog>
 		</div>
 	</body>
-
 	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="../js/dialogs.js"></script>
 	<script type="text/javascript" src="../js/index.js"></script>
 	<script>
-		var bzjgApp = new Vue({
-			data: {
-				job: {
-			
+		var classApp = new Vue({
+			data: {	
+				stsy: [	
+				{
+					name: '技工编号',
+					value: 'aid'
 				},
-				pageInfo:{
-					list:[{
-						jid: '123',
-						jclsname: 'asd',
-						jbh: 'ddd',
-						jname: 'aaa',
-						jsex: 'dddd',
-						jsj: 'ssss',
-						jdate: 'weqwe',
-						jzc: 'dasdasd',
-						jdlm: 'aaaaaa',
-						jaddress: 'dddd'
-					}]
-				}
+				{
+					name: '技工姓名',
+					value: 'aname'
+				}, {
+					name: '分组id',
+					value: 'gid'
+				}, 
+				{
+					name: '账号',
+					value: 'aaccount'
+				},
+//				{
+//					name: '部门职位',
+//					value: 'positionid'
+//				},
+				{
+					name: '离职日期',
+					value: 'endtime'
+				},
+				{
+					name: '入职日期',
+					value: 'startime'
+				},
+				{
+					name: '操作',
+					value: '0'
+				}],
+        		value: '',
+        		vehicleInfo: [],
+        		vehicleInfo2: [],
+				list:[],
+				isShow2: false,
+				isShow1: false,
+				modify:false,
+				carlist: []
 			},
 			methods: {
-
+				queryAll(){
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/bz/queryBanzuList`,function(pg) {
+						_this.vehicleInfo = pg;	
+					})
+				},
+				changequery(sid,n,s){
+					let _this = this;	
+					this.n = 1;
+					this.s = 3;
+					alert(_this.value)
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryBanzujgByBid/${sid}/${this.n}/${this.s}`,function(pg) {
+						_this.vehicleInfo2 = pg;	
+						_this.list = pg.list;
+					});
+				},
+				//根据sid查询状态信息
+				queryBySid(gid){
+					let _this = this;	
+					alert(gid)
+					_this.modify = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryid/${gid}`,function(pg) {
+						_this.carlist = pg;	
+					
+					});
+				},		
+				//修改数据
+				modifyall() {
+					let _this=this;
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/jg/modifBanzu",{
+						type:'put',
+						data:JSON.stringify(_this.carlist),
+						contentType: 'application/json; charset=UTF-8',
+						success(data){
+							if(data=="ok"){
+								alert("修改失败！");
+							}else{							
+								alert("修改成功！");
+								_this.modify = false;
+								_this.queryAlljg(1,3);
+							}
+						}
+					});
+				},
+				queryAlljg(n,s){
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryStarAll/${n}/${s}`,function(pg) {
+						_this.vehicleInfo2 = pg;
+						_this.list = pg.list;	
+					});
+				},
+				//删除方法
+				delOne(gid) {				
+					let _this = this;
+					if(window.confirm('是否确定删除？')) {
+						$.ajax(`http://127.0.0.1:8080/lx/api/jg/deletebanzu/${gid}`, {
+							type: "delete",
+							dataType: "json",
+							success(msg) {
+								if(msg.code == "200") {
+									alert("删除成功");
+									_this.queryAlljg(1,3);
+								} else {
+									alert("删除失败");
+								}
+							}
+						});
+					}
+				},
+				handlerOpen() {
+					$("#cnt").load('addBz.html'); //ajax读取页面
+				},
+				handlerOpen2() {
+					$("#cnt2").load('addjg.html'); //ajax读取页面
+				}
 			},
 			mounted() {
-
+				let _this = this;
+   				 _this.queryAll();
+   				 _this.queryAlljg(1,3);
 			}
-		}).$mount('#bzjgApp');
+		}).$mount('#classApp');
 	</script>
-
 </html>
