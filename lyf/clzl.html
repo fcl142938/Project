@@ -86,7 +86,11 @@
 		</el-row>
 		<el-row :gutter="20" style="margin: 20px;">
 			<template>
+<<<<<<< HEAD
 				<el-table height="300" stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange" style="width: 100%;margin-bottom: 30px;">
+=======
+				<el-table height="500" stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange" style="width: 100%;margin-bottom: 30px;">
+>>>>>>> 1998956cec46166a2906561cd918ef559152adff
 					<el-table-column prop="consumerid" label="编号">
 					</el-table-column>
 					<el-table-column prop="carnumber" label="车牌号码">
@@ -515,9 +519,15 @@
 			//						_this.cheliangpinpaiList = data;
 			//					});
 			//				}
+<<<<<<< HEAD
 							handleCurrentChange(val){
 								let _this = this;
 								$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechajilu/${val.consumerid}`,function(data){
+=======
+							handleCurrentChange(){
+								let _this=this;
+								$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechajilu/1`,function(data){
+>>>>>>> 1998956cec46166a2906561cd918ef559152adff
 									_this.historys=data
 								})
 			
