@@ -459,7 +459,7 @@
 				handleCurrentChange(val) {
 					this.xuanzhongche = val;
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {	
 						_this.consumerinfo = data;
 					});
 				},
