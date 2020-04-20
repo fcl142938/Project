@@ -68,15 +68,25 @@
 		<div id="clzl">
 			<el-row :gutter="20">
 				<el-col :span="15">
+<<<<<<< HEAD
 					<!--<el-col :span="5">
 						<i class="el-icon-edit-outline" @click="md33">新增</i>
+=======
+					<el-col :span="5">
+						<!--<i class="el-icon-edit-outline" @click="md33">新增</i>-->
+>>>>>>> cc29dfb94c6ac755079279fca3d404260675aeb2
 					</el-col>
 					<el-col :span="5">
-						<i class="el-icon-edit" @click="md3">修改</i>
+						<!--<i class="el-icon-edit" @click="md3">修改</i>-->
 					</el-col>
 					<el-col :span="5">
+<<<<<<< HEAD
 						<i class="el-icon-delete" @click="shanchuche">删除</i>
 					</el-col>-->
+=======
+						<!--<i class="el-icon-delete" @click="shanchuche">删除</i>-->
+					</el-col>
+>>>>>>> cc29dfb94c6ac755079279fca3d404260675aeb2
 				</el-col>
 				<el-col :span="5">
 					<el-input v-model="chepai" size="mini" placeholder="匹配名称/名称简码/手机/车牌号"></el-input>
@@ -114,6 +124,7 @@
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
 						<template>
+<<<<<<< HEAD
 							<el-table stripe border ref="singleTable" :data="historys" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
 								<el-table-column prop="consumerid" label="消费编码">
 								</el-table-column>
@@ -134,6 +145,36 @@
 									<template slot-scope="temp">
 										{{temp.row.state | changestate}}
 									</template>
+=======
+							<el-table height="300" stripe border ref="singleTable" :data="wxjl" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
+								<el-table-column prop="smid" label="维修编号">
+								</el-table-column>
+								<el-table-column prop="username" label="姓名">
+								<el-table-column prop="gname" label="维修组">
+								</el-table-column>
+								<el-table-column prop="userphone" label="电话">
+								<el-table-column prop="rescuenumber" label="救援车辆">
+								</el-table-column>
+								<el-table-column prop="useraddress" label="地址">
+								<el-table-column prop="consumermark" label="备注">
+								</el-table-column>
+								<el-table-column prop="userbrithday" label="生日">
+								<el-table-column prop="starttime" label="入厂日期">
+								</el-table-column>
+								<el-table-column prop="userremark" label="备注">
+								<el-table-column prop="entime" label="完工日期">
+								</el-table-column>
+								<el-table-column prop="countprice" label="总金额">
+								</el-table-column>
+								<el-table-column prop="price" label="实际费用">
+								</el-table-column>
+								<el-table-column prop="state" label="完成状态">
+									<template slot-scope="temp">
+										{{temp.row.state | changestate}}
+									</template>
+								</el-table-column>
+								<el-table-column prop="staffname" label="录入人">
+>>>>>>> cc29dfb94c6ac755079279fca3d404260675aeb2
 								</el-table-column>
 							</el-table>
 						</template>
@@ -317,8 +358,13 @@
 					driverdate: '',
 					carcourse: '',
 					buycar: ''
+<<<<<<< HEAD
 				},
 				historys:[]
+=======
+				}
+				wxjl:[]
+>>>>>>> cc29dfb94c6ac755079279fca3d404260675aeb2
 			},
 			methods: {
 				cha(){
@@ -464,6 +510,7 @@
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/clzl/${_this.chepai}`, function(data) {
 						_this.consumercar = data;
 					});
+<<<<<<< HEAD
 					},
 //				handleCurrentChange(val) {
 //					this.xuanzhongche = val;
@@ -517,6 +564,88 @@
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechajilu/1`,function(data){
 						_this.historys=data
 					})
+=======
+				},
+				handleCurrentChange(val) {
+					this.xuanzhongche = val;
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechajilu/${_this.xuanzhongche.consumerid}`, function(data) {
+						_this.wxjl = data;
+					});
+				},
+				handleCurrentChange1(val) {
+					this.xuanzhongkehu = val;
+					let _this = this;
+				},
+				handleClose1(done) {
+					//确认框
+					this.$confirm('是否关闭').then(() => {
+						this.kehu = {
+							userid: '',
+							username: '',
+							userphone: '',
+							useraddress: '',
+							userbrithday: '',
+							userremark: ''
+						};
+						this.a=null;
+						this.kehuche = {
+							consumerid: 0,
+							userid: '',
+							carnumber: '',
+							motorcycleid: '',
+							drivername: '',
+							driverphone: '',
+							driverbrithday: '',
+							driverdate: '',
+							carcourse: '',
+							buycar: ''
+						};
+						done(); //关闭
+					}).catch(() => {
+						//错误
+						console.debug('取消操作');
+					});
+				},
+				cheliangpinpai() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cheliangpinpai`, function(data) {
+						_this.cheliangpinpaiList = data;
+					});
+>>>>>>> cc29dfb94c6ac755079279fca3d404260675aeb2
+				}
+			},
+			filters: {
+				changestate: function(value) {
+					var avb=[{
+							value: 0,
+							label: '接车中'
+						},
+						{
+							value: 1,
+							label: '施工中'
+						}, {
+							value: 2,
+							label: '待验收'
+						}, {
+							value: 3,
+							label: '待付款'
+						}, {
+							value: 4,
+							label: '已完成'
+						}, {
+							value: 5,
+							label: '返工'
+						}
+					];
+					var ff='';
+					avb.forEach(temp=>{
+						if(temp.value==value){
+							ff=temp.label
+						
+						}
+					});
+					return ff;
 				}
 			},
 			mounted() {
