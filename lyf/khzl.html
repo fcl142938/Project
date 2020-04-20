@@ -395,14 +395,14 @@
 					<el-col :span="6">
 						<span>省：</span>
 						<el-select @change="xuanzhong1()" v-model="xuanzhongsheng" placeholder="请选择" style="width: 84%;">
-							<el-option v-for="temp in sheng" :label="temp.provinces" :value="temp.id">
+							<el-option v-for="temp in sheng" :key="temp.provinces" :label="temp.provinces" :value="temp.id">
 							</el-option>
 						</el-select>
 					</el-col>
 					<el-col :span="6">
 						<span>市区：</span>
-						<el-select v-model="xuanzhongshiqu" placeholder="请选择" style="width: 79%;">
-							<el-option v-for="temp in shiqu" :label="temp.market" :value="temp.id">
+						<el-select @change="xuanzhong3()" v-model="xuanzhongshiqu" placeholder="请选择" style="width: 79%;">
+							<el-option v-for="temp in shiqu" :key="temp.market" :label="temp.market" :value="temp.id">
 							</el-option>
 						</el-select>
 					</el-col>
