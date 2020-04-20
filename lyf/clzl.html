@@ -69,13 +69,13 @@
 			<el-row :gutter="20">
 				<el-col :span="15">
 					<el-col :span="5">
-						<i class="el-icon-edit-outline" @click="md33">新增</i>
+						<!--<i class="el-icon-edit-outline" @click="md33">新增</i>-->
 					</el-col>
 					<el-col :span="5">
-						<i class="el-icon-edit" @click="md3">修改</i>
+						<!--<i class="el-icon-edit" @click="md3">修改</i>-->
 					</el-col>
 					<el-col :span="5">
-						<i class="el-icon-delete" @click="shanchuche">删除</i>
+						<!--<i class="el-icon-delete" @click="shanchuche">删除</i>-->
 					</el-col>
 				</el-col>
 				<el-col :span="5">
@@ -114,18 +114,34 @@
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
 						<template>
-							<el-table stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
-								<el-table-column prop="userid" label="客户编码">
+							<el-table height="300" stripe border ref="singleTable" :data="wxjl" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
+								<el-table-column prop="smid" label="维修编号">
 								</el-table-column>
 								<el-table-column prop="username" label="姓名">
+								<el-table-column prop="gname" label="维修组">
 								</el-table-column>
 								<el-table-column prop="userphone" label="电话">
+								<el-table-column prop="rescuenumber" label="救援车辆">
 								</el-table-column>
 								<el-table-column prop="useraddress" label="地址">
+								<el-table-column prop="consumermark" label="备注">
 								</el-table-column>
 								<el-table-column prop="userbrithday" label="生日">
+								<el-table-column prop="starttime" label="入厂日期">
 								</el-table-column>
 								<el-table-column prop="userremark" label="备注">
+								<el-table-column prop="entime" label="完工日期">
+								</el-table-column>
+								<el-table-column prop="countprice" label="总金额">
+								</el-table-column>
+								<el-table-column prop="price" label="实际费用">
+								</el-table-column>
+								<el-table-column prop="state" label="完成状态">
+									<template slot-scope="temp">
+										{{temp.row.state | changestate}}
+									</template>
+								</el-table-column>
+								<el-table-column prop="staffname" label="录入人">
 								</el-table-column>
 							</el-table>
 						</template>
@@ -310,6 +326,7 @@
 					carcourse: '',
 					buycar: ''
 				}
+				wxjl:[]
 			},
 			methods: {
 				cha(){
@@ -459,8 +476,8 @@
 				handleCurrentChange(val) {
 					this.xuanzhongche = val;
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {	
-						_this.consumerinfo = data;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechajilu/${_this.xuanzhongche.consumerid}`, function(data) {
+						_this.wxjl = data;
 					});
 				},
 				handleCurrentChange1(val) {
@@ -502,6 +519,39 @@
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cheliangpinpai`, function(data) {
 						_this.cheliangpinpaiList = data;
 					});
+				}
+			},
+			filters: {
+				changestate: function(value) {
+					var avb=[{
+							value: 0,
+							label: '接车中'
+						},
+						{
+							value: 1,
+							label: '施工中'
+						}, {
+							value: 2,
+							label: '待验收'
+						}, {
+							value: 3,
+							label: '待付款'
+						}, {
+							value: 4,
+							label: '已完成'
+						}, {
+							value: 5,
+							label: '返工'
+						}
+					];
+					var ff='';
+					avb.forEach(temp=>{
+						if(temp.value==value){
+							ff=temp.label
+						
+						}
+					});
+					return ff;
 				}
 			},
 			mounted() {
