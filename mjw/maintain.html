@@ -118,95 +118,31 @@
 				<el-form :model="Typeinfo" :rules="rules" ref="Typeinfo" label-width="100px" class="demo-ruleForm">
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="项目编码" prop="name">
-
-								<el-input v-model="Typeinfo.infoid"></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
 							<el-form-item label="项目名称" prop="name">
 
 								<el-input v-model="Typeinfo.infoname"></el-input>
 
 							</el-form-item>
 						</el-col>
-					</el-row>
-
-					<el-row>
 						<el-col :span="12">
-							<el-form-item label="收入种类" prop="region">
-								<el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-									<el-option label="区域一" value="shanghai"></el-option>
-									<el-option label="区域二" value="beijing"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-
-						<el-col :span="12">
-							<el-form-item label="项目类别" prop="region">
-								<el-select v-model="Typeinfo.typeid" placeholder="请选择活动区域">
-									<el-option label="大众" value="1"></el-option>
-									<el-option label="奔驰" value="2"></el-option>
-									<el-option label="宝马" value="3"></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-form-item label="备注" prop="name">
-
-						<el-input v-model="Typeinfo.infomark"></el-input>
-
-					</el-form-item>
-
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="标准价" prop="name">
+							<el-form-item label="项目价格" prop="name">
 
 								<el-input v-model="Typeinfo.price"></el-input>
 
 							</el-form-item>
 						</el-col>
-						<el-col :span="12">
-							<el-form-item label="会员价" prop="name">
-
-								<el-input></el-input>
-
-							</el-form-item>
-						</el-col>
 					</el-row>
+
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="vip价" prop="name">
-
-								<el-input></el-input>
-
+							<el-form-item label="备注" prop="region">
+								<el-input v-model="Typeinfo.infomark"></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="12">
-							<el-form-item label="协议价" prop="name">
 
-								<el-input></el-input>
-
-							</el-form-item>
-						</el-col>
+						
 					</el-row>
-					<el-row>
-						<el-col :span="12">
-							<el-form-item label="索赔价" prop="name">
-
-								<el-input></el-input>
-
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="保险价" prop="name">
-
-								<el-input></el-input>
-
-							</el-form-item>
-						</el-col>
-					</el-row>
+				
 
 				</el-form>
 				<div slot="footer" class="dialog-footer">
@@ -233,11 +169,12 @@
 					pageinfo: {},
 					multipleSelection: JSON.parse(window.sessionStorage.getItem("multipleSelectionS")),
 					parentid: 0,
+					mytypeparent:0,
 					loadingTy: true,
 					shouButt: false,
 					shouButt2: true,
 					Typeinfo: {
-						infoid: '',
+						
 						infomark: '',
 						infoname: '',
 						price: '',
@@ -269,8 +206,10 @@
 					handleNodeClick(data) {
 						this.currentPage = 1;
 						this.parentid = data.typeid;
+						this.mytypeparent=data.typeparent;
+						this.Typeinfo.typeid = data.typeid;
 						this.gotoPageTy();
-
+						console.log(this.mytypeparent);
 					},
 					gotoPageTy() {
 						let _this = this;
@@ -305,7 +244,7 @@
 							success(msg) {
 								if(msg > 0) {
 									alert('修改成功！');
-									_this.show(_this.typeid);
+										_this.gotoPageTy();
 									_this.dialogFormVisible = false;
 								} else {
 									alert('修改失败！');
@@ -318,13 +257,20 @@
 						let _this = this;
 						this.shouButt = true;
 						this.shouButt2 = false;
-						$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpai/${_this.currentRow.infoid}`, function(val) {
+						if(_this.currentRow.infoid!=null){
+							$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpai/${_this.currentRow.infoid}`, function(val) {
 
 							_this.Typeinfo = val;
 
 							console.log(_this.Typeinfo);
 							_this.dialogFormVisible = true
-						});
+							});
+							
+						}else{
+							
+							alert('请选择一条数据！');
+						}
+						
 
 					},
 					add() {
@@ -342,7 +288,7 @@
 							success(msg) {
 								if(msg > 0) {
 									alert('新增成功！');
-									_this.show(_this.typeid);
+									_this.gotoPageTy();
 									_this.dialogFormVisible = false;
 
 								} else {
@@ -361,8 +307,9 @@
 							contentType: 'application/json',
 							success(msg) {
 								if(msg > 0) {
+									_this.gotoPageTy();
 									alert('删除成功！');
-									_this.show(_this.typeid);
+									
 
 								} else {
 									alert('删除失败！');
