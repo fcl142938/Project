@@ -30,7 +30,7 @@
 			</template>
 			<el-button @click="isShow2=true"  size="small" type="primary" >添加班组</el-button>
 			<el-dialog @opened="handlerOpen" ref="modifdialog" title="添加班组" :visible.sync="isShow2" width="30%" :before-close="handleClose2" center>
-			<div id="cnt">打开添加班组页面</div>				
+			<div id="cnt1">打开添加班组页面</div>				
 			</el-dialog>
 			<el-button @click="isShow1=true" size="small" type="success">添加技工</el-button>
 			<el-dialog @opened="handlerOpen2" ref="modifdialog" title="添加技工" :visible.sync="isShow1" width="30%" :before-close="handleClose2" center>
@@ -154,7 +154,6 @@
 				//根据sid查询状态信息
 				queryBySid(gid){
 					let _this = this;	
-					alert(gid)
 					_this.modify = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryid/${gid}`,function(pg) {
 						_this.carlist = pg;	
@@ -205,10 +204,10 @@
 					}
 				},
 				handlerOpen() {
-					$("#cnt").load('addBz.html'); //ajax读取页面
+					$("#cnt1").load('lx/addBz.html'); //ajax读取页面
 				},
 				handlerOpen2() {
-					$("#cnt2").load('addjg.html'); //ajax读取页面
+					$("#cnt2").load('lx/addjg.html'); //ajax读取页面
 				}
 			},
 			mounted() {
