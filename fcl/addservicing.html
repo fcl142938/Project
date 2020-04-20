@@ -41,6 +41,11 @@
 				</el-table-column>
 				<el-table-column prop="price" label="维修价格">
 				</el-table-column>
+				<el-table-column prop="infotime" label="技工耗时">
+					<template slot-scope="temp">
+						{{temp.row.infotime | changehouser}}
+					</template>
+				</el-table-column>
 				<el-table-column align="center">
 					<template slot="header" slot-scope="scope">
 						<el-button type="success" size="mini" @click="gotoPages">添加维修项</el-button>
@@ -50,7 +55,10 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<div class="text-center" style="margin: 20px  auto  10px;">
+			<div class="text-right" style="margin: 20px  30px  10px;">
+				<span style="margin-right: 30px;">（预计花费=项目费+技工费*小时）</span>
+				<span style="margin-right: 30px;">预计花费：{{countprice}}元</span>
+				<span style="margin-right: 30px;">预计耗时：{{counttime}}小时</span>
 				<el-button size="mini" type="danger" @click="addSermain">开单</el-button>
 			</div>
 
@@ -63,20 +71,24 @@
 
 					},
 					FclSerAllVo: {},
-					price: '20',
-					gprice: '20',
+					price: '12',
+					gprice: '12',
 					name: '',
+					countprice: 24,
+					counttime: 2,
 					tableData: [{
 						"infoid": 0,
 						"infoname": '救援费',
 						"price": 12,
 						"infomark": '救援费',
+						"infotime": 1,
 						"bool": true
 					}, {
 						"infoid": -1,
 						"infoname": '技工费',
 						"price": 12,
 						"infomark": '技工费',
+						"infotime": 1,
 						"bool": true
 					}],
 					sermain: {
@@ -90,13 +102,15 @@
 				},
 				methods: {
 					deleteRow(infoid) {
+						/*重新计算总价格 耗时 */
 						var index1;
 						this.tableData.forEach((temp, index) => {
 							if(temp.infoid == infoid) {
 								index1 = index;
 							}
 						});
-						this.tableData.splice(index1, 1)
+						this.tableData.splice(index1, 1);
+						this.reckonNumber();
 					},
 					uprlist() {
 						//console.log(this.FclSerAllVo)
@@ -107,6 +121,7 @@
 								_this.price = temp.price;
 							}
 						})
+						this.reckonNumber();
 					},
 					upglist() {
 						let _this = this;
@@ -120,6 +135,7 @@
 								_this.gprice = temp.gprice;
 							}
 						})
+						this.reckonNumber();
 					},
 					gotoPages() {
 						window.sessionStorage.setItem("multipleSelectionS", JSON.stringify(this.tableData));
@@ -138,11 +154,13 @@
 							this.tableData.unshift({
 								"infoid": 0,
 								"infoname": '救援费',
-								"price": this.price,
+								"price": parseInt(this.price),
 								"infomark": '救援费',
+								"infotime": 1,
 								"bool": true
 							})
 						}
+						this.reckonNumber();
 					},
 					addSermain() {
 
@@ -153,13 +171,14 @@
 						} else {
 							_this.rescueid = _this.sermain.rescueid;
 						}
-						alert(_this.rescueid);
 						var vo = {
 							"ser": {
 								rescueid: _this.rescueid,
 								consumerid: _this.sermain.consumerid,
 								gid: _this.sermain.gid,
-								consumermark: _this.sermain.consumermark
+								consumermark: _this.sermain.consumermark,
+								countprice: _this.countprice,
+								counttime: _this.counttime
 							},
 							"list": _this.tableData
 						};
@@ -175,6 +194,26 @@
 								_this.goBack();
 							}
 						})
+					},
+					reckonNumber() {
+						let _this = this;
+						_this.counttime = 0;
+						_this.countprice = 0;
+						_this.tableData.forEach(temp => {
+							_this.counttime += temp.infotime;
+							_this.countprice += temp.infotime * _this.gprice + temp.price;
+						})
+						_this.countprice = _this.countprice -_this.gprice;
+
+					}
+				},
+				filters: {
+					changehouser: function(value) {
+						if(value == 0) {
+							return '无需技工费'
+						} else {
+							return value+'/h'
+						}
 					}
 				},
 				mounted() {

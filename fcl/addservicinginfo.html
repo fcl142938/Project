@@ -21,13 +21,15 @@
 				</el-aside>
 				<el-main v-loading="loadingTy">
 					<el-table ref="multipleTable" :data="pageinfo.list" tooltip-effect="dark" style="width: 100%" @select-all="handleSelectionChange" @select="handleSelectionChange">
-						<el-table-column prop="infoid" label="维修编号" width="180" align="center">
+						<el-table-column prop="infoid" label="维修编号" align="center">
 						</el-table-column>
 						<el-table-column prop="infoname" label="项目名称" align="center">
 						</el-table-column>
-						<el-table-column prop="price" label="项目价格" width="180" align="center">
+						<el-table-column prop="price" label="项目价格"align="center">
 						</el-table-column>
 						<el-table-column prop="infomark" label="备注" align="center">
+						</el-table-column>
+						<el-table-column prop="infotime" label="耗时" align="center">
 						</el-table-column>
 						<el-table-column type="selection" width="55">
 						</el-table-column>
@@ -140,6 +142,7 @@
 							window.parent.app.tableData.push(obj);
 						})*/
 						window.parent.app.tableData = this.multipleSelection;
+						window.parent.app.reckonNumber();
 						//关闭
 						closeWindowDialog();
 					}
