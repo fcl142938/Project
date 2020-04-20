@@ -19,6 +19,16 @@
 				</el-table-column>
 				<el-table-column prop="price" label="项目价格" align="center">
 				</el-table-column>
+				<el-table-column prop="infotime" label="技工耗时" align="center">
+					<template slot-scope="temp">
+						{{temp.row.infotime | changeinfotime}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="courseid" label="施工阶段" align="center">
+					<template slot-scope="temp">
+						{{temp.row.courseid | changecourseid}}
+					</template>
+				</el-table-column>
 				<el-table-column prop="infomark" label="项目描述" align="center">
 				</el-table-column>
 			</el-table>
@@ -30,6 +40,16 @@
 		var showApp = new Vue({
 			data: {
 				list: JSON.parse(window.sessionStorage.getItem("list"))
+			},filters:{
+				changeinfotime(val){
+					if(val==0){
+						return '无需技工费'
+					}
+					return val+'/h'
+				},
+				changecourseid(val){
+					return '第'+(val+1)+'次施工'
+				}
 			}
 		}).$mount("#showApp")
 	</script>

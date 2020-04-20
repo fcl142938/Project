@@ -25,12 +25,12 @@
 				<div>
 					<el-form :inline="true" :model="position" class="demo-form-inline" label-width="80px">
 						<el-form-item label="岗位编码">
-							<el-input v-model="position.positionid"></el-input>
+							<el-input size="small" v-model="position.positionid"></el-input>
 						</el-form-item>
 						<el-form-item label="岗位名称">
-							<el-input v-model="position.positionname"></el-input>
+							<el-input size="small" v-model="position.positionname"></el-input>
 						</el-form-item>
-						<el-form-item label="部门">
+						<el-form-item size="small" label="部门">
 							<el-select v-model="position.departmentid" placeholder="请选择部门">
 								<el-option v-for="(temp,i) in d" :label="temp.departmentname" :value="temp.departmentid"></el-option>
 							</el-select>
@@ -68,7 +68,7 @@
 					<el-button v-if="pageInfo.hasNextPage" @click="nextPage" type="primary">下一页</el-button>
 					<el-button @click="lastPage" type="primary">尾页</el-button>
 				</div>-->
-				<div class="block" v-if="pageInfo.list!== undefined && pageInfo.list.length!=0">
+				<div style="text-align: center;" class="block" v-if="pageInfo.list!== undefined && pageInfo.list.length!=0">
 					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :total="pageInfo.total" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</div>

@@ -50,7 +50,7 @@
 					</span>
 				</el-header>
 				<el-container>
-					<el-aside width="250px" style="border: 1px  solid ghostwhite;margin: 20px;border-radius: 20px;">
+					<el-aside width="210px" style="border: 1px  solid ghostwhite;margin: 20px;border-radius: 20px;">
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane fade  active" :id="temp.powersrc" v-for="(temp,index) in staffvo.list">
 								<el-menu style="border-right:0">
@@ -108,8 +108,8 @@
 				editableTabs: [],
 				tabIndex: 1,
 				staffvo: {
-					stf:{
-						staffname:''
+					stf: {
+						staffname: ''
 					}
 				},
 				loadingmenu: true
@@ -118,11 +118,11 @@
 				showView(url, title) {
 					var bool = true;
 					var number;
-					
+
 					this.editableTabs.forEach(temp => {
 						if(temp.title == title) {
 							bool = false;
-							number=temp.name;
+							number = temp.name;
 						}
 					})
 					/*window.sessionStorage.setItem("number",number);*/
@@ -130,7 +130,7 @@
 					if(bool) {
 						this.addTab(this.editableTabsValue, url, title);
 					} else {
-						$("#tab-"+number).click();
+						$("#tab-" + number).click();
 					}
 				},
 				loadPage(obj) {
@@ -142,7 +142,7 @@
 						cancelButtonText: '取消'
 					}).then(() => {
 						$.getJSON(`http://127.0.0.1:8080/fcl/api/staff/extis`, function(res) {
-							location.href ="login.html";
+							location.href = "login.html";
 						})
 					});
 				},
@@ -191,6 +191,16 @@
 				})
 			}
 		}).$mount("#MenuApp");
+
+		//计时器ajax刷新页面//一小时刷新一次
+		/*setInterval(function() {
+			
+			$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/ajaxUp`,function(res) {
+				if(res=="ok"){
+					$(".is-active.is-closable").click();
+				}
+			})
+		}, 1000 *60*30)*/	
 	</script>
 
 </html>
