@@ -68,7 +68,7 @@
 		<div id="clzl">
 			<el-row :gutter="20">
 				<el-col :span="15">
-					<el-col :span="5">
+					<!--<el-col :span="5">
 						<i class="el-icon-edit-outline" @click="md33">新增</i>
 					</el-col>
 					<el-col :span="5">
@@ -76,7 +76,7 @@
 					</el-col>
 					<el-col :span="5">
 						<i class="el-icon-delete" @click="shanchuche">删除</i>
-					</el-col>
+					</el-col>-->
 				</el-col>
 				<el-col :span="5">
 					<el-input v-model="chepai" size="mini" placeholder="匹配名称/名称简码/手机/车牌号"></el-input>
@@ -114,18 +114,26 @@
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
 						<template>
-							<el-table stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
-								<el-table-column prop="userid" label="客户编码">
+							<el-table stripe border ref="singleTable" :data="historys" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
+								<el-table-column prop="consumerid" label="消费编码">
 								</el-table-column>
-								<el-table-column prop="username" label="姓名">
+								<el-table-column prop="gname" label="维修组">
 								</el-table-column>
-								<el-table-column prop="userphone" label="电话">
+								<el-table-column prop="staffname" label="客户名称">
 								</el-table-column>
-								<el-table-column prop="useraddress" label="地址">
+								<el-table-column prop="starttime" label="开始日期">
 								</el-table-column>
-								<el-table-column prop="userbrithday" label="生日">
+								<el-table-column prop="entime" label="结束日期">
 								</el-table-column>
-								<el-table-column prop="userremark" label="备注">
+								<el-table-column prop="countprice" label="预计消费">
+								</el-table-column>
+								<el-table-column prop="price" label="实际消费">
+								</el-table-column>
+								
+								<el-table-column prop="state" label="完成">
+									<template slot-scope="temp">
+										{{temp.row.state | changestate}}
+									</template>
 								</el-table-column>
 							</el-table>
 						</template>
@@ -144,7 +152,7 @@
 						</template>
 					</el-tab-pane>-->
 			</el-row>
-			<el-dialog title="车辆资料编辑" :visible.sync="isShow3" width="70%" :before-close="handleClose1">
+			<!--<el-dialog title="车辆资料编辑" :visible.sync="isShow3" width="70%" :before-close="handleClose1">
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>车牌号码：</span>
@@ -272,7 +280,7 @@
 	    			<el-button @click="isShow3quxiao">取 消</el-button>
 	    			<el-button type="primary" @click="isShow3queding">确 定</el-button>
   				</span>
-			</el-dialog>
+			</el-dialog>-->
 		</div>
 	</body>
 	<!--<script type="text/javascript" src="../js/index.js" ></script>-->
@@ -309,7 +317,8 @@
 					driverdate: '',
 					carcourse: '',
 					buycar: ''
-				}
+				},
+				historys:[]
 			},
 			methods: {
 				cha(){
@@ -318,196 +327,234 @@
 					}
 					this.goToPage();
 				},
-				shanchuche(){
-					if(this.xuanzhongche == null) {
-						this.$message("请选中需要删除的车");
-					} else {
-						this.$confirm('此操作将永久删除该车, 是否继续?', '提示', {
-							confirmButtonText: '确定',
-							cancelButtonText: '取消',
-							type: 'warning'
-						}).then(() => {
-							let _this = this;
-							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanchukehuche/${_this.xuanzhongche.consumerid}`,
-							{
-							type: "delete",
-							dataType: "json",
-							success(data) {
-								if(data.code == "200") {
-									_this.$message({
-										type: 'success',
-										message: '删除成功!'
-									});
-								} else {
-									_this.$message(date.msg);
-								}
-							}
-						});
-						}).catch(() => {
-							this.$message({
-								type: 'info',
-								message: '已取消删除'
-							});
-						});
-					}
-				},
-				xuanzhong2() {
-					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/chexing/${_this.xuanzhongcheliangpinpai}`, function(data) {
-						_this.chexing = data;
-					});
-				},
-				md3() {
-					if(this.xuanzhongche == null) {
-						this.$message("请选中需要修改的车");
-					} else {
-						this.kehuche = this.xuanzhongche;
-						this.xuanzhongcheliangpinpai = this.kehuche.brandname;
-						this.xuanzhongchexing = this.kehuche.motorcyclename;
-						this.a=this.xuanzhongche;
-						this.isShow3 = true;
-					}
-				},
-				md33() {
-					if(this.xuanzhongkehu == null) {
-						this.$message("请选中需要新增的客户");
-					} else {
-						this.kehuche.userid = this.xuanzhongche.userid;
-						this.kehu = this.xuanzhongkehu;
-						this.xuanzhongcheliangpinpai = '';
-						this.xuanzhongchexing = '';
-						this.isShow3 = true;
-					}
-				},
-				isShow3quxiao() {
-					this.isShow3 = false;
-					this.kehuche = {
-						consumerid: 0,
-						userid: '',
-						carnumber: '',
-						motorcycleid: '',
-						drivername: '',
-						driverphone: '',
-						driverbrithday: '',
-						driverdate: '',
-						carcourse: '',
-						buycar: ''
-					};
-					this.a=null;
-				},
-				isShow3queding() {
-					this.isShow3 = false;
-					if(this.a==null){
-						this.kehuche.motorcycleid = this.xuanzhongchexing;
-						this.kehuche.userid = this.kehu.userid;
-						this.addkehuche();
-					}else{
-						this.xiugaiche();
-					}
-				},
-				addkehuche() {
-					let _this = this;
-					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/addkehuche`, {
-						type: "post",
-						contentType: "application/json",
-						data: JSON.stringify(_this.kehuche),
-						dataType: "json",
-						success(date) {
-							if(date.code == "200") {
-								_this.$message(date.msg);
-							} else {
-								_this.$message(date.msg);
-							}
-						}
-					});
-				},
-				xiugaiche(){
-					let _this = this;
-					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xiugaikehuche`, {
-						type: "post",
-						contentType: "application/json",
-						data: JSON.stringify(_this.kehuche),
-						dataType: "json",
-						success(date) {
-							if(date.code == "200") {
-								_this.$message(date.msg);
-							} else {
-								_this.$message(date.msg);
-							}
-							_this.kehuche = {
-								consumerid: 0,
-								userid: '',
-								carnumber: '',
-								motorcycleid: '',
-								drivername: '',
-								driverphone: '',
-								driverbrithday: '',
-								driverdate: '',
-								carcourse: '',
-								buycar: ''
-							};
-							_this.a=null;
-						}
-					});
-				},
+//				shanchuche(){
+//					if(this.xuanzhongche == null) {
+//						this.$message("请选中需要删除的车");
+//					} else {
+//						this.$confirm('此操作将永久删除该车, 是否继续?', '提示', {
+//							confirmButtonText: '确定',
+//							cancelButtonText: '取消',
+//							type: 'warning'
+//						}).then(() => {
+//							let _this = this;
+//							$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/shanchukehuche/${_this.xuanzhongche.consumerid}`,
+//							{
+//							type: "delete",
+//							dataType: "json",
+//							success(data) {
+//								if(data.code == "200") {
+//									_this.$message({
+//										type: 'success',
+//										message: '删除成功!'
+//									});
+//								} else {
+//									_this.$message(date.msg);
+//								}
+//							}
+//						});
+//						}).catch(() => {
+//							this.$message({
+//								type: 'info',
+//								message: '已取消删除'
+//							});
+//						});
+//					}
+//				},
+//				xuanzhong2() {
+//					let _this = this;
+//					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/chexing/${_this.xuanzhongcheliangpinpai}`, function(data) {
+//						_this.chexing = data;
+//					});
+//				},
+//				md3() {
+//					if(this.xuanzhongche == null) {
+//						this.$message("请选中需要修改的车");
+//					} else {
+//						this.kehuche = this.xuanzhongche;
+//						this.xuanzhongcheliangpinpai = this.kehuche.brandname;
+//						this.xuanzhongchexing = this.kehuche.motorcyclename;
+//						this.a=this.xuanzhongche;
+//						this.isShow3 = true;
+//					}
+//				},
+//				md33() {
+//					if(this.xuanzhongkehu == null) {
+//						this.$message("请选中需要新增的客户");
+//					} else {
+//						this.kehuche.userid = this.xuanzhongche.userid;
+//						this.kehu = this.xuanzhongkehu;
+//						this.xuanzhongcheliangpinpai = '';
+//						this.xuanzhongchexing = '';
+//						this.isShow3 = true;
+//					}
+//				},
+//				isShow3quxiao() {
+//					this.isShow3 = false;
+//					this.kehuche = {
+//						consumerid: 0,
+//						userid: '',
+//						carnumber: '',
+//						motorcycleid: '',
+//						drivername: '',
+//						driverphone: '',
+//						driverbrithday: '',
+//						driverdate: '',
+//						carcourse: '',
+//						buycar: ''
+//					};
+//					this.a=null;
+//				},
+//				isShow3queding() {
+//					this.isShow3 = false;
+//					if(this.a==null){
+//						this.kehuche.motorcycleid = this.xuanzhongchexing;
+//						this.kehuche.userid = this.kehu.userid;
+//						this.addkehuche();
+//					}else{
+//						this.xiugaiche();
+//					}
+//				},
+//				addkehuche() {
+//					let _this = this;
+//					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/addkehuche`, {
+//						type: "post",
+//						contentType: "application/json",
+//						data: JSON.stringify(_this.kehuche),
+//						dataType: "json",
+//						success(date) {
+//							if(date.code == "200") {
+//								_this.$message(date.msg);
+//							} else {
+//								_this.$message(date.msg);
+//							}
+//						}
+//					});
+//				},
+//				xiugaiche(){
+//					let _this = this;
+//					$.ajax(`http://127.0.0.1:8080/api/LyfKhzlAction/xiugaikehuche`, {
+//						type: "post",
+//						contentType: "application/json",
+//						data: JSON.stringify(_this.kehuche),
+//						dataType: "json",
+//						success(date) {
+//							if(date.code == "200") {
+//								_this.$message(date.msg);
+//							} else {
+//								_this.$message(date.msg);
+//							}
+//							_this.kehuche = {
+//								consumerid: 0,
+//								userid: '',
+//								carnumber: '',
+//								motorcycleid: '',
+//								drivername: '',
+//								driverphone: '',
+//								driverbrithday: '',
+//								driverdate: '',
+//								carcourse: '',
+//								buycar: ''
+//							};
+//							_this.a=null;
+//						}
+//					});
+//				},
 				goToPage() {
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/clzl/${_this.chepai}`, function(data) {
 						_this.consumercar = data;
 					});
-				},
-				handleCurrentChange(val) {
-					this.xuanzhongche = val;
-					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {	
-						_this.consumerinfo = data;
-					});
-				},
-				handleCurrentChange1(val) {
-					this.xuanzhongkehu = val;
-					let _this = this;
-				},
-				handleClose1(done) {
-					//确认框
-					this.$confirm('是否关闭').then(() => {
-						this.kehu = {
-							userid: '',
-							username: '',
-							userphone: '',
-							useraddress: '',
-							userbrithday: '',
-							userremark: ''
-						};
-						this.a=null;
-						this.kehuche = {
-							consumerid: 0,
-							userid: '',
-							carnumber: '',
-							motorcycleid: '',
-							drivername: '',
-							driverphone: '',
-							driverbrithday: '',
-							driverdate: '',
-							carcourse: '',
-							buycar: ''
-						};
-						done(); //关闭
-					}).catch(() => {
-						//错误
-						console.debug('取消操作');
-					});
-				},
-				cheliangpinpai() {
-					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cheliangpinpai`, function(data) {
-						_this.cheliangpinpaiList = data;
-					});
+					},
+//				handleCurrentChange(val) {
+//					this.xuanzhongche = val;
+//					let _this = this;
+//					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {	
+//						_this.consumerinfo = data;
+//					});
+//				},
+//				handleCurrentChange1(val) {
+//					this.xuanzhongkehu = val;
+//					let _this = this;
+//				},
+//				handleClose1(done) {
+//					//确认框
+//					this.$confirm('是否关闭').then(() => {
+//						this.kehu = {
+//							userid: '',
+//							username: '',
+//							userphone: '',
+//							useraddress: '',
+//							userbrithday: '',
+//							userremark: ''
+//						};
+//						this.a=null;
+//						this.kehuche = {
+//							consumerid: 0,
+//							userid: '',
+//							carnumber: '',
+//							motorcycleid: '',
+//							drivername: '',
+//							driverphone: '',
+//							driverbrithday: '',
+//							driverdate: '',
+//							carcourse: '',
+//							buycar: ''
+//						};
+//						done(); //关闭
+//					}).catch(() => {
+//						//错误
+//						console.debug('取消操作');
+//					});
+//				},
+//				cheliangpinpai() {
+//					let _this = this;
+//					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cheliangpinpai`, function(data) {
+//						_this.cheliangpinpaiList = data;
+//					});
+//				}
+				handleCurrentChange(){
+					let _this=this;
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechajilu/1`,function(data){
+						_this.historys=data
+					})
 				}
 			},
 			mounted() {
 				this.goToPage();
 				this.cheliangpinpai();
-			}
+			},filters: {
+				changestate: function(value) {
+					var avb=[{
+							value: 0,
+							label: '接车中'
+						},
+						{
+							value: 1,
+							label: '施工中'
+						}, {
+							value: 2,
+							label: '待验收'
+						}, {
+							value: 3,
+							label: '待付款'
+						}, {
+							value: 4,
+							label: '已完成'
+						}, {
+							value: 5,
+							label: '返工'
+						}
+					];
+					var ff='';
+					avb.forEach(temp=>{
+						if(temp.value==value){
+							ff=temp.label
+						
+						}
+					});
+					return ff;
+				}
+				}
 		}).$mount('#clzl');
 	</script>
 </html>
