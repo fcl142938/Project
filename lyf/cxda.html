@@ -16,7 +16,7 @@
 			
 			i {
 				color: #5ca8ff;
-				font-size: 18px;
+				font-size: 15px;
 			}
 			
 			.el-row {
@@ -56,75 +56,65 @@
 
 	<body>
 		<div id="cxda">
-			<el-row :gutter="20" style="background-color: #f3fffd;">
-				<el-col :span="12">
-					<span style="font-family: '楷体';font-size: xx-large;padding-left: 10px;">品牌车型</span>
-				</el-col>
-				<el-col :span="8">
-				</el-col>
-				<el-col :span="2">
-				</el-col>
-				<el-col :span="2">
-					<el-button type="warning" plain style="font-size: 18px;">关闭</el-button>
-				</el-col>
-			</el-row>
-			<el-row :gutter="20" style="background-color: #fefff3;">
-				<el-col :span="7" style="height: 100%;">
+			<el-row :gutter="20">
+				<el-col :span="7" style="height: 780px;border-right:gainsboro solid 1px;">
 					<el-col :span="6">
-						<i class="el-icon-edit-outline" @click="xzpp">新增</i>
+						<el-button @click="xzpp" type="primary" size="mini" plain>新增</el-button>
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-edit" @click="xgpp">修改</i>
+						<el-button @click="xgpp" type="primary" size="mini" plain>修改</el-button>
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-delete" @click="shanpinpai">删除</i>
+						<el-button @click="shanpinpai" type="primary" size="mini" plain>删除</el-button>
 					</el-col>
-					<el-col :span="24">
+					<!--<el-col :span="24">
 						<el-col :span="15">
-							<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+							<el-input v-model="input" size="mini" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
 						</el-col>
 						<el-col :span="5">
-							<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+							<el-button type="primary" plain size="mini">搜索</el-button>
 						</el-col>
-					</el-col>
-					<el-col :span="20">
+					</el-col>-->
+					<el-col :span="22">
 						<template>
-							<el-table stripe border ref="singleTable" :data="carbrand" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-								<el-table-column property="brandid" label="编码" width="100">
+							<el-table height="650" stripe border ref="singleTable" :data="carbrand" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+								<el-table-column property="brandid" label="编码">
 								</el-table-column>
-								<el-table-column property="brandname" label="品牌" width="153">
+								<el-table-column property="brandname" label="品牌">
 								</el-table-column>
-								<el-table-column property="brandletter" label="首字母" width="100">
+								<el-table-column property="brandletter" label="首字母">
 								</el-table-column>
 							</el-table>
 						</template>
 					</el-col>
 				</el-col>
-				<el-col :span="17">
+				<!--<div id="" style="border: solid 1px;height: 700px;width: 2px;">
+				</div>-->
+				<el-col :span="17" style="padding-left:100px;">
 					<el-col :span="2">
-						<i class="el-icon-edit-outline" @click="xzchexing">新增</i>
+						<el-button @click="xzchexing" type="primary" size="mini" plain>新增</el-button>
 					</el-col>
 					<el-col :span="2">
-						<i class="el-icon-edit" @click="xgchexing">修改</i>
+						<el-button @click="xgchexing" type="primary" size="mini" plain>修改</el-button>
 					</el-col>
 					<el-col :span="2">
-						<i class="el-icon-delete" @click="scchexing">删除</i>
+						<el-button @click="scchexing" type="primary" size="mini" plain>删除</el-button>
 					</el-col>
 					<el-col :span="2">
-						<i class="el-icon-picture">照片</i>
+						<el-button type="primary" size="mini" plain>照片</el-button>
 					</el-col>
-					<el-col :span="24">
-						<el-col :span="6">
-							<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+					<el-col :span="16">
+						<el-col :span="15">
+							<el-input v-model="input" size="mini" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
 						</el-col>
-						<el-col :span="2">
-							<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+						<el-col :span="4">
+							<el-button type="primary" plain size="mini">搜索</el-button>
 						</el-col>
 					</el-col>
-					<el-col :span="20">
+					<el-col :span="22">
 						<template>
-							<el-table stripe border ref="singleTable" :data="motorcycle" highlight-current-row @current-change="handleCurrentChange1">
-								<el-table-column prop="motorcyclename" label="车型" width="162">
+							<el-table height="680" stripe border ref="singleTable" :data="motorcycle" highlight-current-row @current-change="handleCurrentChange1">
+								<el-table-column prop="motorcyclename" label="车型" width="173">
 								</el-table-column>
 								<el-table-column prop="motorcycleprice" label="参考价格" width="150">
 								</el-table-column>

@@ -23,12 +23,12 @@
 			
 			i {
 				color: #5ca8ff;
-				font-size: 18px;
+				font-size: 15px;
 			}
 			
-			.el-tabs__content {
+			/*.el-tabs__content {
 				display: block;
-			}
+			}*/
 			
 			.el-row {
 				&:last-child {
@@ -66,28 +66,8 @@
 	</head>
 	<body>
 		<div id="clzl">
-			<el-row :gutter="20" style="background-color: #f3fffd;">
-				<el-col :span="12">
-					<span style="font-family: '楷体';font-size: xx-large;padding-left: 10px;">客户档案</span>
-				</el-col>
-				<el-col :span="8">
-					<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
-				</el-col>
-				<el-col :span="2">
-					<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
-				</el-col>
-				<el-col :span="2">
-					<el-button type="warning" plain style="font-size: 18px;">关闭</el-button>
-				</el-col>
-			</el-row>
-			<el-row :gutter="20" style="background-color: #fefff3;">
-				<el-col :span="10">
-					<el-col :span="8">
-						<span>车牌号码：</span>
-						<el-input v-model="chepai" style="width: 60%;">
-					</el-col>
-				</el-col>
-				<el-col :span="8">
+			<el-row :gutter="20">
+				<el-col :span="15">
 					<el-col :span="5">
 						<i class="el-icon-edit-outline" @click="md33">新增</i>
 					</el-col>
@@ -97,23 +77,20 @@
 					<el-col :span="5">
 						<i class="el-icon-delete" @click="shanchuche">删除</i>
 					</el-col>
-					<el-col :span="5">
-						<i class="el-icon-search" @click="cha">查询</i>
-					</el-col>
+				</el-col>
+				<el-col :span="5">
+					<el-input v-model="chepai" size="mini" placeholder="匹配名称/名称简码/手机/车牌号"></el-input>
 				</el-col>
 				<el-col :span="2">
-					<i class="el-icon-brush">保养</i>
+					<el-button @click="cha" type="primary" size="mini" plain>搜索</el-button>
 				</el-col>
 				<el-col :span="2">
-					<i class="el-icon-upload2">导出</i>
-				</el-col>
-				<el-col :span="2">
-					<i class="el-icon-setting">字段设置</i>
+					<el-button type="info" plain size="mini">导出</el-button>
 				</el-col>
 			</el-row>
-			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
+			<el-row :gutter="20" style="margin: 20px;">
 				<template>
-							<el-table stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+							<el-table height="500" stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange" style="width: 100%;margin-bottom: 30px;">
 								<el-table-column prop="consumerid" label="编号">
 								</el-table-column>
 								<el-table-column prop="carnumber" label="车牌号码">
@@ -136,8 +113,6 @@
 						</template>
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
-				<el-tabs type="border-card">
-					<el-tab-pane label="客户信息">
 						<template>
 							<el-table stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
 								<el-table-column prop="userid" label="客户编码">
@@ -154,7 +129,6 @@
 								</el-table-column>
 							</el-table>
 						</template>
-					</el-tab-pane>
 					<!--<el-tab-pane label="历史维修">
 						<template>
 							<el-table stripe border ref="singleTable" :data="tableData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
@@ -169,7 +143,6 @@
 							</el-table>
 						</template>
 					</el-tab-pane>-->
-				</el-tabs>
 			</el-row>
 			<el-dialog title="车辆资料编辑" :visible.sync="isShow3" width="70%" :before-close="handleClose1">
 				<el-row :gutter="20" style="background-color: #f3fffd;">
@@ -306,7 +279,7 @@
 	<script>
 		var indexApp = new Vue({
 			data: {
-				chepai:'',
+				chepai:null,
 				chexing: [],
 				xuanzhongchexing: '',
 				consumercar:[],
@@ -340,11 +313,10 @@
 			},
 			methods: {
 				cha(){
-					alert()
-					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/chachepai/${_this.chepai}`, function(data) {
-						_this.consumercar = data;
-					});
+					if(this.chepai==''){
+						this.chepai=null;
+					}
+					this.goToPage();
 				},
 				shanchuche(){
 					if(this.xuanzhongche == null) {
@@ -480,14 +452,14 @@
 				},
 				goToPage() {
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/clzl`, function(data) {
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/clzl/${_this.chepai}`, function(data) {
 						_this.consumercar = data;
 					});
 				},
 				handleCurrentChange(val) {
 					this.xuanzhongche = val;
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/xuanzhongchechakehu/${_this.xuanzhongche.userid}`, function(data) {	
 						_this.consumerinfo = data;
 					});
 				},

@@ -14,6 +14,15 @@
 				margin: 0;
 			}
 			
+			.el-dropdown-link {
+			    cursor: pointer;
+			    color: #409EFF;
+			    font-size: 15px;
+			}
+			.el-icon-arrow-down {
+			    font-size: 15px;
+			}
+			
 			i {
 				color: #5ca8ff;
 				font-size: 18px;
@@ -63,85 +72,56 @@
 			<el-row :gutter="20" >
 				<el-col :span="8">
 					<el-col :span="6">
-						<i class="el-icon-edit" @click="kehubianji">客户编辑</i>
+						<el-dropdown :hide-on-click="false" placement="top">
+						  <span class="el-dropdown-link">
+						    客户编辑<i class="el-icon-arrow-down el-icon--right"></i>
+						  </span>
+						  <el-dropdown-menu slot="dropdown">
+						    <el-dropdown-item><span @click="md1">增加客户和车</span></el-dropdown-item>
+						    <el-dropdown-item><span @click="md22">增加客户</span></el-dropdown-item>
+						    <el-dropdown-item><span @click="md2">修改客户</span></el-dropdown-item>
+						    <el-dropdown-item><span @click="shanchukuhu">删除客户</span></el-dropdown-item>
+						  </el-dropdown-menu>
+						</el-dropdown>
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-document-copy" @click="cheziliao">车资料</i>
+						<el-dropdown :hide-on-click="false" placement="top">
+						  <span class="el-dropdown-link">
+						    车资料<i class="el-icon-arrow-down el-icon--right"></i>
+						  </span>
+						  <el-dropdown-menu slot="dropdown">
+						    <el-dropdown-item><span @click="md33">增加车资料</span></el-dropdown-item>
+						    <el-dropdown-item><span @click="md3">修改车资料</span></el-dropdown-item>
+						    <el-dropdown-item><span @click="shanchuche">删除车资料</span></el-dropdown-item>
+						  </el-dropdown-menu>
+						</el-dropdown>
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-user">客户分类</i>
+						<!--<i class="el-icon-user">客户分类</i>-->
 					</el-col>
 					<el-col :span="6">
-						<i class="el-icon-search">查询</i>
+						<!--<i class="el-icon-search">查询</i>-->
 					</el-col>
 				</el-col>
 				<el-col :span="2">
-					<i @click="daochukhzl" class="el-icon-upload2">导出</i>
+					<!--<i @click="daochukhzl" class="el-icon-upload2">导出</i>-->
+				</el-col>
+				<el-col :span="5">
+					<!--<i class="el-icon-setting">字段设置</i>-->
+				</el-col>
+				<el-col :span="5">
+					<el-input size="mini" v-model="tiaojian" placeholder="匹配名称/名称简码/手机"></el-input>
 				</el-col>
 				<el-col :span="2">
-					<i class="el-icon-setting">字段设置</i>
-				</el-col>
-				<el-col :span="10">
-					<el-input v-model="input" placeholder="匹配名称/名称简码/手机/会员卡号/车牌号"></el-input>
+					<el-button type="primary" @click="cha" plain size="mini">搜索</el-button>
 				</el-col>
 				<el-col :span="2">
-					<el-button type="primary" plain style="font-size: 18px;">搜索</el-button>
+					<el-button @click="daochukhzl" type="info" plain size="mini">导出</el-button>
 				</el-col>
 			</el-row>
-			<el-row id="che" :gutter="20" style="background-color: #d7eaff; display: none;">
-				<el-col :span="12">
-					<el-col :span="6">
-						车资料
-					</el-col>
-					<el-col :span="6">
-						<span @click="md33">增加车资料</span>
-					</el-col>
-					<el-col :span="6">
-						<span @click="md3">修改车资料</span>
-					</el-col>
-					<el-col :span="6">
-						<span @click="shanchuche">删除车资料</span>
-					</el-col>
-				</el-col>
-				<el-col :span="10">
-				</el-col>
-				<el-col :span="2">
-					<i class="el-icon-caret-top" @click="shouche">收起</i>
-				</el-col>
-			</el-row>
-			<el-row id="kehu" :gutter="20" style="background-color: #d7eaff;display: none;">
-				<el-col :span="14">
-					<el-col :span="3">
-						客户编辑
-					</el-col>
-					<el-col :span="3">
-						<span @click="md1">增加客户和车</span>
-					</el-col>
-					<el-col :span="3">
-						<span @click="md22">增加客户</span>
-					</el-col>
-					<el-col :span="3">
-						<span @click="md2">修改客户</span>
-					</el-col>
-					<el-col :span="3">
-						<span @click="shanchukuhu">删除客户</span>
-					</el-col>
-					<el-col :span="3">
-						相关证照
-					</el-col>
-					<el-col :span="3">
-						设置密码
-					</el-col>
-				</el-col>
-				<el-col :span="8">
-				</el-col>
-				<el-col :span="2">
-					<i class="el-icon-caret-top" @click="shoukehu">收起</i>
-				</el-col>
-			</el-row>
-			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
+			<el-row :gutter="20" style="margin: 20px;">
 				<template>
-					<el-table stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+					<el-table height="300" stripe border ref="singleTable" :data="consumerinfo" highlight-current-row @current-change="handleCurrentChange" style="width: 100%; margin-bottom: 30px;">
 						<el-table-column prop="userid" label="客户编码">
 						</el-table-column>
 						<el-table-column prop="username" label="姓名">
@@ -159,7 +139,7 @@
 			</el-row>
 			<el-row :gutter="20" style="background-color: #d7eaff;margin: 20px;">
 						<template>
-							<el-table stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%">
+							<el-table height="300" stripe border ref="singleTable" :data="consumercar" highlight-current-row @current-change="handleCurrentChange1" style="width: 100%;">
 								<el-table-column prop="consumerid" label="编号">
 								</el-table-column>
 								<el-table-column prop="carnumber" label="车牌号码">
@@ -182,7 +162,7 @@
 						</template>
 			</el-row>
 			<el-dialog title="增加客户和车资料" :visible.sync="isShow1" width="70%" :before-close="handleClose1">
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<el-row :gutter="24" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>客户编码：</span>
 						<el-input v-model="kehu.userid" :disabled="true" style="width: 70%;">
@@ -210,7 +190,7 @@
 						<el-input v-model="kehu.userbrithday" type="date" style="width: 66%;">
 					</el-col>
 				</el-row>
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<!--<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>账期（天）：</span>
 						<el-input style="width: 66%;">
@@ -227,19 +207,19 @@
 						<span>顾问电话：</span>
 						<el-input style="width: 70%;">
 					</el-col>
-				</el-row>
+				</el-row>-->
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>省：</span>
 						<el-select @change="xuanzhong1()" v-model="xuanzhongsheng" placeholder="请选择" style="width: 84%;">
-							<el-option v-for="temp in sheng" :label="temp.provinces" :value="temp.id">
+							<el-option v-for="temp in sheng" :key="temp.provinces" :label="temp.provinces" :value="temp.id">
 							</el-option>
 						</el-select>
 					</el-col>
 					<el-col :span="6">
 						<span>市区：</span>
-						<el-select v-model="xuanzhongshiqu" placeholder="请选择" style="width: 79%;">
-							<el-option v-for="temp in shiqu" :label="temp.market" :value="temp.id">
+						<el-select @change="xuanzhong3()" v-model="xuanzhongshiqu" placeholder="请选择" style="width: 79%;">
+							<el-option v-for="temp in shiqu" :key="temp.market" :label="temp.market" :value="temp.id">
 							</el-option>
 						</el-select>
 					</el-col>
@@ -324,7 +304,7 @@
 						<el-input v-model="kehuche.buycar" type="date" style="width: 71%;">
 					</el-col>
 				</el-row>
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<!--<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>上牌日期：</span>
 						<el-input type="date" style="width: 70%;">
@@ -358,9 +338,9 @@
 						<span>商业险到期：</span>
 						<el-input type="date" style="width: 65%;">
 					</el-col>
-				</el-row>
+				</el-row>-->
 				<span slot="footer" class="dialog-footer">
-	    			<el-button @click="isShow1 = false">取 消</el-button>
+	    			<el-button @click="md1qx">取 消</el-button>
 	    			<el-button type="primary" @click="md11">确 定</el-button>
   				</span>
 			</el-dialog>
@@ -393,7 +373,7 @@
 						<el-input v-model="kehu.userbrithday" type="date" style="width: 66%;">
 					</el-col>
 				</el-row>
-				<el-row :gutter="20" style="background-color: #f3fffd;">
+				<!--<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>账期（天）：</span>
 						<el-input style="width: 66%;">
@@ -410,7 +390,7 @@
 						<span>顾问电话：</span>
 						<el-input style="width: 70%;">
 					</el-col>
-				</el-row>
+				</el-row>-->
 				<el-row :gutter="20" style="background-color: #f3fffd;">
 					<el-col :span="6">
 						<span>省：</span>
@@ -615,6 +595,7 @@
 	<script>
 		var khzl = new Vue({
 			data: {
+				tiaojian:null,
 				a:null,
 				b:null,
 				input: '',
@@ -627,8 +608,8 @@
 				consumercar: [],
 				xuanzhongconsumercar: null,
 				sheng: [],
-				xuanzhongsheng: '',
 				shiqu: [],
+				xuanzhongsheng: '',
 				xuanzhongshiqu: '',
 				cheliangpinpaiList: [],
 				xuanzhongcheliangpinpai: '',
@@ -654,9 +635,16 @@
 					driverdate: '',
 					carcourse: '',
 					buycar: ''
-				}
+				},
+				dz:''
 			},
 			methods: {
+				cha(){
+					if(this.tiaojian==''){
+						this.tiaojian=null;
+					}
+					this.goToPage();
+				},
 				daochukhzl(){
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/daochukhzl`, function(data) {
@@ -883,8 +871,36 @@
 					this.isShow1 = false;
 					this.kehuche.motorcycleid = this.xuanzhongchexing;
 					this.kehuche.userid = this.kehu.userid;
+					this.xuanzhongsheng= '';
+					this.xuanzhongshiqu= '';
 					this.addkehu();
 					this.addkehuche();
+				},
+				md1qx(){
+					this.isShow1 = false;
+					this.kehu = {
+							userid: '',
+							username: '',
+							userphone: '',
+							useraddress: '',
+							userbrithday: '',
+							userremark: ''
+						};
+						this.a=null;
+						this.xuanzhongsheng= '';
+						this.xuanzhongshiqu= '';
+						this.kehuche = {
+							consumerid: 0,
+							userid: '',
+							carnumber: '',
+							motorcycleid: '',
+							drivername: '',
+							driverphone: '',
+							driverbrithday: '',
+							driverdate: '',
+							carcourse: '',
+							buycar: ''
+						};
 				},
 				addkehu() {
 					let _this = this;
@@ -933,10 +949,36 @@
 					});
 				},
 				xuanzhong1() {
+					this.xuanzhongshiqu='';
+					let obj = {};
+					  obj = this.sheng.find((item)=>{
+					    return item.id === this.xuanzhongsheng;
+					  });
+					  this.dz=obj.provinces;
+					if(this.kehu.useraddress==''){
+						this.kehu.useraddress=obj.provinces+this.kehu.useraddress;
+					}else{
+						this.kehu.useraddress='';
+						this.kehu.useraddress=obj.provinces+this.kehu.useraddress;
+					}
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/shiqu/${_this.xuanzhongsheng}`, function(data) {
 						_this.shiqu = data;
 					});
+				},
+				xuanzhong3() {
+					if(this.xuanzhongshiqu!=''){
+						obj = this.shiqu.find((item)=>{
+					    	return item.id === this.xuanzhongshiqu;
+					  	});
+						this.kehu.useraddress=this.dz+obj.market;
+					}else{
+					let obj = {};
+					  obj = this.shiqu.find((item)=>{
+					    return item.id === this.xuanzhongshiqu;
+					  });
+						this.kehu.useraddress=this.kehu.useraddress+obj.market;
+					}
 				},
 				handleCurrentChange(val) {
 					this.currentRow = val;
@@ -971,6 +1013,8 @@
 							userremark: ''
 						};
 						this.a=null;
+						this.xuanzhongsheng= '';
+						this.xuanzhongshiqu= '';
 						this.kehuche = {
 							consumerid: 0,
 							userid: '',
@@ -990,7 +1034,7 @@
 				},
 				goToPage() {
 					let _this = this;
-					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction`, function(data) {
+					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/${_this.tiaojian}`, function(data) {
 						_this.consumerinfo = data;
 					});
 				},

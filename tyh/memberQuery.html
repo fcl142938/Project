@@ -23,26 +23,60 @@
 				<!--<h3>会员操作</h3>
 				<hr />-->
 				<div>
-					<el-form :inline="true" :model="member" class="demo-form-inline" label-width="80px">
+					<el-form style="float:right" :inline="true" :model="member" class="demo-form-inline" label-width="80px">
 						<el-form-item label="会员名称">
-							<el-input v-model="member.name"></el-input>
+							<el-input size="small" v-model="member.name"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success" @click="onQuery()">查询</el-button>
-							<el-button type="primary" @click="onAdd('tyh/memberAdd.html')">新会员</el-button>
+							<el-button size="small" type="success" @click="onQuery()">查询</el-button>
 						</el-form-item>
 					</el-form>
 				</div>
 				<div>
 					<template>
-						<el-table :data="pageInfo.list" stripe style="width: 100%">
+						<el-table highlight-current-row @current-change="onXz" :data="pageInfo.list" stripe style="width: 100%">
 							<el-table-column prop="memberid" label="会员编号">
 							</el-table-column>
-							<el-table-column prop="membername" label="会员姓名">
+							<el-table-column prop="membername" label="会员账号">
 							</el-table-column>
 							<el-table-column prop="countintegrate" label="会员积分">
 							</el-table-column>
 							<el-table-column prop="memberintegrate" label="会员剩余积分">
+							</el-table-column>
+							<el-table-column prop="money" label="余额">
+							</el-table-column>
+							<el-table-column prop="gradename" label="等级">
+							</el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="temp">
+									<el-button @click="onCz(temp.row.memberid)" type="success" size="small" round>充值</el-button>
+									<el-button @click="onDel(temp.row.memberid)" type="danger" size="small" round>删除</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+					</template>
+				</div>
+				<div>
+					<el-dialog :destroy-on-close="true" @opened="handlOpen" title="登录会员" :visible.sync="isShow" :before-close="handleClose" center>
+						<div id="hy"></div>
+					</el-dialog>
+				</div>
+				<div>
+					<template>
+						<el-table :data="mo" stripe style="width: 100%">
+							<el-table-column prop="mid" label="消费编号">
+							</el-table-column>
+							<el-table-column prop="membername" label="会员账号">
+							</el-table-column>
+							<el-table-column prop="makeintegral" label="使用/增加积分">
+							</el-table-column>
+							<el-table-column prop="countintegral" label="剩余积分">
+							</el-table-column>
+							<el-table-column prop="makemoney" label="使用/充值金额">
+							</el-table-column>
+							<el-table-column prop="countmoney" label="余额">
+							</el-table-column>
+							<el-table-column prop="medate" label="消费日期">
 							</el-table-column>
 						</el-table>
 					</template>
@@ -54,7 +88,7 @@
 					<el-button v-if="pageInfo.hasNextPage" @click="nextPage" type="primary">下一页</el-button>
 					<el-button @click="lastPage" type="primary">尾页</el-button>
 				</div>-->
-				<div class="block" v-if="pageInfo.list!== undefined && pageInfo.list.length!=0">
+				<div style="text-align: center;" class="block" v-if="pageInfo.list!== undefined && pageInfo.list.length!=0">
 					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :total="pageInfo.total" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper">
 					</el-pagination>
 				</div>
@@ -67,8 +101,11 @@
 	<script>
 		var memberQueryApp = new Vue({
 			data: {
+				isShow: false,
+				memberid: '',
+				mo: [],
 				currentPage: 1,
-				pageSize: 1,
+				pageSize: 3,
 				val: '全部',
 				member: {
 					name: ''
@@ -82,11 +119,44 @@
 					countintegrate: '',
 					money: '',
 					countmoney: '',
-					starttime: ''
+					starttime: '',
+					gradename: ''
 				},
 				pageInfo: {}
 			},
 			methods: {
+				handlOpen() {
+					$("#hy").load('tyh/topUp.html');
+				},
+				onDel(memberid) {
+					let _this = this;
+					if(window.confirm('是否移除当前会员')) {
+						$.ajax(`http://127.0.0.1:8080/tyh/api/m/tyhDelByMember/${memberid}`, {
+							type: "delete",
+							dataType: "json",
+							success(res) {
+								if(res.code == "200") {
+									alert("删除成功");
+								} else {
+									alert("删除失败");
+								}
+							}
+						});
+					}
+				},
+				onCz(memberid) {
+					this.isShow=true;
+					let _this = this;
+					window.sessionStorage.setItem('memberid', memberid);
+				},
+				onXz(val) {
+					let _this = this;
+					_this.mo.memberid = val.memberid;
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/tyhQueryByMemberinfo/${val.memberid}`, function(mo) {
+						console.info(mo);
+						_this.mo = mo;
+					});
+				},
 				onAdd(url) {
 					$("#cnt").load(url);
 				},
@@ -106,7 +176,7 @@
 				goToQueryMember() {
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/${_this.currentPage}/${_this.pageSize}`, function(m) {
-						console.info(m);	
+						console.info(m);
 						_this.pageInfo = m;
 					});
 				}

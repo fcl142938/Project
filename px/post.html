@@ -87,6 +87,9 @@
 						<el-button  type="primary"  @click="showDialog" size="mini">增加员工</el-button>
 					
 					<el-button type="primary" @click="xls" size="mini">导出</el-button>
+					<el-button type="primary" @click="showDialogs1" size="mini">部门新增</el-button>
+					<el-button type="primary" @click="deletedep" size="mini">删除部门</el-button>
+					<el-button type="primary" @click="showDialogs2" size="mini">修改部门</el-button>
 					
 				</el-row>
 				</div>
@@ -94,14 +97,8 @@
 					<el-col :span="3">
 							<h5>公司部门</h5>
 							
-						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"  @node-contextmenu="rightClick" ></el-tree>
-							 <div v-show="menuVisible">
-                              <ul id="menu" class="menu">
-                                 <li class="menu_item" @click="showDialogs1">增加部门</li>
-                                 <li class="menu_item" @click="deletedep">删除部门</li>
-                                 <li class="menu_item" @click="showDialogs2">修改部门</li>
-                              </ul>
-                             </div>	
+						<el-tree :data="datas" :props="defaultProps" @node-click="handleNodeClick"  ></el-tree>
+							
 					</el-col>
 				
 					
@@ -173,6 +170,10 @@
 				 len:"",
 				 dep:"null",
 				 pos:"null",
+				 show:[],
+				
+				 
+				 
 		       datas:[{
 		       	   positionname:"全部",
 		       	   list:[],
@@ -196,7 +197,8 @@
 					 let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/fcl/api/department`, function(date) {
 						_this.datas[0].list = date;
-
+					
+					
 					});
 				},
 			
@@ -219,11 +221,13 @@
 				
 				},
 				deletedep(){
-						let _this = this;
-					if(_this.len>0){
-						    this.$alert('该部门不能被删除', '系统提示');
-							return
-					}
+					
+					
+					let _this = this;
+						if(_this.show.length>0){
+							_this.$alert('该部门不能被删除', '系统提示');
+							
+						}else{
 					this.$confirm('是否移除部门信息?', '系统提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
@@ -253,7 +257,7 @@
 							message: '已取消删除'
 						});
 					});
-					
+					}
 					
 				},
 				
@@ -262,13 +266,9 @@
             	
             	let _this = this;
            
-            	this.datas.forEach(row=>{
-            		if(row.departmentid==object.departmentid){
-            		    _this.len= row.list.length	
-            		}
-            	})
+            	
             		
-            	  _this.did =JSON.stringify(object.departmentid);
+            	  
                 this.menuVisible = false // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
                 this.menuVisible = true  // 显示模态窗口，跳出自定义菜单栏
                 var menu = document.querySelector('#menu')
@@ -361,8 +361,15 @@
 						_this.goToPage();
 					       
 					} else {
+				
 						_this.dep=data.positionname;
 						_this.pos=null;
+						_this.did=data.departmentid;
+				$.getJSON(`http://127.0.0.1:8080/px/api/user/querypos/${_this.did}`, function(date) {
+						_this.show=date;
+						
+					});
+					
 						_this.goToPage();
 						
 					}
@@ -398,6 +405,7 @@
 					let _this = this;
 					sessionStorage.setItem('id',_this.did);
 					this.isShows2=true;
+					
 				},
 			
 			tableRowClassName({
