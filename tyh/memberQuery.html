@@ -137,6 +137,7 @@
 							success(res) {
 								if(res.code == "200") {
 									alert("删除成功");
+									$(".is-active.is-closable").click();
 								} else {
 									alert("删除失败");
 								}

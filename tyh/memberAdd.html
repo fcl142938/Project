@@ -119,6 +119,7 @@
 							success(msg) {
 								if(msg.code == "200") {
 									alert("已成功注册成为本店会员");
+									$("#cnt").load('tyh/memberQuery.html');
 								} else {
 									alert("新增失败");
 								}

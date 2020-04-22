@@ -103,7 +103,8 @@
 							success(res) {
 								if(res.code == "200") {
 									alert("删除成功");
-									location.href = "jobDefinition.html";
+									$(".is-active.is-closable").click();
+									//location.href = "jobDefinition.html";
 								} else {
 									alert("删除失败");
 								}
@@ -121,6 +122,7 @@
 						success(res) {
 							if(res.code == "200") {
 								alert("修改成功");
+								$(".is-active.is-closable").click();
 							} else {
 								alert("修改失败");
 							}
@@ -142,6 +144,7 @@
 								success(msg) {
 									if(msg.code == "200") {
 										alert("新增岗位成功");
+										$(".is-active.is-closable").click();
 									} else {
 										alert("新增岗位失败");
 									}

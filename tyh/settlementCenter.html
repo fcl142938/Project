@@ -243,6 +243,7 @@
 							success(res) {
 								if(res.code == "200") {
 									alert("已回滚");
+									$(".is-active.is-closable").click();
 									_this.goToSettlementCenter();
 								} else {
 									alert("回滚失败");
@@ -290,7 +291,8 @@
 					let _this = this;
 					if(_this.smid != ""){
 						window.sessionStorage.setItem('smid', _this.smid);
-						$("#cnt").load("tyh/receipts.html");
+						//$("#cnt").load("tyh/receipts.html");
+						window.open('tyh/receipts.html');
 					} else{
 						alert("请选择单据");
 					}
