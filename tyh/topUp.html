@@ -58,19 +58,8 @@
 					_this.m.memberid = window.sessionStorage.getItem('memberid');
 					_this.m.memberintegrate = _this.m.money;
 					_this.m.countintegrate = _this.m.money;
-					$.ajax(`http://127.0.0.1:8080/tyh/api/m/tyhUpdateByCz`, {
-						type: "put",
-						dataType: "json",
-						contentType: "application/json",
-						data: JSON.stringify(_this.m),
-						success(res) {
-							if(res.code == "200") {
-								alert("充值成功");
-								$(".is-active.is-closable").click();
-							} else {
-								alert("充值失败");
-							}
-						}
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/showalipay/${_this.m.memberid}/${_this.m.money}`, function(res){
+							$("#cnt").html(res)								
 					});
 				}
 			},

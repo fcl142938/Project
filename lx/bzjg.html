@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title>班组技工</title>
@@ -9,74 +10,87 @@
 		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
 		<script type="text/javascript" src="../js/vue.js"></script>
-			<style>
+		<style>
 			/*[v-cloak] {
 				display: none;
 			}*/
 		</style>
 	</head>
+
 	<body>
 		<div id="classApp">
-			<div id="zz" style="float: right;">			
-			<template>
-   					<el-select v-model="value" size="small" placeholder="全部" @change="changequery">
-   						 <el-option
-     						v-for="item in vehicleInfo"
-      						:key="item.gid"
-      						:label="item.gname"
-      						:value="item.gid">
-   						 </el-option>
- 					</el-select>					
-			</template>
-			<el-button @click="isShow2=true"  size="small" type="primary" >添加班组</el-button>
-			<el-dialog @opened="handlerOpen" ref="modifdialog" title="添加班组" :visible.sync="isShow2" width="30%" :before-close="handleClose2" center>
-			<div id="cnt1">打开添加班组页面</div>				
-			</el-dialog>
-			<el-button @click="isShow1=true" size="small" type="success">添加技工</el-button>
-			<el-dialog @opened="handlerOpen2" ref="modifdialog" title="添加技工" :visible.sync="isShow1" width="30%" :before-close="handleClose2" center>
-			<div id="cnt2">打开添加技工页面</div>
-			</el-dialog>
-		</div>
-		<div id="indexApp">
+			<div id="indexApp">
+				<el-form :model="star" inline="true" class="demo-form-inline" label-width="90px">
+					班组名称：
+					<el-input size="small" v-model="star.gname" style="width: 200px;"></el-input>
+					<el-button size="small" type="primary" @click="onAdd()">添加班組</el-button>
+					<el-button size="small" type="primary" @click="removebanzu()">刪除班组</el-button>
+				</el-form>
+				<el-container>
+
+					<el-aside width="300px">
+						<el-table :data="vehicleInfo" style="width: 100%" highlight-current-row @current-change="showjg">
+							<el-table-column label="班组编号" align="center">
+								<template slot-scope="temp">
+									{{temp.$index+1}}
+								</template>
+							</el-table-column>
+							<el-table-column prop="gname" label="班组名称" align="center">
+							</el-table-column>
+							<el-table-column prop="gprice" label="班组价格" align="center">
+							</el-table-column>
+						</el-table>
+					</el-aside>
+					<el-main>
 						<el-table :data="vehicleInfo2.list" border style="width: 100%">
-							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+							<el-table-column label="技工编号" align="center">
+								<template slot-scope="temp">
+									{{temp.$index+1}}
+								</template>
+							</el-table-column>
+							<el-table-column prop="aname" label="技工姓名" align="center">
+							</el-table-column>
+							<el-table-column prop="agid" label="技工等级" align="center">
+							</el-table-column>
+							<el-table-column prop="startime" label="入职日期" align="center">
+							</el-table-column>
+							<el-table-column label="操作" align="center">
+								<template slot="header" slot-scope="scope">
+									<el-button size="small" type="primary" @click="this.showWindowDialog('lx/addJg.html','添加技工')">添加技工</el-button>
+								</template>
 								<template slot-scope="scope">
-									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="delOne(scope.row.gid)">删除</el-button>
-									
-									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="queryBySid(scope.row.gid)">修改</el-button>									
+									<el-button type="primary" size="small" @click="delOne(scope.row.aid)">删除</el-button>
+									<el-button type="primary" size="small" @click="queryBySid(scope.row.aid)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
-		<el-pagination align="center"  background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo2.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo2.pageSize">
-				</div>
-				<el-dialog title="修改技工信息" :visible.sync="modify" width="50%" :before-close="handleClose">
+						<el-pagination align="center" prev-text="上一页" next-text="下一页" @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo2.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo2.pageSize">
+						</el-pagination>
+					</el-main>
+				</el-container>
+
+			</div>
+			<el-dialog title="修改技工信息" :visible.sync="modify" width="50%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
 						<el-form-item label="技工姓名">
 							<el-input v-model="carlist.aname"></el-input>
 						</el-form-item>
 						<el-form-item label="分组">
-							<el-input v-model="carlist.gid"></el-input>
+							<el-select size="small" v-model="carlist.gid" placeholder="请选择分租">
+								<el-option v-for="(temp,i) in vehicleInfo" :label="temp.gname" :value="temp.gid"></el-option>
+							</el-select>
 						</el-form-item>
 						<el-form-item label="账号">
 							<el-input v-model="carlist.aaccount"></el-input>
 						</el-form-item>
 						<el-form-item label="密码">
-							<el-input v-model="carlist.apwd"></el-input>
+							<el-input v-model="carlist.apwd" type="password"></el-input>
 						</el-form-item>
 						<el-form-item label="等级">
-							<el-input v-model="carlist.agid"></el-input>
-						</el-form-item>
-						<el-form-item label="部门职位">
-							<el-input v-model="carlist.positionid"></el-input>
-						</el-form-item>
-						<el-form-item label="离职日期">
-        					<el-date-picker type="date" placeholder="选择日期" v-model="carlist.endtime" style="width: 100%;"></el-date-picker></el-form-item>
-        					<el-form-item label="入职日期">
-        					<el-date-picker type="date" placeholder="选择日期" v-model="carlist.startime" style="width: 100%;"></el-date-picker></el-form-item>
-						<el-form-item label="状态">
-							<el-input v-model="carlist.state"></el-input>
+							<el-select size="small" v-model="carlist.agid" placeholder="请选择等級">
+								<el-option v-for="(temp,i) in vehicleInfo1" :label="temp.agname" :value="temp.agid"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -92,112 +106,125 @@
 	<script type="text/javascript" src="../js/index.js"></script>
 	<script>
 		var classApp = new Vue({
-			data: {	
-				stsy: [	
-				{
-					name: '技工编号',
-					value: 'aid'
+			data: {
+				star: {
+					gname: '',
+					gprice: ''
 				},
-				{
-					name: '技工姓名',
-					value: 'aname'
-				}, {
-					name: '分组id',
-					value: 'gid'
-				}, 
-				{
-					name: '账号',
-					value: 'aaccount'
-				},
-//				{
-//					name: '部门职位',
-//					value: 'positionid'
-//				},
-				{
-					name: '离职日期',
-					value: 'endtime'
-				},
-				{
-					name: '入职日期',
-					value: 'startime'
-				},
-				{
-					name: '操作',
-					value: '0'
-				}],
-        		value: '',
-        		vehicleInfo: [],
-        		vehicleInfo2: [],
-				list:[],
+				value: '',
+				vehicleInfo: [],
+				vehicleInfo2: [],
+				list: [],
 				isShow2: false,
 				isShow1: false,
-				modify:false,
-				carlist: []
+				modify: false,
+				carlist: {},
+				vehicleInfo1:[],
+				currentPage: 1,
+				pageSize: 5,
+				sid:0,
+				banzu:{}
 			},
 			methods: {
-				queryAll(){
+				removebanzu(){
+					if(this.banzu.gname==undefined){
+						alert("请选择班组");
+						return ;
+					}else{
+						this.delOne();
+					}
+				},
+				handleSizeChange(val){
+						this.pageSize = val;
+						this.changequery();
+				},
+				handleCurrentChange(val) {
+						this.currentPage = val;
+						this.changequery();
+				},
+				showjg(val) {
+					this.sid=val.gid;
+					this.banzu=val;
+					this.changequery();
+				},
+				onAdd() {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/bz/queryBanzuList`,function(pg) {
-						_this.vehicleInfo = pg;	
-					})
-				},
-				changequery(sid,n,s){
-					let _this = this;	
-					this.n = 1;
-					this.s = 3;
-					alert(_this.value)
-					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryBanzujgByBid/${sid}/${this.n}/${this.s}`,function(pg) {
-						_this.vehicleInfo2 = pg;	
-						_this.list = pg.list;
-					});
-				},
-				//根据sid查询状态信息
-				queryBySid(gid){
-					let _this = this;	
-					_this.modify = true;
-					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryid/${gid}`,function(pg) {
-						_this.carlist = pg;	
-					
-					});
-				},		
-				//修改数据
-				modifyall() {
-					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/lx/api/jg/modifBanzu",{
-						type:'put',
-						data:JSON.stringify(_this.carlist),
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/bz/addBanzu", {
+						type: 'post',
+						dataType: "json",
+						data: JSON.stringify(_this.star),
 						contentType: 'application/json; charset=UTF-8',
-						success(data){
-							if(data=="ok"){
-								alert("修改失败！");
-							}else{							
-								alert("修改成功！");
-								_this.modify = false;
-								_this.queryAlljg(1,3);
+						success(data) {
+							if(data == "ok") {
+								alert("新增失败！");
+							} else {
+								alert("新增成功！");
+								$(".is-active.is-closable").click();
+								_this.isShow2 = false;
 							}
 						}
 					});
 				},
-				queryAlljg(n,s){
+				queryAll() {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryStarAll/${n}/${s}`,function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/bz/queryBanzuList`, function(pg) {
+						_this.vehicleInfo = pg;
+					})
+				},
+				changequery() {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryBanzujgByBid/${_this.sid}/${_this.currentPage}/${_this.pageSize}`, function(pg) {
 						_this.vehicleInfo2 = pg;
-						_this.list = pg.list;	
+						_this.list = pg.list;
+					});
+				},
+				//根据sid查询状态信息
+				queryBySid(gid) {
+					let _this = this;
+					_this.modify = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryid/${gid}`, function(pg) {
+						_this.carlist = pg;
+
+					});
+				},
+				//修改数据
+				modifyall() {
+					let _this = this;
+					jQuery.ajax("http://127.0.0.1:8080/lx/api/jg/modifBanzu", {
+						type: 'put',
+						data: JSON.stringify(_this.carlist),
+						contentType: 'application/json; charset=UTF-8',
+						success(data) {
+							if(data == "ok") {
+								alert("修改失败！");
+							} else {
+								alert("修改成功！");
+								_this.modify = false;
+								$(".is-active.is-closable").click();
+							}
+						}
+					});
+				},
+				queryAlljg() {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/lx/api/jg/queryStarAll/1/5`, function(pg) {
+						_this.vehicleInfo2 = pg;
+						_this.list = pg.list;
 					});
 				},
 				//删除方法
-				delOne(gid) {				
+				delOne() {
 					let _this = this;
-					if(window.confirm('是否确定删除？')) {
-						$.ajax(`http://127.0.0.1:8080/lx/api/jg/deletebanzu/${gid}`, {
+					if(window.confirm('是否确定删除'+_this.banzu.gname+'?')) {
+						$.ajax(`http://127.0.0.1:8080/lx/api/jg/deletebanzu/${_this.banzu.gid}`, {
 							type: "delete",
 							dataType: "json",
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
-									_this.queryAlljg(1,3);
+									$(".is-active.is-closable").click();
 								} else {
-									alert("删除失败");
+									alert("该班组下有技不能删除");
 								}
 							}
 						});
@@ -212,9 +239,14 @@
 			},
 			mounted() {
 				let _this = this;
-   				 _this.queryAll();
-   				 _this.queryAlljg(1,3);
+				_this.queryAll();
+				_this.queryAlljg();
+				jQuery.getJSON(`http://127.0.0.1:8080/lx/api/xm1/queryStarAll`,function(pg) {
+						_this.vehicleInfo1 = pg;
+					//	_this.list = pg.list;	
+				});
 			}
 		}).$mount('#classApp');
 	</script>
+
 </html>

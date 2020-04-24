@@ -31,6 +31,9 @@
 						<el-form-item label="*车牌号">
 							<el-input v-model="star.rescuenumber" style="width: 200px;" size="small"></el-input>
 						</el-form-item>
+							<el-form-item label="*价格">
+							<el-input v-model="star.price" style="width: 200px;" size="small"></el-input>
+						</el-form-item>
 						<el-form-item label="*当前里程">
 							<el-input v-model="star.renumber" style="width: 200px;" size="small"></el-input>
 							<!--<el-form-item label="*状态">
@@ -48,7 +51,6 @@
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="delOne(scope.row.rescueid)">删除</el-button>
-									
 									<el-button type="primary" size="small" plain v-if="temp.value==0" @click="queryBySid(scope.row.rescueid)">修改</el-button>									
 								</template>
 							</el-table-column>
@@ -101,6 +103,9 @@
 				{
 					name: '状态',
 					value: 'state'
+				},{
+					name:'价格',
+					value:'price'
 				},
 			
 				{
@@ -113,6 +118,7 @@
 					rescueid:'',
 					rescuenumber:'',
 					renumber:'',
+					price:'',
 					state:''			
 				},
 				modify:false,

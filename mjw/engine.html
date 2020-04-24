@@ -29,38 +29,27 @@
 
 
 			</div>
-			<div class="mobileBackColor" style="position: relative; height: 150px;">
+			<div class="mobileBackColor">
 				<!--; background-color: #EDF2FC;-->
 				<div class="mobileBackColor" style="float: right;">
-					<el-button type="primary" >	<span  @click="add()"><i class="el-icon-edit-outline"></i>增加</span></el-button>
-					<el-button type="primary" ><span  @click="del()"><i class="el-icon-delete"></i>删除</span></el-button>
-					<el-button type="primary" >	<span  @click="upd()"><i class="el-icon-document-copy"></i>保存</span></el-button>
-					
-					
-				
-					
-					
-					
+					分类名称:<input type="text" v-model="currentRow.motorname">
+					<el-button type="primary"  size="mini"  >	<span @click="add()"><i class="el-icon-edit-outline"></i>增加</span></el-button>
+					<el-button type="primary"  size="mini" ><span  @click="del()"><i class="el-icon-delete"></i>删除</span></el-button>
+					<el-button type="primary" size="mini" >	<span   @click="upd()"><i class="el-icon-document-copy"></i>保存</span></el-button>			
 				</div>
-				<div style="position: absolute; bottom: 0px; float: left; " class="mobileBackColor">
-					<p style="color: #FBC4C4;">分类代码<input type="text" v-model="currentRow.motorid">分类名称<input type="text" v-model="currentRow.motorname"></p>
-				</div>
+				<!--<div style="position: absolute; bottom: 0px; float: left; " class="mobileBackColor">
+					<p ></p>
+				</div>-->
 
 			</div>
 			<div style="width: 500px;">
 				<template>
 					<el-table  @row-click="row"  :data="this.pageinfo.list" highlight-current-row  style="width: 100%">
-
 						<el-table-column property="motorid" label="发动机编码" width="120">
 						</el-table-column>
 						<el-table-column property="motorname" label="发动机名称">
 						</el-table-column>
 					</el-table>
-					<div style="margin-top: 20px">
-						<span>合计:{{pageinfo.endRow}}条</span>
-						<el-button type="primary" @click="prePage()">上一页</el-button>
-						<el-button type="primary" @click="nextPage()">下一页</el-button>
-					</div>
 				</template>
 
 			</div>
@@ -168,11 +157,11 @@
 						
 						this.currentRow=val;
 					},
-					show(pageNum,pageSize) {
+					show() {
 
 						let _this = this;
 
-						$.getJSON(`http://127.0.0.1:8080/api/fadongjis/showList/${pageNum}/${pageSize}`, function(val) {
+						$.getJSON(`http://127.0.0.1:8080/api/fadongjis/showList`, function(val) {
 
 							_this.pageinfo = val;
 
@@ -181,7 +170,7 @@
 					}
 				},
 				mounted() {
-					this.show(1, 2);
+					this.show();
 				}
 			}).$mount('#engineApp');
 		</script>

@@ -4,12 +4,12 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>结算中心</title>
-		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<!--<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="../css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../css/index.css" />
 		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
-		<script type="text/javascript" src="../js/vue.js"></script>
+		<script type="text/javascript" src="../js/vue.js"></script>-->
 		<style>
 			[v-cloak] {
 				display: none;
@@ -73,9 +73,9 @@
 					<el-dialog :destroy-on-close="true" @opened="handlOpen" title="登录会员" :visible.sync="isShow" :before-close="handleClose" center>
 						<div id="hy"></div>
 					</el-dialog>
-					<el-button size="small" type="success" @click="onSy">收银</el-button>
+					<!--<el-button size="small" type="success" @click="onSy">收银</el-button>
 					<el-button size="small" type="success" @click="onHg">回滚</el-button>
-					<el-button size="small" type="success" @click="onOpenReceipts">打开单据</el-button>
+					<el-button size="small" type="success" @click="onOpenReceipts">打开单据</el-button>-->
 					<!--<el-button size="small" type="success" @click="">导出</el-button>-->
 				</div>
 				<div>
@@ -83,46 +83,48 @@
 						<el-table highlight-current-row @current-change="onXz" :data="sc" style="width: 100%">
 							<el-table-column fixed prop="smid" label="销售单号">
 							</el-table-column>
-							<el-table-column prop="starttime" label="开单日期">
-							</el-table-column>
 							<!--<el-table-column prop="state" label="结算状态" width="120">
 							</el-table-column>-->
-							<el-table-column prop="entime" label="结算时间">
-							</el-table-column>
 							<!--<el-table-column prop="staffname" label="结算人" width="120">
 							</el-table-column>-->
 							<el-table-column prop="countprice" label="预计金额">
 							</el-table-column>
 							<el-table-column prop="price" label="结算金额">
 							</el-table-column>
+							<el-table-column prop="carnumber" label="车牌号">
+							</el-table-column>
+							<el-table-column prop="starttime" label="开单日期">
+							</el-table-column>
+							<el-table-column prop="entime" label="完工时间">
+							</el-table-column>
 							<!--<el-table-column prop="jname" label="结算类型" width="120">
 							</el-table-column>-->
 							<!--<el-table-column prop="username" label="客户名称" width="120">
 							</el-table-column>-->
-							<el-table-column prop="carnumber" label="车牌号">
-							</el-table-column>
-							<el-table-column prop="motorcyclename" label="车型">
-							</el-table-column>
+							<!--<el-table-column prop="motorcyclename" label="车型">
+							</el-table-column>-->
 							<!--<el-table-column prop="userremark" label="备注" width="120">
 							</el-table-column>-->
-							<!--<el-table-column label="操作">
+							<el-table-column label="操作" align="center">
 								<template slot-scope="temp">
-									<el-button @click="onXz(temp.row.smid)" type="primary" round>选择</el-button>
+									<el-button v-if="temp.row.state==3" size="small" type="success" @click="onSy">收银</el-button>
+									<!--<el-button v-if="temp.row.state==4" size="small" type="success" @click="onHg">退款</el-button>-->
+									<el-button  v-if="temp.row.state==4" size="small" type="success" @click="onOpenReceipts">打印单据</el-button>
 								</template>
-							</el-table-column>-->
+							</el-table-column>
 						</el-table>
 					</template>
 				</div>
 			</div>
 		</div>
 	</body>
-	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<!--<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="../js/dialogs.js"></script>
-	<script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>-->
 	<script>
 		var settlementCenterApp = new Vue({
 			data: {
-				isShow:false,
+				isShow: false,
 				s: {
 					smid: '',
 					starttime: '',
@@ -190,7 +192,7 @@
 				}]
 			},
 			methods: {
-				handlOpen(){
+				handlOpen() {
 					$("#hy").load('tyh/loginHy.html');
 				},
 				/*showDialog() {
@@ -216,21 +218,21 @@
 					if(_this.s.userremark == "") {
 						_this.s.userremark = null;
 					}
-					if(_this.s.starttime == ""){
+					if(_this.s.starttime == "") {
 						_this.s.starttime = null;
 					}
-					if(_this.s.entime == ""){
+					if(_this.s.entime == "") {
 						_this.s.entime = null;
 					}
 					console.info(_this.s.starttime);
 					console.info(_this.s.entime);
 					$.ajax(`http://127.0.0.1:8080/tyh/api/sc/queryByMaxSettlementCenter/${_this.s.state}/${_this.s.smid}/${_this.s.carnumber}/${_this.s.username}/${_this.s.staffname}/${_this.s.userremark}/${_this.s.starttime}/${_this.s.entime}`, {
-							type: "get",
-							success(sc) {
-								_this.sc = sc;
-								console.info(sc);
-							}
-						});
+						type: "get",
+						success(sc) {
+							_this.sc = sc;
+							console.info(sc);
+						}
+					});
 				},
 				onHg() {
 					if(window.confirm('是否给当前数据进行回滚操作')) {
@@ -254,23 +256,18 @@
 				},
 				onSy() {
 					if(window.confirm('是否给当前数据进行收银操作')) {
-						if(window.confirm('是否为本店会员')){
-							this.isShow=true;
-						} else{
+						if(window.confirm('是否为本店会员')) {
+							this.isShow = true;
+						} else {
 							let _this = this;
-							$.ajax(`http://127.0.0.1:8080/tyh/api/sc/tyhupdateBySettlementCenter/${_this.smid}`, {
-								type: "put",
-								dataType: "json",
-								contentType: "application/json",
-								data: JSON.stringify(_this.smid),
-								success(res) {
-									if(res.code == "200") {
-										alert("已收银");
-										_this.goToSettlementCenter();
-									} else {
-										alert("收银失败");
-									}
-								}
+							$.getJSON(`http://127.0.0.1:8080/tyh/api/sc/showalipay/${_this.smid}/0`, function(res){
+									$("#cnt").html(res)
+//									if(res.code == "200") {
+//										alert("已收银");
+//										_this.goToSettlementCenter();
+//									} else {
+//										alert("收银失败");
+//									}
 							});
 						}
 					}
@@ -289,14 +286,14 @@
 				},
 				onOpenReceipts() {
 					let _this = this;
-					if(_this.smid != ""){
+					if(_this.smid != "") {
 						window.sessionStorage.setItem('smid', _this.smid);
 						//$("#cnt").load("tyh/receipts.html");
 						window.open('tyh/receipts.html');
-					} else{
+					} else {
 						alert("请选择单据");
 					}
-					
+
 				}
 			},
 			mounted() {

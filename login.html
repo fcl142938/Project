@@ -84,6 +84,8 @@
 				$.getJSON(`http://127.0.0.1:8080/fcl/api/staff/login/${staffname}/${staffpwd}`,function(res){
 					if(res.state==200){
 						location.href = "menu.html";
+					}else if(res.state==300){
+						alert("您已离职");
 					}else{
 						alert("密码或账号错误");
 					}

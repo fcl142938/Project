@@ -153,7 +153,7 @@
 			</el-dialog>
 			<el-dialog title="车型定义" :visible.sync="isShow2" width="50%" :before-close="handleClose1">
 				<el-row :gutter="24" style="background-color: #f3fffd;">
-					<el-col :span="16">
+					<el-col :span="24">
 						<el-col :span="24">
 							<span>车辆品牌：</span>
 							<el-input v-model="pinpai.brandid" :disabled="true" style="width: 30%;"></el-input>
@@ -161,18 +161,8 @@
 						</el-col>
 						<el-col :span="24">
 							<el-col :span="12">
-								<span>车型ID：</span>
-								<el-input style="width: 75%;">
-							</el-col>
-							<el-col :span="12">
 								<span>车型名称：</span>
 								<el-input v-model="chexing.motorcyclename" style="width: 70%;">
-							</el-col>
-						</el-col>
-						<el-col :span="24">
-							<el-col :span="12">
-								<span>进口国产：</span>
-								<el-input style="width: 70%;">
 							</el-col>
 							<el-col :span="12">
 								<span>参考价格：</span>
@@ -201,14 +191,10 @@
 						</el-col>
 						<el-col :span="24">
 							<span>发动机品牌：</span>
-							<el-select v-model="chexing.motorid" placeholder="请选择" style="width: 82%;">
-								<el-option label="奥利给" :value="1"></el-option>
-								<el-option label="哈撒给" :value="2"></el-option>
+							<el-select v-model="chexing.motorid" placeholder="请选择"  style="width: 82%;">
+								<el-option v-for="(temp,i) in fadongji" :label="temp.motorname" :value="temp.motorid"></el-option>
 							</el-select>
 						</el-col>
-					</el-col>
-					<el-col :span="8">
-						<h1>图</h1>
 					</el-col>
 				</el-row>
 				<span slot="footer" class="dialog-footer">
@@ -242,7 +228,8 @@
 					motorid:''
 				},
 				a:null,
-				b:null
+				b:null,
+				fadongji:[]
 			},
 			methods: {
 				scchexing(){
@@ -265,6 +252,7 @@
 										type: 'success',
 										message: '删除成功!'
 									});
+									$(".is-active.is-closable").click();
 								} else {
 									_this.$message(date.msg);
 								}
@@ -331,6 +319,7 @@
 								motorid:''
 							};
 							_this.b=null;
+							$(".is-active.is-closable").click();
 						}
 					});
 				},
@@ -347,6 +336,7 @@
 							} else {
 								_this.$message(date.msg);
 							}
+							$(".is-active.is-closable").click();
 						}
 					});
 				},
@@ -379,6 +369,7 @@
 										type: 'success',
 										message: '删除成功!'
 									});
+									$(".is-active.is-closable").click();
 								} else {
 									_this.$message(date.msg);
 								}
@@ -441,6 +432,7 @@
 								brandletter: ''
 							};
 							_this.a=null;
+							$(".is-active.is-closable").click();
 						}
 					});
 				},
@@ -463,6 +455,7 @@
 								brandletter: ''
 							};
 							_this.a=null;
+							$(".is-active.is-closable").click();
 						}
 					});
 				},
@@ -493,6 +486,7 @@
 							brandid:'',
 							motorid:''
 						};
+						$(".is-active.is-closable").click();
 						done(); //关闭
 					}).catch(() => {
 						//错误
@@ -504,10 +498,18 @@
 					$.getJSON(`http://127.0.0.1:8080/api/LyfKhzlAction/cxdaqcpp`, function(data) {
 						_this.carbrand = data;
 					});
-				},
+				},getfadongji(){
+					let  _this=this;
+						$.getJSON(`http://127.0.0.1:8080/api/fadongjis/showList`, function(val) {
+
+							_this.fadongji = val.list;
+
+						});
+				}
 			},
 			mounted() {
 				this.goToPage();
+				this.getfadongji();
 			}
 		}).$mount('#cxda');
 	</script>
