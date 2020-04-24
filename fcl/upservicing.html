@@ -51,6 +51,36 @@
 					</template>
 				</el-table-column>
 			</el-table>
+			<el-table :data="shoplist" style="width: 100%">
+				<el-table-column label="材料编号">
+					<template slot-scope="temp">
+						{{temp.$index+1}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="shname" label="材料名称">
+				</el-table-column>
+				<el-table-column prop="slprice" label="材料价格">
+				</el-table-column>
+				<el-table-column prop="number" label="使用数量">
+						<template slot-scope="temp">
+							<span v-if="temp.row.bool">{{temp.row.number}}</span>
+							<el-input v-if="temp.row.bool==undefined" style="width:150px;"  size="mini" v-model="temp.row.number" placeholder="请输入数量" @input="changenumber(temp.row)"></el-input>
+						</template>
+				</el-table-column>
+				<el-table-column prop="courseid" label="维修阶段">
+					<template slot-scope="temp">
+						{{temp.row.courseid | changecourseid}}
+					</template>
+				</el-table-column>
+				<el-table-column align="center">
+					<template slot="header" slot-scope="scope">
+						<el-button type="success" size="mini" @click="gotoShop">添加材料</el-button>
+					</template>
+					<template slot-scope="temp">
+						<el-button v-if="!temp.row.bool" size="mini" type="danger" @click="deleteRow1(temp.row.serid)">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
 			<div class="text-right" style="margin: 20px  50px   10px;">
 				<span style="margin-right: 30px;">（预计花费=项目费+技工费*小时）</span>
 				<span style="margin-right: 30px;">预计花费：{{countprice}}元</span>
@@ -80,7 +110,9 @@
 						consumermark: ''
 					},
 					name:'',
-					rescueid: 0
+					rescueid: 0,
+					shoplist:[],
+					newshoplist:[]
 				},
 				methods: {
 					deleteRow(infoid) {
@@ -97,16 +129,19 @@
 						window.sessionStorage.setItem("multipleSelectionS", JSON.stringify(this.tableData));
 						var numbers=2;
 						if(!this.value1){
-							numbers=1;
+							numbers=1;z
 						}
 						window.sessionStorage.setItem("numbers", numbers);
 						showWindowDialog('fcl/addservicinginfo.html', '添加');
 					},
 					goBack() {
 						$("#cnt").load("fcl/servicing_meetcar.html");
+					},gotoShop(){
+						window.sessionStorage.setItem("shoplist", JSON.stringify(this.newshoplist));
+						window.sessionStorage.setItem("bool",0);
+						showWindowDialog('fcl/shop.html', '添加材料');
 					},
 					addSermain() {
-
 						let _this = this;
 
 						if(!this.value1) {
@@ -148,6 +183,10 @@
 							_this.counttime += temp.infotime;
 							_this.countprice += temp.infotime * _this.gprice + temp.price;
 						})
+						
+						_this.shoplist.forEach(temp => {
+							_this.countprice += temp.number*temp.slprice;
+						})
 						_this.countprice = _this.countprice -_this.gprice;
 
 					}
@@ -159,6 +198,8 @@
 						} else {
 							return value+'/h'
 						}
+					},changecourseid:function(val){
+						return "第"+(val+1)+"次施工"
 					}
 				},
 				mounted() {
@@ -166,6 +207,7 @@
 					$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/queryRescuecar`, function(res) {
 						_this.FclSerAllVo = res;
 						//初始化
+						
 						var vo = JSON.parse(window.sessionStorage.getItem("serUp"));
 						console.log(vo);
 						_this.sermain = vo.ser;
@@ -186,6 +228,19 @@
 								"infotime":temp.infotime,
 								"courseid":temp.courseid,
 								"bool": true
+							});
+						});
+						vo.shlist.forEach(temp=>{
+							_this.shoplist.push({
+								"serid":temp.serid,
+								"shid":	temp.shid,
+								"shname":temp.shname,
+								"slbuyprice":temp.slbuyprice,
+								"slprice":temp.slprice,
+								"number":1,
+								"slnumber":temp.slnumber,
+								"courseid":0,
+								"bool":true
 							});
 						})
 						_this.reckonNumber();

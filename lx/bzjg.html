@@ -50,7 +50,10 @@
 							</el-table-column>
 							<el-table-column prop="aname" label="技工姓名" align="center">
 							</el-table-column>
-							<el-table-column prop="agid" label="技工等级" align="center">
+							<el-table-column prop="agid" label="技工薪资" align="center">
+								<template slot-scope="temp">
+									{{temp.row.agid | changeprice}}
+								</template>
 							</el-table-column>
 							<el-table-column prop="startime" label="入职日期" align="center">
 							</el-table-column>
@@ -59,7 +62,7 @@
 									<el-button size="small" type="primary" @click="this.showWindowDialog('lx/addJg.html','添加技工')">添加技工</el-button>
 								</template>
 								<template slot-scope="scope">
-									<el-button type="primary" size="small" @click="delOne(scope.row.aid)">删除</el-button>
+									<el-button type="primary" size="small" @click="dejg(scope.row.aid)">删除</el-button>
 									<el-button type="primary" size="small" @click="queryBySid(scope.row.aid)">修改</el-button>
 								</template>
 							</el-table-column>
@@ -81,12 +84,12 @@
 								<el-option v-for="(temp,i) in vehicleInfo" :label="temp.gname" :value="temp.gid"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="账号">
+						<!--<el-form-item label="账号">
 							<el-input v-model="carlist.aaccount"></el-input>
 						</el-form-item>
 						<el-form-item label="密码">
 							<el-input v-model="carlist.apwd" type="password"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 						<el-form-item label="等级">
 							<el-select size="small" v-model="carlist.agid" placeholder="请选择等級">
 								<el-option v-for="(temp,i) in vehicleInfo1" :label="temp.agname" :value="temp.agid"></el-option>
@@ -119,32 +122,38 @@
 				isShow1: false,
 				modify: false,
 				carlist: {},
-				vehicleInfo1:[],
+				vehicleInfo1: [],
 				currentPage: 1,
 				pageSize: 5,
-				sid:0,
-				banzu:{}
+				sid: 0,
+				banzu: {}
 			},
 			methods: {
-				removebanzu(){
-					if(this.banzu.gname==undefined){
+				dejg(aid){
+					$.getJSON(`http://127.0.0.1:8080/lx/api/jg/dejg/${aid}`,function(res){
+						alert("删除成功");
+						$(".is-active.is-closable").click();
+					})
+				},
+				removebanzu() {
+					if(this.banzu.gname == undefined) {
 						alert("请选择班组");
-						return ;
-					}else{
+						return;
+					} else {
 						this.delOne();
 					}
 				},
-				handleSizeChange(val){
-						this.pageSize = val;
-						this.changequery();
+				handleSizeChange(val) {
+					this.pageSize = val;
+					this.changequery();
 				},
 				handleCurrentChange(val) {
-						this.currentPage = val;
-						this.changequery();
+					this.currentPage = val;
+					this.changequery();
 				},
 				showjg(val) {
-					this.sid=val.gid;
-					this.banzu=val;
+					this.sid = val.gid;
+					this.banzu = val;
 					this.changequery();
 				},
 				onAdd() {
@@ -215,7 +224,7 @@
 				//删除方法
 				delOne() {
 					let _this = this;
-					if(window.confirm('是否确定删除'+_this.banzu.gname+'?')) {
+					if(window.confirm('是否确定删除' + _this.banzu.gname + '?')) {
 						$.ajax(`http://127.0.0.1:8080/lx/api/jg/deletebanzu/${_this.banzu.gid}`, {
 							type: "delete",
 							dataType: "json",
@@ -241,10 +250,31 @@
 				let _this = this;
 				_this.queryAll();
 				_this.queryAlljg();
-				jQuery.getJSON(`http://127.0.0.1:8080/lx/api/xm1/queryStarAll`,function(pg) {
-						_this.vehicleInfo1 = pg;
+				jQuery.getJSON(`http://127.0.0.1:8080/lx/api/xm1/queryStarAll`, function(pg) {
+					_this.vehicleInfo1 = pg;
 					//	_this.list = pg.list;	
 				});
+			},
+			filters: {
+				changeprice(val) {
+					let _this = this;
+					var price;
+					$.ajax({
+						async: false,
+						type: "get",
+						url:`http://127.0.0.1:8080/lx/api/xm1/queryStarAll`,
+						dataType: 'json', //将后台返回的内容当作json对象来处理
+						success: function(data) {
+							data.forEach(temp => {
+							if(val == temp.agid) {
+								price = temp.agprice;
+								return;
+								}
+							})
+						}
+					});
+					return price;
+				}
 			}
 		}).$mount('#classApp');
 	</script>

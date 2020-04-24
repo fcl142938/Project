@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			.badge {
+				padding: 0 5px 0 3px;
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="fclshowApp">
+			<el-container>
+				<el-main v-loading="loadingTy">
+					<el-table ref="multipleTable" :data="pageinfo.list" tooltip-effect="dark" style="width: 100%" @select-all="handleSelectionChange" @select="handleSelectionChange">
+						<el-table-column  label="材料编号" align="center">
+							<template slot-scope="temp">
+								{{temp.$index+1}}
+							</template>
+						</el-table-column>
+						<el-table-column prop="shname" label="材料名称" align="center">
+						</el-table-column>
+						<el-table-column prop="slbuyprice" label="材料进价"align="center">
+						</el-table-column>
+						<el-table-column prop="slprice" label="材料售价" align="center">
+						</el-table-column>
+						<el-table-column prop="slnumber" label="库存数量" align="center">
+						</el-table-column>
+						<el-table-column type="selection" width="55">
+						</el-table-column>
+					</el-table>
+					<div style="text-align: center;" v-if="pageinfo.list !== undefined&&pageinfo.list.length!=0">
+						<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[5,10,15,20]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageinfo.total">
+						</el-pagination>
+						<el-button type="success" size="mini" style="margin: 10px 5px 0 420px;">返回</el-button>
+						<el-badge :value="shoplist.length" class="item">
+							<el-button size="small" @click="addser">添加</el-button>
+							
+						</el-badge>
+					</div>
+
+				</el-main>
+			</el-container>
+		</div>
+		<script>
+			var fclshowApp = new Vue({
+				data: {
+					beanlist:[],
+					pageSize: 5,
+					currentPage: 1,
+					pageinfo: {},
+					shoplist: JSON.parse(window.sessionStorage.getItem("shoplist")),
+					loadingTy: true,
+					bool:window.sessionStorage.getItem("bool")
+				},
+				methods: {
+					handleSizeChange(val) {
+						this.pageSize = val;
+						this.gotoPageTy();
+					},
+					handleCurrentChange(val) {
+						this.currentPage = val;
+						this.gotoPageTy();
+					},
+					handleNodeClick(data) {
+						this.currentPage = 1;
+						this.parentid = data.typeid;
+						this.gotoPageTy();
+					},
+					handleSelectionChange(val) {
+						//console.log(this.multipleSelection)				
+						let _this = this;
+							//合并数据
+							_this.shoplist=[];
+									
+							val.forEach(row => {
+								_this.shoplist.push({
+									"shid":	row.shid,
+								"shname":row.shname,
+								"slbuyprice":row.slbuyprice,
+								"slprice":row.slprice,
+								"number":1,
+								"slnumber":row.slnumber,
+								"courseid":0
+								});
+							})
+						//						
+						//console.log(this.multipleSelection)
+					},
+					gotoPageTy() {
+						let _this = this;
+						_this.loadingTy = true;
+						$.getJSON(`http://127.0.0.1:8080/fcl/api/sermain/qureyShop/${_this.currentPage}/${_this.pageSize}`, function(res) {
+							_this.pageinfo = res;
+							//行选中状态
+							console.log(_this.shoplist);
+							setTimeout(() => {
+								_this.pageinfo.list.forEach(row => {
+									_this.shoplist.forEach(temp => {
+										if(temp.shid == row.shid) {
+											_this.$refs.multipleTable.toggleRowSelection(row, true);
+										}
+									})
+								})
+								_this.loadingTy = false;
+							},100);
+
+						})
+					},
+					addser() {
+						if(this.shoplist.length == 0) {
+							alert("请选择");
+							return;
+						}
+						/*	this.multipleSelection.forEach((obj, index) => {
+							window.parent.app.tableData.push(obj);
+						})*/
+						window.parent.app.newshoplist = this.shoplist;
+						window.parent.app.reckonNumber();
+						//关闭
+						closeWindowDialog();
+					}
+				},
+				mounted() {
+					let _this = this;
+					_this.gotoPageTy();
+				}
+			}).$mount("#fclshowApp")
+		</script>
+	</body>
+
+</html>

@@ -55,8 +55,38 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<div class="text-right" style="margin: 20px  30px  10px;">
-				<span style="margin-right: 30px;">（预计花费=项目费+技工费*小时）</span>
+			</el-form>
+			<el-table :data="shoplist" style="width: 100%">
+				<el-table-column label="材料编号">
+					<template slot-scope="temp">
+						{{temp.$index+1}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="shname" label="材料名称">
+				</el-table-column>
+				<el-table-column prop="slprice" label="材料价格">
+				</el-table-column>
+				<el-table-column prop="number" label="使用数量">
+						<template slot-scope="temp">
+							<el-input style="width:150px;"  size="mini" v-model="temp.row.number" placeholder="请输入数量" @input="changenumber(temp.row)"></el-input>
+						</template>
+				</el-table-column>
+				<!--<el-table-column prop="courseid" label="维修阶段">
+					<template slot-scope="temp">
+						{{temp.row.courseid | changecourseid}}
+					</template>
+				</el-table-column>-->
+				<el-table-column align="center">
+					<template slot="header" slot-scope="scope">
+						<el-button type="success" size="mini" @click="gotoShop">添加材料</el-button>
+					</template>
+					<template slot-scope="temp">
+						<el-button size="mini" type="danger" @click="deleteRow1(temp.row.serid)">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<div class="text-right" style="margin: 20px  60px  10px;">
+				<span style="margin-right: 30px;">（预计花费=项目费+技工费*小时+材料费）</span>
 				<span style="margin-right: 30px;">预计花费：{{countprice}}元</span>
 				<span style="margin-right: 30px;">预计耗时：{{counttime}}小时</span>
 				<el-button size="mini" type="danger" @click="addSermain">开单</el-button>
@@ -70,6 +100,7 @@
 					servicing: {
 
 					},
+					shoplist:[],
 					FclSerAllVo: {},
 					price: '12',
 					gprice: '12',
@@ -112,6 +143,14 @@
 						this.tableData.splice(index1, 1);
 						this.reckonNumber();
 					},
+					deleteRow1(serid){
+						this.shoplist.forEach((temp, index) => {
+							if(temp.serid == serid) {
+								index1 = index;
+							}
+						});
+						this.shoplist.splice(index1, 1);
+					},
 					uprlist() {
 						//console.log(this.FclSerAllVo)
 						let _this = this;
@@ -142,6 +181,11 @@
 						window.sessionStorage.setItem("numbers", this.numbers);
 						showWindowDialog('fcl/addservicinginfo.html', '添加');
 					},
+					gotoShop(){
+						window.sessionStorage.setItem("shoplist", JSON.stringify(this.shoplist));
+						window.sessionStorage.setItem("bool","0");
+						showWindowDialog('fcl/shop.html', '添加材料');
+					},
 					goBack() {
 						$("#cnt").load("fcl/servicing_meetcar.html");
 					},
@@ -163,7 +207,6 @@
 						this.reckonNumber();
 					},
 					addSermain() {
-
 						let _this = this;
 
 						if(!this.value1) {
@@ -180,7 +223,8 @@
 								countprice: _this.countprice,
 								counttime: _this.counttime
 							},
-							"list": _this.tableData
+							"list": _this.tableData,
+							"shlist":_this.shoplist
 						};
 						//console.log(vo)
 						$.ajax({
@@ -195,6 +239,14 @@
 							}
 						})
 					},
+					changenumber(val){
+						if(val.number>val.slnumber){
+							alert("库存不够");
+							val.number=1;
+							return;
+						}
+						this.reckonNumber();
+					},
 					reckonNumber() {
 						let _this = this;
 						_this.counttime = 0;
@@ -202,6 +254,10 @@
 						_this.tableData.forEach(temp => {
 							_this.counttime += temp.infotime;
 							_this.countprice += temp.infotime * _this.gprice + temp.price;
+						})
+						
+						_this.shoplist.forEach(temp => {
+							_this.countprice += temp.number*temp.slprice;
 						})
 						_this.countprice = _this.countprice -_this.gprice;
 
@@ -214,6 +270,9 @@
 						} else {
 							return value+'/h'
 						}
+					},
+					changecourseid:function(val){
+						return "第"+(val+1)+"次施工"
 					}
 				},
 				mounted() {

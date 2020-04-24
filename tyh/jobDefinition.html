@@ -24,9 +24,6 @@
 				<hr />-->
 				<div>
 					<el-form :inline="true" :model="position" class="demo-form-inline" label-width="80px">
-						<el-form-item label="岗位编码">
-							<el-input size="small" v-model="position.positionid"></el-input>
-						</el-form-item>
 						<el-form-item label="岗位名称">
 							<el-input size="small" v-model="position.positionname"></el-input>
 						</el-form-item>
@@ -130,12 +127,7 @@
 					});
 				},
 				onSave() {
-					let _this = this;
-					console.info(_this.position.positionid);
-					$.getJSON(`http://127.0.0.1:8080/tyh/api/p/tyhQueryByPositionId/${_this.position.positionid}`, function(msg) {
-						if(msg.code == "200") {
-							alert("岗位编号已存在，请点击修改");
-						} else {
+					let _this = this;		
 							$.ajax(`http://127.0.0.1:8080/tyh/api/p/tyhinsertByPosition`, {
 								type: "post",
 								dataType: "json",
@@ -150,8 +142,6 @@
 									}
 								}
 							});
-						}
-					});
 				},
 				show(val) {
 					let _this = this;

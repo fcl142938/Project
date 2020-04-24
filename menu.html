@@ -180,6 +180,10 @@
 			mounted() {
 				let _this = this;
 				$.getJSON(`http://127.0.0.1:8080/fcl/api/staff/power`, function(res) {
+					if(res=="no"){
+						alert("请登录");
+						location.href="login.html";
+					}
 					_this.staffvo = res;
 					setTimeout(() => {
 						$(".nav-tabs>li").eq(0).addClass("active");

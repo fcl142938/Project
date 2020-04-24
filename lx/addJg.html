@@ -23,12 +23,12 @@
 							<el-option v-for="(temp,i) in vehicleInfo" :label="temp.gname" :value="temp.gid"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="账号">
+				<!--<el-form-item label="账号">
 					<el-input v-model="carlist.aaccount"></el-input>
 				</el-form-item>
 				<el-form-item label="密码">
 					<el-input v-model="carlist.apwd" type="passward"></el-input>
-				</el-form-item>
+				</el-form-item>-->
 				<el-form-item label="等级">
 					<el-select size="small" v-model="carlist.agid" placeholder="请选择技工等級">
 							<el-option v-for="(temp,i) in vehicleInfo1" :label="temp.agname" :value="temp.agid"></el-option>
