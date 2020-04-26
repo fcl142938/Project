@@ -14,7 +14,7 @@
 					<el-tree :data="departments" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
 				</el-aside>
 				<el-main style="border: 1px gainsboro solid;border-radius: 5px;padding:10px 10px">
-					<h3 class="text-center">{{title}}</h3>
+					<h3 class="text-center">{{title}} <el-button type="success" @click="upPower" size="mini" style="margin-left:100px;">保存设置</el-button></h3>
 					<el-checkbox-group v-model="checkList">
 						<div style="width: 310px;margin: 10px 3px;border-radius: 5px;float: left;border: 1px gainsboro solid;" v-for="(temp,i) in powerData">
 							<h3 class="text-center">{{temp.powername}}</h3>
@@ -25,7 +25,6 @@
 							</div>
 						</div>
 					</el-checkbox-group>
-					<el-button type="success" @click="upPower">保存</el-button>
 				</el-main>
 			</el-container>
 		</div>
@@ -40,7 +39,7 @@
 					label: 'positionname',
 				},
 				powerData: [],
-				positionid: 0,
+				positionid: -1,
 				title: '公司权限管理',
 				departmentname: ''
 			},
@@ -72,14 +71,14 @@
 							_this.positionid = data.positionid;
 						})
 					} else {
-						_this.positionid = 0;
+						_this.positionid = -1;
 						_this.departmentname = data.positionname;
 						_this.title = '公司权限管理';
 						_this.checkList = [];
 					}
 				},
 				upPower() {
-					if(this.positionid != 0) {
+					if(this.positionid != -1) {
 						let _this = this;
 						$.ajax({
 							url: "http://127.0.0.1:8080/fcl/api/power/modifyPower",

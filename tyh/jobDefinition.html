@@ -42,7 +42,10 @@
 				<div>
 					<template>
 						<el-table @current-change="show" :data="pageInfo.list" stripe style="width: 100%">
-							<el-table-column prop="positionid" label="岗位编码">
+							<el-table-column label="岗位编码">
+								<template slot-scope="temp">
+									{{temp.$index+1}}
+								</template>
 							</el-table-column>
 							<el-table-column prop="positionname" label="岗位名称">
 							</el-table-column>

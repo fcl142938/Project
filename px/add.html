@@ -95,7 +95,7 @@
 				<el-form-item label="员工账号" prop="staffaccount">
 					<el-col :span="6">
 						<!--非常重要-->
-						<el-input  v-model="user.staffaccount" placeholder="" style="width: 130px;"></el-input>
+						<el-input  v-model="user.staffaccount" placeholder="请输入账号" style="width: 130px;"></el-input>
 					</el-col>
 				</el-form-item>
 				  </el-col> 
@@ -238,10 +238,12 @@
 											_this.$message({
 												type: 'success',
 												message: '新增成功'
-											});
-											
+											});	
 											personApp.isShow=false;//非常重要
 										   window.parent.personApp.goToPage();
+										}else{
+											loading.close(); //关闭加载块【非常重要】
+											alert("改账号已被使用");
 										}
 									}
 								});

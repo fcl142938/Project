@@ -150,6 +150,7 @@
 							}
 						});
 						this.shoplist.splice(index1, 1);
+						this.reckonNumber();
 					},
 					uprlist() {
 						//console.log(this.FclSerAllVo)
@@ -183,7 +184,6 @@
 					},
 					gotoShop(){
 						window.sessionStorage.setItem("shoplist", JSON.stringify(this.shoplist));
-						window.sessionStorage.setItem("bool","0");
 						showWindowDialog('fcl/shop.html', '添加材料');
 					},
 					goBack() {

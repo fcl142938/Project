@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="showApp">
+			<el-table :data="list" style="width: 100%">
+				<el-table-column label="材料编号">
+					<template slot-scope="temp">
+						{{temp.$index+1}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="shname" label="材料名称">
+				</el-table-column>
+				<el-table-column prop="slprice" label="材料价格">
+				</el-table-column>
+				<el-table-column prop="number" label="使用数量">
+				</el-table-column>
+				<!--<el-table-column prop="courseid" label="维修阶段">
+					<template slot-scope="temp">
+						{{temp.row.courseid | changecourseid}}
+					</template>
+				</el-table-column>-->
+			</el-table>
+			<div class="text-right" style="margin:20px 20px"><el-button size="mini" type="primary"  @click="this.closeWindowDialog()">返回</el-button></div>
+			
+		</div>
+	</body>
+	<script>
+		var showApp = new Vue({
+			data: {
+				list: JSON.parse(window.sessionStorage.getItem("shlist"))
+			},filters:{
+				changeinfotime(val){
+					if(val==0){
+						return '无需技工费'
+					}
+					return val+'/h'
+				},
+				changecourseid(val){
+					return '第'+(val+1)+'次施工'
+				}
+			}
+		}).$mount("#showApp")
+	</script>
+
+</html>

@@ -51,7 +51,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<el-table :data="shoplist" style="width: 100%">
+			<el-table :data="showshoplist" style="width: 100%">
 				<el-table-column label="材料编号">
 					<template slot-scope="temp">
 						{{temp.$index+1}}
@@ -67,11 +67,11 @@
 							<el-input v-if="temp.row.bool==undefined" style="width:150px;"  size="mini" v-model="temp.row.number" placeholder="请输入数量" @input="changenumber(temp.row)"></el-input>
 						</template>
 				</el-table-column>
-				<el-table-column prop="courseid" label="维修阶段">
+				<!--<el-table-column prop="courseid" label="维修阶段">
 					<template slot-scope="temp">
 						{{temp.row.courseid | changecourseid}}
 					</template>
-				</el-table-column>
+				</el-table-column>-->
 				<el-table-column align="center">
 					<template slot="header" slot-scope="scope">
 						<el-button type="success" size="mini" @click="gotoShop">添加材料</el-button>
@@ -112,9 +112,19 @@
 					name:'',
 					rescueid: 0,
 					shoplist:[],
-					newshoplist:[]
+					oldshoplist:[],
+					showshoplist:[]
 				},
 				methods: {
+					deleteRow1(serid){
+						this.shoplist.forEach((temp, index) => {
+							if(temp.serid == serid) {
+								index1 = index;
+							}
+						});
+						this.shoplist.splice(index1, 1);
+						this.reckonNumber();
+					},
 					deleteRow(infoid) {
 						var index1;
 						this.tableData.forEach((temp, index) => {
@@ -137,9 +147,17 @@
 					goBack() {
 						$("#cnt").load("fcl/servicing_meetcar.html");
 					},gotoShop(){
-						window.sessionStorage.setItem("shoplist", JSON.stringify(this.newshoplist));
+						window.sessionStorage.setItem("shoplist", JSON.stringify(this.shoplist));
 						window.sessionStorage.setItem("bool",0);
 						showWindowDialog('fcl/shop.html', '添加材料');
+					},
+					changenumber(val){
+						if(val.number>val.slnumber){
+							alert("库存不够");
+							val.number=1;
+							return;
+						}
+						this.reckonNumber();
 					},
 					addSermain() {
 						let _this = this;
@@ -160,7 +178,8 @@
 								countprice: _this.countprice,
 								counttime: _this.counttime
 							},
-							"list": _this.tableData
+							"list": _this.tableData,
+							"shlist":_this.shoplist
 						};
 						//console.log(vo)
 						$.ajax({
@@ -183,12 +202,24 @@
 							_this.counttime += temp.infotime;
 							_this.countprice += temp.infotime * _this.gprice + temp.price;
 						})
-						
-						_this.shoplist.forEach(temp => {
+						this.changeshow();
+						_this.showshoplist.forEach(temp => {
 							_this.countprice += temp.number*temp.slprice;
 						})
 						_this.countprice = _this.countprice -_this.gprice;
 
+					},
+					changeshow(){	
+						this.showshoplist=[];
+							this.oldshoplist.forEach(temp => {
+								this.showshoplist.push(temp);
+							})
+							
+							this.shoplist.forEach(temp => {
+								this.showshoplist.push(temp);
+							})
+							
+							
 					}
 				},
 				filters: {
@@ -231,7 +262,7 @@
 							});
 						});
 						vo.shlist.forEach(temp=>{
-							_this.shoplist.push({
+							_this.oldshoplist.push({
 								"serid":temp.serid,
 								"shid":	temp.shid,
 								"shname":temp.shname,

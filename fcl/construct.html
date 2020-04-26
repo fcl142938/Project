@@ -13,7 +13,7 @@
 				</el-switch>
 			</div>
 			<div v-loading="loading">
-				<el-table :data="pageinfo.list" border style="width: 100%">
+				<el-table :data="pageinfo.list" border style="width: 100%"  @row-dblclick="showlist">
 					<el-table-column type="expand" style="text-align: center;">
 						<template slot-scope="props">
 							<el-table :data="props.row.list" border style="margin: 0 auto;">
@@ -131,6 +131,9 @@
 						alert("操作成功");
 						_this.gotoPage();
 					})
+				},showlist(val){
+					window.sessionStorage.setItem("shlist",JSON.stringify(val.shlist));
+					showWindowDialog("fcl/showshoplist.html","维修材料")	
 				}
 			},
 			filters: {
