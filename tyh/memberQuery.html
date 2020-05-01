@@ -24,7 +24,7 @@
 				<hr />-->
 				<div>
 					<el-form style="float:right" :inline="true" :model="member" class="demo-form-inline" label-width="80px">
-						<el-form-item label="会员名称">
+						<el-form-item label="会员账号">
 							<el-input size="small" v-model="member.name"></el-input>
 						</el-form-item>
 						<el-form-item>
@@ -125,6 +125,13 @@
 				pageInfo: {}
 			},
 			methods: {
+				onQuery(){
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/tyh/api/m/tyhQueryByHyzh/${_this.member.name}/${1}/${1}`, function(m) {
+						console.info(m);
+						_this.pageInfo = m;
+					});
+				},
 				handlOpen() {
 					$("#hy").load('tyh/topUp.html');
 				},

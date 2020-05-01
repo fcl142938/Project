@@ -38,9 +38,9 @@
 								<el-option v-for="(temp,i) in g" :label="temp.gradename" :value="temp.gradeid"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="余额：" prop="money">
+						<!--<el-form-item label="余额：" prop="money">
 							<el-input v-model="m.money"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 						<el-form-item>
 							<el-button type="m" @click="onRegister">注册</el-button>
 						</el-form-item>
@@ -110,6 +110,7 @@
 			methods: {
 				onRegister() {
 					let _this = this;
+					_this.m.money = 0;
 					if(_this.m.memberpwd == _this.m.memberpwds) {
 						$.ajax(`http://127.0.0.1:8080/tyh/api/m/tyhInsertByMember`, {
 							type: "post",
