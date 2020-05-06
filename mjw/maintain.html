@@ -106,7 +106,7 @@
 								<el-table-column property="infomark" label="备注">
 								</el-table-column>
 							</el-table>
-							<div style="margin-top: 20px">
+							<div style="margin-top: 20px;text-align: center;">
 
 							</div>
 						</template>
@@ -235,7 +235,7 @@
 						console.log(this.Typeinfo);
 
 						let _this = this;
-						alert(JSON.stringify(_this.Typeinfo));
+						
 						$.ajax(`http://127.0.0.1:8080/api/weixius/pingpai`, {
 							type: 'put',
 							dataType: 'json',
