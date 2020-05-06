@@ -52,18 +52,12 @@
 
 				<el-container>
 					<el-header style="text-align: right; font-size: 12px">
-						<el-button type="primary" ><span @click="dialogFormVisible = true;
+						<el-button type="primary"><span @click="dialogFormVisible = true;
 						shouButt:true;
-						shouButt2:false;" ><i class="el-icon-edit-outline"></i>增加</span></el-button>
-						<el-button type="primary" ><span @click="deleteById()"><i class="el-icon-delete"></i>删除</span></el-button>
-						<el-button type="primary" >	<span @click="queryOne()"><i class="el-icon-document-copy"></i>修改</span></el-button>
-					
-						
-						
-						
-						
-					
-						
+						shouButt2:false;"><i class="el-icon-edit-outline"></i>增加</span></el-button>
+						<el-button type="primary"><span @click="deleteById()"><i class="el-icon-delete"></i>删除</span></el-button>
+						<el-button type="primary"> <span @click="queryOne()"><i class="el-icon-document-copy"></i>修改</span></el-button>
+
 					</el-header>
 
 					<el-main>
@@ -73,8 +67,16 @@
 							<el-table ref="singleTable" :data="pageinfo.list" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
 
 								<el-table-column property="infoid" label="编号" width="120">
+									<template slot-scope="temp">
+										{{temp.$index+1}}
+									</template>
 								</el-table-column>
 								<el-table-column property="infoname" label="项目名称" width="120">
+								</el-table-column>
+								<el-table-column property="infotime" label="耗时">
+										<template slot-scope="temp">
+											{{temp.row.infotime+'/h'}}
+										</template>
 								</el-table-column>
 								<el-table-column property="price" label="标准价">
 								</el-table-column>
@@ -107,8 +109,14 @@
 								</el-table-column>
 							</el-table>
 							<div style="margin-top: 20px;text-align: center;">
+<<<<<<< HEAD
 
+=======
+								<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[5,10,15,20]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageinfo.total">
+								</el-pagination>
+>>>>>>> cd1f6334a9d9f2901c1cb92d260e25ba3922a374
 							</div>
+
 						</template>
 					</el-main>
 				</el-container>
@@ -126,23 +134,24 @@
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="项目价格" prop="name">
-
 								<el-input v-model="Typeinfo.price"></el-input>
-
 							</el-form-item>
 						</el-col>
 					</el-row>
 
 					<el-row>
 						<el-col :span="12">
+							<el-form-item label="技工耗时" prop="region">
+								<el-input v-model="Typeinfo.infotime"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
 							<el-form-item label="备注" prop="region">
 								<el-input v-model="Typeinfo.infomark"></el-input>
 							</el-form-item>
 						</el-col>
 
-						
 					</el-row>
-				
 
 				</el-form>
 				<div slot="footer" class="dialog-footer">
@@ -169,16 +178,17 @@
 					pageinfo: {},
 					multipleSelection: JSON.parse(window.sessionStorage.getItem("multipleSelectionS")),
 					parentid: 0,
-					mytypeparent:0,
+					mytypeparent: 0,
 					loadingTy: true,
 					shouButt: false,
 					shouButt2: true,
 					Typeinfo: {
-						
+
 						infomark: '',
 						infoname: '',
 						price: '',
-						typeid: ''
+						typeid: '',
+						infotime: ''
 
 					},
 					typeid: '',
@@ -203,13 +213,21 @@
 					}
 				},
 				methods: {
+					handleSizeChange(val) {
+						this.pageSize = val;
+						this.gotoPageTy();
+					},
+					handleCurrentChange(val) {
+						this.currentPage = val;
+						this.gotoPageTy();
+					},
 					handleNodeClick(data) {
 						this.currentPage = 1;
 						this.parentid = data.typeid;
-						this.mytypeparent=data.typeparent;
+						this.mytypeparent = data.typeparent;
 						this.Typeinfo.typeid = data.typeid;
 						this.gotoPageTy();
-						console.log(this.mytypeparent);
+						//console.log(this.mytypeparent);
 					},
 					gotoPageTy() {
 						let _this = this;
@@ -218,21 +236,14 @@
 							_this.pageinfo = res;
 							//行选中状态
 							setTimeout(() => {
-								_this.pageinfo.list.forEach(row => {
-									_this.multipleSelection.forEach(temp => {
-										if(temp.infoid == row.infoid) {
-											_this.$refs.multipleTable.toggleRowSelection(row, true);
-										}
-									})
-								})
 								_this.loadingTy = false;
 							}, 100);
 
 						})
-						console.log(this.pageinfo);
+						//console.log(this.pageinfo);
 					},
 					updet() {
-						console.log(this.Typeinfo);
+						//console.log(this.Typeinfo);
 
 						let _this = this;
 						
@@ -244,7 +255,7 @@
 							success(msg) {
 								if(msg > 0) {
 									alert('修改成功！');
-										_this.gotoPageTy();
+									_this.gotoPageTy();
 									_this.dialogFormVisible = false;
 								} else {
 									alert('修改失败！');
@@ -257,20 +268,19 @@
 						let _this = this;
 						this.shouButt = true;
 						this.shouButt2 = false;
-						if(_this.currentRow.infoid!=null){
+						if(_this.currentRow.infoid != null) {
 							$.getJSON(`http://127.0.0.1:8080/api/weixius/pingpai/${_this.currentRow.infoid}`, function(val) {
 
-							_this.Typeinfo = val;
+								_this.Typeinfo = val;
 
-							console.log(_this.Typeinfo);
-							_this.dialogFormVisible = true
+								console.log(_this.Typeinfo);
+								_this.dialogFormVisible = true
 							});
-							
-						}else{
-							
+
+						} else {
+
 							alert('请选择一条数据！');
 						}
-						
 
 					},
 					add() {
@@ -309,17 +319,12 @@
 								if(msg > 0) {
 									_this.gotoPageTy();
 									alert('删除成功！');
-									
 
 								} else {
 									alert('删除失败！');
 								}
 							}
 						});
-					},
-					handleCurrentChange(val) {
-						this.currentRow = val;
-						console.log(this.currentRow);
 					},
 					shoumenu(typeid) {
 						let _this = this;
@@ -348,6 +353,7 @@
 						_this.dataType = res;
 					})
 					this.shoumenu(1);
+					this.gotoPageTy();
 				}
 
 			}).$mount('#maintain');
