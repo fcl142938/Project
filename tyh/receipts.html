@@ -32,38 +32,74 @@
 				<hr style="width: 100%;" />
 				<div>
 					<el-form :inline="true" :model="xq" class="demo-form-inline">
+<<<<<<< HEAD
+						<el-form-item style="width:20%;" label="车牌号码">
+							<!--去除边框  style="border:0 none;outline:none;"-->
+							<el-col>
+								{{xq.carnumber}}
+							</el-col>
+							<!--<el-input v-model="xq.carnumber"></el-input>-->
+=======
 						<el-form-item label="车牌号码">
 							<el-input v-model="xq.carnumber"></el-input>
+>>>>>>> 34acea23c126e77c246b39152214a3d8f6fb9809
 						</el-form-item>
 						<!--<el-form-item label="车架号">
 							<el-input v-model="auction.auctionName"></el-input>
 						</el-form-item>-->
-						<el-form-item label="车辆型号">
-							<el-input v-model="xq.motorcyclename"></el-input>
+						<el-form-item style="width:20%;" label="车辆型号">
+							<el-col :span="24">
+								{{xq.motorcyclename}}
+							</el-col>
+							<!--<el-input v-model="xq.motorcyclename"></el-input>-->
 						</el-form-item>
-						<el-form-item label="车辆品牌">
-							<el-input v-model="xq.brandname"></el-input>
+						<el-form-item style="width:20%;"  label="车辆品牌">
+							<el-col>
+								{{xq.brandname}}
+							</el-col>
+							<!--<el-input v-model="xq.brandname"></el-input>-->
 						</el-form-item>
-						<el-form-item label="发动机号">
-							<el-input v-model="xq.motorid"></el-input>
+						<el-form-item style="width:20%;" label="发动机号">
+							<el-col>
+								{{xq.motorid}}
+							</el-col>
+							<!--<el-input v-model="xq.motorid"></el-input>-->
 						</el-form-item>
-						<el-form-item label="发动机品牌">
-							<el-input v-model="xq.motorname"></el-input>
+						<el-form-item style="width:20%;" label="发动机品牌">
+							<el-col>
+								{{xq.motorname}}
+							</el-col>
+							<!--<el-input v-model="xq.motorname"></el-input>-->
 						</el-form-item>
-						<el-form-item label="服务顾问">
-							<el-input v-model="xq.staffname"></el-input>
+						<el-form-item style="width:20%;" label="服务顾问">
+							<el-col>
+								{{xq.staffname}}
+							</el-col>
+							<!--<el-input v-model="xq.staffname"></el-input>-->
 						</el-form-item>
-						<el-form-item label="车主姓名">
-							<el-input v-model="xq.username"></el-input>
+						<el-form-item style="width:20%;" label="车主姓名">
+							<el-col>
+								{{xq.username}}
+							</el-col>
+							<!--<el-input v-model="xq.username"></el-input>-->
 						</el-form-item>
-						<el-form-item label="驾驶员">
-							<el-input v-model="xq.drivername"></el-input>
+						<el-form-item style="width:20%;" label="驾驶员">
+							<el-col>
+								{{xq.drivername}}
+							</el-col>
+							<!--<el-input v-model="xq.drivername"></el-input>-->
 						</el-form-item>
-						<el-form-item label="联系电话">
-							<el-input v-model="xq.driverphone"></el-input>
+						<el-form-item style="width:20%;" label="联系电话">
+							<el-col>
+								{{xq.driverphone}}
+							</el-col>
+							<!--<el-input v-model="xq.driverphone"></el-input>-->
 						</el-form-item>
-						<el-form-item label="进厂里程">
-							<el-input v-model="xq.carcourse"></el-input>
+						<el-form-item style="width:20%;" label="进厂里程">
+							<el-col>
+								{{xq.carcourse}}
+							</el-col>
+							<!--<el-input v-model="xq.carcourse"></el-input>-->
 						</el-form-item>
 						<!--<el-form-item label="进场油量">
 							<el-input v-model="auction.auctionName"></el-input>
@@ -71,8 +107,11 @@
 						<el-form-item label="上次历程">
 							<el-input v-model="auction.auctionName"></el-input>
 						</el-form-item>-->
-						<el-form-item label="进场时间">
-							<el-input v-model="xq.starttime"></el-input>
+						<el-form-item style="width:20%;" label="进场时间">
+							<el-col>
+								{{xq.starttime}}
+							</el-col>
+							<!--<el-input v-model="xq.starttime"></el-input>-->
 						</el-form-item>
 						<!--<el-form-item label="业务类型">
 							<el-select v-model="auction.auctionName" placeholder="请选择业务类型">
@@ -103,20 +142,32 @@
 						<!--<el-form-item label="赔款公司">
 							<el-input v-model="auction.auctionName"></el-input>
 						</el-form-item>-->
-						<el-form-item label="完成时间">
-							<el-input v-model="xq.entime"></el-input>
+						<el-form-item style="width:20%;" label="完成时间">
+							<el-col>
+								{{xq.entime}}
+							</el-col>
+							<!--<el-input v-model="xq.entime"></el-input>-->
 						</el-form-item>
 						<!--<el-form-item label="上次进场">
 							<el-input v-model="auction.auctionName"></el-input>
 						</el-form-item>-->
-						<el-form-item label="预估金额">
-							<el-input v-model="xq.countprice"></el-input>
+						<el-form-item style="width:20%;" label="预估金额">
+							<el-col>
+								{{xq.countprice}}
+							</el-col>
+							<!--<el-input v-model="xq.countprice"></el-input>-->
 						</el-form-item>
-						<el-form-item label="接待备注">
-							<el-input v-model="xq.userremark"></el-input>
+						<el-form-item style="width:20%;" label="接待备注">
+							<el-col>
+								{{xq.userremark}}
+							</el-col>
+							<!--<el-input v-model="xq.userremark"></el-input>-->
 						</el-form-item>
-						<el-form-item label="修复陈诉" prop="consumermark">
-							<el-input type="textarea" v-model="xq.consumermark"></el-input>
+						<el-form-item style="width:20%;" label="修复陈诉" prop="consumermark">
+							<el-col>
+								{{xq.consumermark}}
+							</el-col>
+							<!--<el-input type="textarea" v-model="xq.consumermark"></el-input>-->
 						</el-form-item>
 					</el-form>
 				</div>
